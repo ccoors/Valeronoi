@@ -66,9 +66,14 @@ void Robot::slot_get_wifi() {
       } else {
         if (json.object()["__class"].toString() ==
             "ValetudoWifiConfiguration") {
-          const auto signal =
-              json.object()["details"].toObject()["signal"].toDouble();
-          emit signal_wifi_updated(signal);
+          const auto details_object = json.object()["details"].toObject();
+          const auto signal = details_object["signal"].toDouble();
+          if (details_object.contains("signal") && signal <= -1) {
+            emit signal_wifi_updated(signal);
+          } else {
+            qDebug()
+                << "Message did not contain a valid signal strength, ignoring";
+          }
         } else {
           qDebug() << "Received unexpected JSON object, ignoring";
         }
