@@ -17,7 +17,7 @@ Builds for macOS are currently not provided, as I have no means to create them.
 3. Connect Valeronoi to the robot using the "Connect" button
 4. Verify that the correct map is displayed
 5. Start recording WiFi measurements by clicking the "Begin recording" button
-6. Start a cleanup, either using the controls in the "Control" tab or Valetudo/Home Assitant/... If you don't have persistent maps, make sure to not start a full cleanup! Major map updates can not be handled in Valeronoi.
+6. Start a cleanup, either using the controls in the "Control" tab or Valetudo/Home Assistant/... If you don't have persistent maps, make sure to not start a full cleanup! Major map updates can not be handled in Valeronoi.
 7. While cleaning, watch the map update
 8. After the robot returned to the dock, stop the recording and/or disconnect Valeronoi
 
