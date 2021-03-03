@@ -227,6 +227,9 @@
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="0">
                <widget class="QPushButton" name="buttonClean">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="statusTip">
                  <string>Start full cleanup</string>
                 </property>
@@ -237,6 +240,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QPushButton" name="buttonPause">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="statusTip">
                  <string>Pause robot</string>
                 </property>
@@ -247,6 +253,9 @@
               </item>
               <item row="1" column="0">
                <widget class="QPushButton" name="buttonStop">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="statusTip">
                  <string>Stop robot</string>
                 </property>
@@ -257,6 +266,9 @@
               </item>
               <item row="1" column="1">
                <widget class="QPushButton" name="buttonHome">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="statusTip">
                  <string>Go to dock</string>
                 </property>
@@ -267,6 +279,9 @@
               </item>
               <item row="2" column="0">
                <widget class="QPushButton" name="buttonLocate">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="statusTip">
                  <string>Locate robot</string>
                 </property>

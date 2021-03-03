@@ -529,6 +529,12 @@ void ValeronoiWindow::connect_robot_signals() {
     ui->actionRobotManager->setEnabled(false);
     ui->recordingToggle->setEnabled(true);
     ui->connectToggle->setText(tr("Disconnect"));
+
+    ui->buttonClean->setEnabled(true);
+    ui->buttonHome->setEnabled(true);
+    ui->buttonPause->setEnabled(true);
+    ui->buttonStop->setEnabled(true);
+    ui->buttonLocate->setEnabled(true);
   });
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_ended, this,
           [=]() {
@@ -536,6 +542,11 @@ void ValeronoiWindow::connect_robot_signals() {
             ui->actionRobotManager->setEnabled(true);
             ui->recordingToggle->setEnabled(false);
             ui->connectToggle->setText(tr("Connect"));
+            ui->buttonClean->setEnabled(false);
+            ui->buttonHome->setEnabled(false);
+            ui->buttonPause->setEnabled(false);
+            ui->buttonStop->setEnabled(false);
+            ui->buttonLocate->setEnabled(false);
           });
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_error, this,
           [=]() {
