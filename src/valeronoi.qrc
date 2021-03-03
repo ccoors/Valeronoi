@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>res/valeronoi.png</file>
+        <file>res/SourceCodePro-Regular.otf</file>
+        <file>res/colormaps.json</file>
+    </qresource>
+</RCC>

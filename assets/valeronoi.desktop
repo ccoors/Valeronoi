@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Valeronoi
+Comment=Valeronoi is a companion app for Valetudo for generating WiFi heat maps.
+Exec=valeronoi
+Icon=valeronoi
+Categories=Network;Utility;
+Terminal=false
