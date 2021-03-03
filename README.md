@@ -12,7 +12,7 @@ Builds for macOS are currently not provided, as I have no means to create them.
 
 ## Basic Usage
 
-1. Make sure you have a supported robot running a recent Valetudo version (API v2, Valetudo 2020.02.0 recommended). Having persistent maps is highly recommended.
+1. Make sure you have a supported robot running a recent Valetudo version (API v2, Valetudo 2021.02.0 recommended). Having persistent maps is highly recommended.
 2. Set up the robot connection in Valeronoi (Robot -> Setup)
 3. Connect Valeronoi to the robot using the "Connect" button
 4. Verify that the correct map is displayed
