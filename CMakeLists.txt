@@ -159,7 +159,7 @@ target_link_libraries(valeronoi PRIVATE ${VALERONOI_LINK_LIBRARIES})
 if(APPLE)
     install(TARGETS valeronoi BUNDLE DESTINATION Valeronoi)
     set_source_files_properties(
-        ${CMAKE_SOURCE_DIR}/assets/valeronoi.icns
+        ${CMAKE_SOURCE_DIR}/assets/icon/valeronoi.icns
         PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
     )
 elseif(NOT WIN32)
