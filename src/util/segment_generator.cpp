@@ -6,6 +6,8 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Voronoi_diagram_2.h>
 
+#include <utility>
+
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef CGAL::Delaunay_triangulation_2<K> DT;
 typedef CGAL::Delaunay_triangulation_adaptation_traits_2<DT> AT;
@@ -58,9 +60,6 @@ void SegmentGenerator::run() {
       return;
     }
 
-    // Yes, technically we copy twice, but doing this calculation between the
-    // mutex lock and unlock is worse. And this is justified, simplifying once
-    // leads to permanent rendering improvements.
     Valeronoi::state::RawMeasurements simplified_measurements;
     if (simplify > 1) {
       for (auto &m : measurements) {
@@ -91,7 +90,7 @@ void SegmentGenerator::run() {
         sm.average = avg / sm.data.size();
       }
     } else {
-      simplified_measurements = measurements;
+      simplified_measurements = std::move(measurements);
     }
 
     Valeronoi::state::DataSegments segments;
