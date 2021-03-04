@@ -142,11 +142,15 @@ set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_COPYRIGHT
     "2021 Christian Friedrich Coors, released under GPLv3"
 )
-set(MACOSX_BUNDLE_ICON_FILE "valeronoi")
+set(MACOSX_BUNDLE_ICON_FILE "valeronoi.icns")
 set(MACOSX_BUNDLE_LONG_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
 
-add_executable(valeronoi WIN32 MACOSX_BUNDLE ${SOURCE_FILES} assets/appinfo.rc)
+add_executable(
+    valeronoi WIN32 MACOSX_BUNDLE
+    ${SOURCE_FILES} ${CMAKE_SOURCE_DIR}/assets/icon/valeronoi.icns
+    ${CMAKE_SOURCE_DIR}/assets/appinfo.rc
+)
 target_compile_options(valeronoi PRIVATE -fPIC)
 add_executable(valeronoi-tests ${TEST_FILES})
 
