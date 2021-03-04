@@ -105,7 +105,7 @@ void ValetudoAPI::next_connection_step() {
 
     const auto robot_capabilities = m_connection_responses[2].array();
     m_robot_information.m_capabilities.clear();
-    for (const auto &c : robot_capabilities) {
+    for (const auto &&c : robot_capabilities) {
       m_robot_information.m_capabilities.push_back(c.toString());
     }
 
