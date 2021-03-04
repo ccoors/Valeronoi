@@ -112,7 +112,7 @@ void RobotMap::generate_map() {
   // a Layer. As layers are already a performance problem, we have to remove
   // duplicates by using an unordered_set.
   std::unordered_map<std::string, std::unordered_set<Block>> floor_pixels;
-  for (const auto &layer : m_map_json["layers"].toArray()) {
+  for (const auto &&layer : m_map_json["layers"].toArray()) {
     const auto &layer_obj = layer.toObject();
     auto layer_type = layer_obj["type"].toString().toStdString();
     if (layer_type == "segment") {
@@ -130,7 +130,7 @@ void RobotMap::generate_map() {
       for (qsizetype i = 0; i + 1 < pixels.size(); i += 2) {
         int block_x = pixels[i].toInt();
         int block_y = pixels[i + 1].toInt();
-        floor_pixels[layer_type].insert({block_x, block_y}).second;
+        floor_pixels[layer_type].insert({block_x, block_y});
       }
     }
   }
@@ -139,7 +139,7 @@ void RobotMap::generate_map() {
                &min_x, &max_x, &min_y, &max_y);
   }
 
-  for (const auto &entity : m_map_json["entities"].toArray()) {
+  for (const auto &&entity : m_map_json["entities"].toArray()) {
     const auto &entity_obj = entity.toObject();
     const auto entity_class = entity_obj["__class"].toString();
     const auto entity_type = entity_obj["type"].toString();

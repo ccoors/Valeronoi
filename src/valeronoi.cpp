@@ -271,7 +271,7 @@ void ValeronoiWindow::load_colormaps() {
 
   int map_index_to_set = 0;
 
-  for (const auto &json : colormap_json) {
+  for (const auto &&json : colormap_json) {
     auto colormap = json.toObject();
     auto name = colormap["name"].toString();
     auto colors = colormap["colors"].toArray();
