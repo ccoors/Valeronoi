@@ -15,11 +15,17 @@ Builds for macOS are currently not provided, as I have no means to create them.
 1. Make sure you have a supported robot running a recent Valetudo version (API v2, Valetudo 2021.02.0 recommended). Having persistent maps is highly recommended.
 2. Set up the robot connection in Valeronoi (Robot -> Setup)
 3. Connect Valeronoi to the robot using the "Connect" button
-4. Verify that the correct map is displayed
+4. Verify that the complete, correct map is displayed (!) See below for an explanation.
 5. Start recording WiFi measurements by clicking the "Begin recording" button
 6. Start a cleanup, either using the controls in the "Control" tab or Valetudo/Home Assistant/... If you don't have persistent maps, make sure to not start a full cleanup! Major map updates can not be handled in Valeronoi.
 7. While cleaning, watch the map update
 8. After the robot returned to the dock, stop the recording and/or disconnect Valeronoi
+
+### Persistent maps
+
+If the robot decides to generate a new map while recording (which it _will_ do when it encounters enough new territory), all coordinates of the map can change and they will not match the recordings up to that point. **This will mess up your recording.** There is no way to prevent this from happening. If your robot does not support persistent maps, make sure to only record when doing partial cleanups, as a new map will always be generated on a full cleanup.
+
+If you do not have a map, you'll have to do a full cleanup before starting the recording and doing a second (partial) cleanup.
 
 ## Support
 
