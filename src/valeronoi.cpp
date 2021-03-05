@@ -34,9 +34,11 @@ namespace Valeronoi {
 ValeronoiWindow::ValeronoiWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::ValeronoiWindow),
+      m_export_dialog{this},
       m_robot_config_dialog{this},
       m_settings_dialog{this},
       m_about_dialog{this},
+      m_update_dialog{this},
       m_modified{false},
       m_current_file{""} {
   QSettings settings;
