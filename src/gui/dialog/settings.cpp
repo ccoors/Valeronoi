@@ -27,6 +27,7 @@ namespace Valeronoi::gui::dialog {
 SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::SettingsDialog) {
   ui->setupUi(this);
+  setWindowFlags(Qt::Sheet);
 
   connect(ui->checkUpdates, &QCheckBox::stateChanged, this, [=]() {
     QSettings settings;

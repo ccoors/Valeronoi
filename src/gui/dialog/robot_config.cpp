@@ -30,6 +30,7 @@ RobotConfigDialog::RobotConfigDialog(QWidget *parent)
       m_progress_dialog(tr("Testing connection..."), tr("Cancel"), 0, 100,
                         this) {
   ui->setupUi(this);
+  setWindowFlags(Qt::Sheet);
 
   m_progress_dialog.setWindowModality(Qt::ApplicationModal);
   m_progress_dialog.setAutoClose(true);

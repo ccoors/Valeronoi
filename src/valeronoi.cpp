@@ -34,9 +34,11 @@ namespace Valeronoi {
 ValeronoiWindow::ValeronoiWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::ValeronoiWindow),
+      m_export_dialog{this},
       m_robot_config_dialog{this},
       m_settings_dialog{this},
       m_about_dialog{this},
+      m_update_dialog{this},
       m_modified{false},
       m_current_file{""} {
   QSettings settings;
@@ -49,6 +51,10 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
       m_robot_map, m_wifi_measurements, ui->displayFrame);
   verticalLayout->addWidget(m_display_widget);
   slot_end_recording();
+
+#if __APPLE__
+  ui->recordingStatsGroup->setFlat(true);
+#endif
 
   m_wifi_measurements.set_map(m_robot_map);
 
@@ -271,7 +277,7 @@ void ValeronoiWindow::load_colormaps() {
 
   int map_index_to_set = 0;
 
-  for (const auto &json : colormap_json) {
+  for (const auto &&json : colormap_json) {
     auto colormap = json.toObject();
     auto name = colormap["name"].toString();
     auto colors = colormap["colors"].toArray();

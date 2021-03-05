@@ -23,6 +23,7 @@ namespace Valeronoi::gui::dialog {
 ExportDialog::ExportDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::ExportDialog) {
   ui->setupUi(this);
+  setWindowFlags(Qt::Sheet);
 
   connect(ui->width, QOverload<int>::of(&QSpinBox::valueChanged), this,
           [=](int width) {

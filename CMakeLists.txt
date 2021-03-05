@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.12)
 project(
     Valeronoi
     VERSION 0.1.0
@@ -137,13 +137,32 @@ set(SOURCE_FILES
 
 set(TEST_FILES tests/test_main.cpp tests/test_colormap.cpp)
 
-add_executable(valeronoi WIN32 ${SOURCE_FILES} assets/appinfo.rc)
+set(MACOSX_BUNDLE_BUNDLE_NAME "Valeronoi")
+set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
+set(MACOSX_BUNDLE_COPYRIGHT
+    "2021 Christian Friedrich Coors, released under GPLv3"
+)
+set(MACOSX_BUNDLE_ICON_FILE "valeronoi.icns")
+set(MACOSX_BUNDLE_LONG_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
+set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
+
+add_executable(
+    valeronoi WIN32 MACOSX_BUNDLE
+    ${SOURCE_FILES} ${CMAKE_SOURCE_DIR}/assets/icon/valeronoi.icns
+    ${CMAKE_SOURCE_DIR}/assets/appinfo.rc
+)
 target_compile_options(valeronoi PRIVATE -fPIC)
 add_executable(valeronoi-tests ${TEST_FILES})
 
 target_link_libraries(valeronoi PRIVATE ${VALERONOI_LINK_LIBRARIES})
 
-if(NOT WIN32)
+if(APPLE)
+    install(TARGETS valeronoi BUNDLE DESTINATION Valeronoi)
+    set_source_files_properties(
+        ${CMAKE_SOURCE_DIR}/assets/icon/valeronoi.icns
+        PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
+    )
+elseif(NOT WIN32)
     install(
         TARGETS valeronoi
         RUNTIME DESTINATION bin
