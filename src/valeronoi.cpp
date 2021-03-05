@@ -50,6 +50,10 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
   verticalLayout->addWidget(m_display_widget);
   slot_end_recording();
 
+#if __APPLE__
+  ui->recordingStatsGroup->setFlat(true);
+#endif
+
   m_wifi_measurements.set_map(m_robot_map);
 
   connect_actions();
