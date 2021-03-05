@@ -121,7 +121,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox">
+             <widget class="QGroupBox" name="recordingStatsGroup">
               <property name="title">
                <string>Recording statistics</string>
               </property>
@@ -610,7 +610,7 @@
     <string>Ctrl+O</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionSave">
@@ -624,7 +624,7 @@
     <string>Ctrl+S</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionSaveAs">
@@ -638,7 +638,7 @@
     <string>Ctrl+Shift+S</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionNew">
@@ -652,7 +652,7 @@
     <string>Ctrl+N</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionQuit">
@@ -691,7 +691,7 @@
     <string>Ctrl+Shift+D</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionExportAsSVG">
@@ -702,7 +702,7 @@
     <string>Ctrl+Shift+E</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionHTTPLog">
@@ -724,7 +724,7 @@
     <string>Check for new updates</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
   <action name="actionAboutQt">
@@ -754,7 +754,7 @@
     <string>Ctrl+Shift+R</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::NoRole</enum>
    </property>
   </action>
  </widget>
