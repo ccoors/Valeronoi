@@ -13,9 +13,9 @@ RUN TMPDIR=$(mktemp -d) \
 
 RUN TMPDIR=$(mktemp -d) \
         && cd $TMPDIR \
-        && wget https://download.qt.io/official_releases/qt/6.0/6.0.1/single/qt-everywhere-src-6.0.1.tar.xz \
-        && tar -xf qt-everywhere-src-6.0.1.tar.xz \
-        && cd qt-everywhere-src-6.0.1 \
+        && wget https://download.qt.io/official_releases/qt/6.0/6.0.2/single/qt-everywhere-src-6.0.2.tar.xz \
+        && tar -xf qt-everywhere-src-6.0.2.tar.xz \
+        && cd qt-everywhere-src-6.0.2 \
         && cmake . -G Ninja -DCMAKE_BUILD_TYPE=Release -DINSTALL_BINDIR=lib/qt6/bin -DINSTALL_ARCHDATADIR=lib/qt6 -DINSTALL_DATADIR=share/qt6 -DINSTALL_INCLUDEDIR=include/qt6 -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs -DINPUT_openssl=runtime \
         && cmake --build . --parallel \
         && cmake --install . \
