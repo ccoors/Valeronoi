@@ -1,7 +1,7 @@
 !include "MUI2.nsh"
 
 Name "Valeronoi"
-OutFile "InstallValeronoi.exe"
+OutFile "Valeronoi-installer-x86_64.exe"
 Unicode True
 
 InstallDir "$LOCALAPPDATA\Valeronoi"

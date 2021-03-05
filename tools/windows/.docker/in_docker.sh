@@ -21,6 +21,6 @@ python /source/tools/windows/.docker/copy_dlls.py
 makensis install.nsi
 
 mkdir -p /source/dist
-mv InstallValeronoi.exe /source/dist
-rm install.nsi
-cp -r . /source/dist/windows_portable
+mv Valeronoi-installer-x86_64.exe /source/dist
+rm install.nsi appinfo.rc
+cp -r . /source/dist/Valeronoi-Windows-portable-x86_64
