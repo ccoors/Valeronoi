@@ -57,6 +57,12 @@
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
              <widget class="QPushButton" name="connectToggle">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="statusTip">
                <string>Connect to/disconnect from the robot</string>
               </property>
@@ -69,6 +75,12 @@
              <widget class="QPushButton" name="recordingToggle">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="statusTip">
                <string>Begin/End recording data</string>
@@ -119,6 +131,22 @@
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>10</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item>
              <widget class="QGroupBox" name="recordingStatsGroup">
@@ -230,6 +258,12 @@
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="statusTip">
                  <string>Start full cleanup</string>
                 </property>
@@ -242,6 +276,12 @@
                <widget class="QPushButton" name="buttonPause">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                 <property name="statusTip">
                  <string>Pause robot</string>
@@ -256,6 +296,12 @@
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="statusTip">
                  <string>Stop robot</string>
                 </property>
@@ -269,6 +315,12 @@
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="statusTip">
                  <string>Go to dock</string>
                 </property>
@@ -281,6 +333,12 @@
                <widget class="QPushButton" name="buttonLocate">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                 <property name="statusTip">
                  <string>Locate robot</string>
@@ -324,7 +382,7 @@
               <item row="0" column="1">
                <widget class="QComboBox" name="displayMode">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -359,7 +417,7 @@
               <item row="1" column="1">
                <widget class="QComboBox" name="displayColorMap">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -375,6 +433,12 @@
               </item>
               <item row="2" column="1">
                <widget class="QSlider" name="simplifySlider">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="statusTip">
                  <string>Collapse data points that are close together</string>
                 </property>
