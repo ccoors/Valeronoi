@@ -25,10 +25,11 @@ namespace Valeronoi::robot::api::v2 {
 
 const QUrl VALETUDO_VERSION = QUrl("/api/v2/valetudo/version");
 const QUrl ROBOT_INFO = QUrl("/api/v2/robot");
+const QUrl ROBOT_STATE = QUrl("/api/v2/robot/state");
 const QUrl ROBOT_CAPABILITIES_INFO = QUrl("/api/v2/robot/capabilities");
 const QUrl ROBOT_MAP_SSE = QUrl("/api/v2/robot/state/map/sse");
 
-const QList<QUrl> ROBOT_INIT_URLS = {VALETUDO_VERSION, ROBOT_INFO,
+const QList<QUrl> ROBOT_INIT_URLS = {VALETUDO_VERSION, ROBOT_INFO, ROBOT_STATE,
                                      ROBOT_CAPABILITIES_INFO};
 const QStringList SUPPORTED_VALETUDO_VERSIONS = {"2021.02.0"};
 
@@ -103,7 +104,10 @@ void ValetudoAPI::next_connection_step() {
     m_robot_information.m_implementation =
         robot_info["implementation"].toString();
 
-    const auto robot_capabilities = m_connection_responses[2].array();
+    const auto robot_state = m_connection_responses[2].object();
+    m_robot_information.m_attributes = robot_state["attributes"].toArray();
+
+    const auto robot_capabilities = m_connection_responses[3].array();
     m_robot_information.m_capabilities.clear();
     for (const auto &&c : robot_capabilities) {
       m_robot_information.m_capabilities.push_back(c.toString());

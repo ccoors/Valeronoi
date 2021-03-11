@@ -126,6 +126,10 @@ void RobotConfigDialog::slot_robot_connected() {
       robot_information->m_capabilities.contains("WifiConfigurationCapability");
   bool has_map_save_capability = robot_information->m_capabilities.contains(
       "PersistentMapControlCapability");
+  bool map_saving_enabled =
+      robot_information
+          ->get_attribute("PersistentMapSettingStateAttribute")["value"]
+          .toString() == "enabled";
 
   QString has_wifi_config_description, has_map_save_description;
   if (has_wifi_config) {
@@ -135,14 +139,21 @@ void RobotConfigDialog::slot_robot_connected() {
     has_wifi_config_description =
         tr("❌ The robot does not have the WifiConfigurationCapability.");
   }
-  if (has_map_save_capability) {
+
+  if (map_saving_enabled) {
     has_map_save_description =
-        tr("✅ The robot has the PersistentMapControlCapability. Make sure "
-           "persistent data is enabled.");
+        tr("✅ The robot has the PersistentMapSettingStateAttribute and it is "
+           "enabled.");
   } else {
-    has_map_save_description =
-        tr("❌ The robot does not have the PersistentMapControlCapability! Make "
-           "sure to not do full cleans while recording.");
+    if (has_map_save_capability) {
+      has_map_save_description =
+          tr("❌ The robot has the PersistentMapControlCapability, but the "
+             "PersistentMapSettingStateAttribute is not enabled.");
+    } else {
+      has_map_save_description = tr(
+          "❌ The robot does not have the PersistentMapControlCapability! Make "
+          "sure to not do full cleans while recording.");
+    }
   }
 
   m_robot.slot_disconnect();

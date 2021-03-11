@@ -15,27 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef VALETUDO_ROBOT_ROBOT_INFORMATION_H
-#define VALETUDO_ROBOT_ROBOT_INFORMATION_H
 
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QString>
-#include <QStringList>
+#include "robot_information.h"
 
 namespace Valeronoi::robot {
 
-struct RobotInformation {
-  QString m_valetudo_version;
-  QString m_manufacturer, m_model_name, m_implementation;
-  QStringList m_capabilities;
-  QJsonArray m_attributes;
-
-  [[nodiscard]] QJsonObject get_attribute(const QString &class_name,
-                                          const QString &type = "",
-                                          const QString &sub_type = "") const;
-};
+QJsonObject RobotInformation::get_attribute(const QString &class_name,
+                                            const QString &type,
+                                            const QString &sub_type) const {
+  for (const auto &&attr : m_attributes) {
+    auto attribute = attr.toObject();
+    if (!class_name.isEmpty() &&
+        class_name != attribute["__class"].toString()) {
+      continue;
+    }
+    if (!type.isEmpty() && type != attribute["type"].toString()) {
+      continue;
+    }
+    if (!sub_type.isEmpty() && type != attribute["subType"].toString()) {
+      continue;
+    }
+    return attribute;
+  }
+  return QJsonObject();
+}
 
 }  // namespace Valeronoi::robot
-
-#endif

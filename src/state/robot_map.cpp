@@ -29,6 +29,14 @@ RobotMap::RobotMap(QObject *parent) : QObject(parent) { reset(); }
 void RobotMap::update_map_json(const QString &json) {
   m_error = "";
   m_valid = false;
+  if (json == "null") {
+    // Edge case, because QJsonDocument::fromJson also returns null if it
+    // detects a parsing error
+    m_error = tr("No map data");
+    emit signal_map_updated();
+    return;
+  }
+
   QJsonParseError error;
   auto json_document = QJsonDocument::fromJson(json.toUtf8(), &error);
   if (json_document.isNull()) {
@@ -37,7 +45,7 @@ void RobotMap::update_map_json(const QString &json) {
     return;
   }
   if (json_document.isEmpty()) {
-    m_error = "No map data";
+    m_error = tr("No map data");
     emit signal_map_updated();
     return;
   }
@@ -46,12 +54,12 @@ void RobotMap::update_map_json(const QString &json) {
 
 void RobotMap::update_map_json(const QJsonObject &json_object) {
   if (json_object["__class"].toString() != "ValetudoMap") {
-    m_error = "Did not receive ValetudoMap";
+    m_error = tr("Did not receive ValetudoMap");
     emit signal_map_updated();
     return;
   }
   if (json_object["metaData"].toObject()["version"].toInt() != 1) {
-    m_error = "Unknown map version";
+    m_error = tr("Unknown map version");
     emit signal_map_updated();
     return;
   }
