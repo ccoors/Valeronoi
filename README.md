@@ -6,7 +6,11 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 
 ## Installation
 
-Binary distributions are available for Linux and Windows (64-bit). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases). Binary releases for Linux are [AppImages](https://appimage.org/), the binary releases for Windows are installers/portable ZIPs. Please note that there are two AppImages, "legacy" and "current". Try "current" first, if that does not work, use "legacy". The "current" AppImage is built on Ubuntu 20.04 LTS (Focal) and Qt 6, so it probably won't run on anything older than that (specifically glibc 2.29). The "legacy" AppImage is built on Ubuntu 18.04 LTS (Bionic) and Qt 5. The Windows release _should_ only run on Windows 10. Builds for macOS (Intel) are built with Qt 5 and compatible with macOS 10.15 (Catalina) or later.
+Binary distributions are available for Linux, macOS and Windows (x86_64). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases).
+
+- Linux: "current" and "legacy" [AppImages](https://appimage.org/). Try "current" first, if that does not work, use "legacy". The "current" AppImage is built on Ubuntu 20.04 LTS (Focal) and Qt 6, so it probably won't run on anything older than that (specifically glibc 2.29). The "legacy" AppImage is built on Ubuntu 18.04 LTS (Bionic) and Qt 5.
+- macOS: Built with Qt 5 on macOS 10.15 Catalina, should work on Catalina or later on Intel Macs. There is currently no native support for M1-based Macs, but Valeronoi should work with Rosetta 2.
+- Windows: Cross-compiled on Linux with mingw-w64 and Qt 6. Available as an installer and a portable zip.
 
 ## Basic Usage
 
@@ -57,15 +61,7 @@ make -j
 
 ### Arch Linux
 
-```
-# pacman -S base-devel cgal qt6-base qt6-imageformats qt6-svg
-```
-
-Alternatively for Qt 5 (not recommended):
-
-```
-# pacman -S base-devel cgal qt5-base qt5-imageformats qt5-svg qt5-x11extras
-```
+A `PKGBUILD` for the `valeronoi-git` package is provided in `tools/pkgbuild/valeronoi-git`. To build and install it run `makepkg -si`.
 
 ### Building the binary distributions
 
