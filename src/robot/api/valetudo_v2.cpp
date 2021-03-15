@@ -31,7 +31,7 @@ const QUrl ROBOT_MAP_SSE = QUrl("/api/v2/robot/state/map/sse");
 
 const QList<QUrl> ROBOT_INIT_URLS = {VALETUDO_VERSION, ROBOT_INFO, ROBOT_STATE,
                                      ROBOT_CAPABILITIES_INFO};
-const QStringList SUPPORTED_VALETUDO_VERSIONS = {"2021.02.0"};
+const QStringList SUPPORTED_VALETUDO_VERSIONS = {"2021.02.0", "2021.03.0"};
 
 ValetudoAPI::ValetudoAPI() {
   m_map_connection.set_url(ROBOT_MAP_SSE);
