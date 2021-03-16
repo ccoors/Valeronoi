@@ -87,7 +87,7 @@ enum class DISPLAY_MODE {
 
 struct DataSegment {
   int x{0}, y{0};
-  double value;
+  double value{0.0};
   QPolygon polygon;
   QColor color;
 };

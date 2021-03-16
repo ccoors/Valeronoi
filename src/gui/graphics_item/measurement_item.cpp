@@ -18,15 +18,21 @@
 #include "measurement_item.h"
 
 #include <QPen>
+#include <algorithm>
 
-constexpr const QSize SCALE_SIZE{200, 30};
+constexpr const int SCALE_FONT_SIZE{15};
+constexpr const int SCALE_HISTOGRAM_HEIGHT{70};
+constexpr const int SCALE_BAR_HEIGHT{30};
+constexpr const int SCALE_WIDTH{200};
 constexpr const int SCALE_MARGIN{5};
+constexpr const QSize SCALE_SIZE{
+    SCALE_WIDTH, SCALE_BAR_HEIGHT + SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT};
 
 namespace Valeronoi::gui::graphics_item {
 MeasurementItem::MeasurementItem(const Valeronoi::state::RobotMap &robot_map,
                                  QGraphicsItem *parent)
     : MapBasedItem(robot_map, parent), m_font("Source Code Pro") {
-  m_font.setPixelSize(SCALE_SIZE.height() / 2);
+  m_font.setPixelSize(SCALE_FONT_SIZE);
 }
 
 void MeasurementItem::paint(QPainter *painter,
@@ -105,9 +111,14 @@ void MeasurementItem::set_data_segments(const state::DataSegments &segments) {
   m_data_segments = segments;
   m_min = 0.0;
   m_max = -100.0;
+  m_histogram.clear();
+  m_histogram_max = 0;
   for (const auto &s : m_data_segments) {
     m_min = std::min(m_min, s.value);
     m_max = std::max(m_max, s.value);
+    const auto int_value = static_cast<int>(s.value);
+    m_histogram[int_value] += 1;
+    m_histogram_max = std::max(m_histogram_max, m_histogram[int_value]);
     m_points_path.addRect(s.x - 25, s.y - 25, 50, 50);
   }
   calculate_colors();
@@ -124,27 +135,58 @@ void MeasurementItem::calculate_colors() {
 
     painter.setBrush(Qt::black);
     painter.setPen(Qt::transparent);
-    painter.drawRect(0, 0, SCALE_SIZE.width() + 2 * SCALE_MARGIN,
+    painter.drawRect(0, 0, SCALE_WIDTH + 2 * SCALE_MARGIN,
                      SCALE_SIZE.height() + 2 * SCALE_MARGIN);
-    for (int x = 0; x < SCALE_SIZE.width(); x++) {
-      painter.setBrush(
-          color_value(static_cast<double>(x) / SCALE_SIZE.width()));
-      painter.drawRect(x + SCALE_MARGIN, SCALE_MARGIN, 1,
-                       SCALE_SIZE.height() / 3);
+
+    if (m_histogram_max > 0) {
+      painter.setPen(Qt::transparent);
+      const auto int_max = static_cast<int>(m_max);
+      const auto int_min = static_cast<int>(m_min);
+      const auto bar_width =
+          static_cast<double>(SCALE_WIDTH) / (int_max - int_min + 1);
+      std::for_each(
+          m_histogram.begin(), m_histogram.end(), [&](const auto values) {
+            const auto bin = values.first;
+            const auto count = values.second;
+            const auto height = SCALE_HISTOGRAM_HEIGHT *
+                                static_cast<double>(count) / m_histogram_max;
+            const auto x = SCALE_MARGIN + bar_width * (bin - int_min);
+            auto bin_rect =
+                QRectF(x, SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT - height,
+                       bar_width, height);
+            painter.setBrush(get_color(bin));
+            painter.drawRect(bin_rect);
+          });
+      painter.setBrush(Qt::transparent);
+      painter.setPen(QPen(Qt::white, 1));
+      painter.drawRect(SCALE_MARGIN, SCALE_MARGIN, SCALE_WIDTH,
+                       SCALE_HISTOGRAM_HEIGHT);
+    }
+
+    painter.setPen(Qt::transparent);
+
+    for (int x = 0; x < SCALE_WIDTH; x++) {
+      painter.setBrush(color_value(static_cast<double>(x) / SCALE_WIDTH));
+      painter.drawRect(x + SCALE_MARGIN,
+                       2 * SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT, 1,
+                       SCALE_BAR_HEIGHT / 3);
     }
     painter.setBrush(Qt::transparent);
     painter.setPen(QPen(Qt::white, 1));
-    painter.drawRect(SCALE_MARGIN, SCALE_MARGIN, SCALE_SIZE.width(),
-                     SCALE_SIZE.height() / 3);
-    painter.drawText(SCALE_MARGIN, SCALE_MARGIN + SCALE_SIZE.height() / 3,
-                     SCALE_SIZE.width() / 2, (SCALE_SIZE.height() / 3) * 2,
-                     Qt::AlignTop,
-                     QString::number(m_min, 'f', 1).append(" dBm"));
-    painter.drawText(SCALE_MARGIN + SCALE_SIZE.width() / 2,
-                     SCALE_MARGIN + SCALE_SIZE.height() / 3,
-                     SCALE_SIZE.width() / 2, (SCALE_SIZE.height() / 3) * 2,
-                     Qt::AlignTop | Qt::AlignRight,
-                     QString::number(m_max, 'f', 1).append(" dBm"));
+    painter.drawRect(SCALE_MARGIN, 2 * SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT,
+                     SCALE_WIDTH, SCALE_BAR_HEIGHT / 3);
+    painter.drawText(
+        SCALE_MARGIN,
+        2 * SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT + SCALE_BAR_HEIGHT / 3,
+        SCALE_WIDTH / 2, (SCALE_BAR_HEIGHT / 3) * 2, Qt::AlignTop,
+        QString::number(m_min, 'f', 1).append(" dBm"));
+    painter.drawText(
+        SCALE_MARGIN + SCALE_WIDTH / 2,
+        2 * SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT + SCALE_BAR_HEIGHT / 3,
+        SCALE_WIDTH / 2, (SCALE_BAR_HEIGHT / 3) * 2,
+        Qt::AlignTop | Qt::AlignRight,
+        QString::number(m_max, 'f', 1).append(" dBm"));
+
     painter.end();
   }
   update();
@@ -172,8 +214,8 @@ QRectF MeasurementItem::boundingRect() const {
   if (!m_robot_map.is_valid()) {
     return rect;
   }
-  if (rect.width() < SCALE_SIZE.width() + SCALE_MARGIN) {
-    rect += QMarginsF(0, 0, SCALE_SIZE.width() + SCALE_MARGIN, 0);
+  if (rect.width() < SCALE_WIDTH + SCALE_MARGIN) {
+    rect += QMarginsF(0, 0, SCALE_WIDTH + SCALE_MARGIN, 0);
   }
   return rect + QMarginsF(0, 0, 0, SCALE_SIZE.height() + 4 * SCALE_MARGIN);
 }

@@ -20,6 +20,7 @@
 
 #include <QFont>
 #include <QPicture>
+#include <unordered_map>
 
 #include "../../state/measurements.h"
 #include "../../state/robot_map.h"
@@ -59,6 +60,8 @@ class MeasurementItem : public MapBasedItem {
   [[nodiscard]] QColor color_value(double normalized_value) const;
 
   double m_min{0.0}, m_max{0.0};
+  std::unordered_map<int, int> m_histogram;
+  int m_histogram_max;
 
   const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
 
