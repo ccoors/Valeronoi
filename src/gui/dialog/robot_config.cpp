@@ -61,6 +61,8 @@ RobotConfigDialog::~RobotConfigDialog() { delete ui; }
 
 void RobotConfigDialog::slot_save() {
   QSettings settings;
+  ensure_http();
+
   settings.setValue("robot/url", ui->valetudoAddress->text());
   settings.setValue("robot/auth/enabled", ui->groupBoxAuth->isChecked());
   settings.setValue("robot/auth/username", ui->authUsername->text());
@@ -79,6 +81,8 @@ void RobotConfigDialog::load_settings() {
       settings.value("robot/auth/username", "").toString());
   ui->authPassword->setText(
       settings.value("robot/auth/password", "").toString());
+
+  ensure_http();
 }
 
 void RobotConfigDialog::slot_end_test() {
@@ -88,6 +92,7 @@ void RobotConfigDialog::slot_end_test() {
 }
 
 void RobotConfigDialog::slot_test_connection() {
+  ensure_http();
   const QString url_input = ui->valetudoAddress->text().trimmed();
   if (url_input.isEmpty()) {
     QMessageBox::warning(this, tr("Error"),
@@ -181,5 +186,12 @@ void RobotConfigDialog::slot_robot_connection_failed() {
   m_progress_dialog.close();
   QMessageBox::warning(this, tr("Error"),
                        tr("Test failed:\n%1").arg(m_robot.get_error()));
+}
+
+void RobotConfigDialog::ensure_http() {
+  const auto current_text = ui->valetudoAddress->text().trimmed();
+  if (!current_text.startsWith("http://")) {
+    ui->valetudoAddress->setText(QString("http://").append(current_text));
+  }
 }
 }  // namespace Valeronoi::gui::dialog

@@ -61,6 +61,8 @@ class RobotConfigDialog : public QDialog {
   void slot_robot_connection_failed();
 
  private:
+  void ensure_http();
+
   Ui::RobotConfigDialog *ui;
   QProgressDialog m_progress_dialog;
   bool m_test_cancelled{false};
