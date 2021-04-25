@@ -49,8 +49,6 @@ void Robot::set_connection_configuration(const ConnectionConfiguration &conf) {
 
 QString Robot::get_error() const { return m_api.get_error(); }
 
-QString Robot::get_warning() const { return m_api.get_warning(); }
-
 bool Robot::is_connected() const { return m_api.is_connected(); }
 
 bool Robot::is_connecting() const { return m_api.is_connecting(); }

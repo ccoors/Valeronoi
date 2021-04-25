@@ -50,8 +50,6 @@ class ValetudoAPI : public QObject {
 
   [[nodiscard]] QString get_error() const;
 
-  [[nodiscard]] QString get_warning() const;
-
   [[nodiscard]] bool is_connected() const;
 
   [[nodiscard]] bool is_connecting() const;
@@ -95,7 +93,7 @@ class ValetudoAPI : public QObject {
   RobotInformation m_robot_information;
   ConnectionConfiguration m_connection_configuration;
 
-  QString m_error_message, m_warning_message;
+  QString m_error_message;
 
   QNetworkAccessManager m_qnam;
   QList<QJsonDocument> m_connection_responses;

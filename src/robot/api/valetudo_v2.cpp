@@ -31,7 +31,6 @@ const QUrl ROBOT_MAP_SSE = QUrl("/api/v2/robot/state/map/sse");
 
 const QList<QUrl> ROBOT_INIT_URLS = {VALETUDO_VERSION, ROBOT_INFO, ROBOT_STATE,
                                      ROBOT_CAPABILITIES_INFO};
-const QStringList SUPPORTED_VALETUDO_VERSIONS = {"2021.02.0", "2021.03.0"};
 
 ValetudoAPI::ValetudoAPI() {
   m_map_connection.set_url(ROBOT_MAP_SSE);
@@ -53,8 +52,6 @@ const RobotInformation *ValetudoAPI::get_information() const {
 
 QString ValetudoAPI::get_error() const { return m_error_message; }
 
-QString ValetudoAPI::get_warning() const { return m_warning_message; }
-
 bool ValetudoAPI::is_connected() const { return m_connected; }
 
 bool ValetudoAPI::is_connecting() const { return m_connecting; }
@@ -67,7 +64,6 @@ void ValetudoAPI::slot_connect() {
   m_connecting_step = 0;
   m_connection_responses.clear();
   m_error_message = "";
-  m_warning_message = "";
   emit signal_connecting();
   next_connection_step();
 }
@@ -92,11 +88,6 @@ void ValetudoAPI::next_connection_step() {
     const auto valetudo_version =
         m_connection_responses[0].object()["release"].toString();
     m_robot_information.m_valetudo_version = valetudo_version;
-    if (!SUPPORTED_VALETUDO_VERSIONS.contains(
-            m_robot_information.m_valetudo_version)) {
-      m_warning_message = QString("Unknown Valetudo Version: %1")
-                              .arg(m_robot_information.m_valetudo_version);
-    }
 
     const auto robot_info = m_connection_responses[1].object();
     m_robot_information.m_manufacturer = robot_info["manufacturer"].toString();

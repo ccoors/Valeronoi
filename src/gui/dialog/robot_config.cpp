@@ -170,11 +170,6 @@ void RobotConfigDialog::slot_robot_connected() {
           .arg(has_wifi_config_description)
           .arg(has_map_save_description);
 
-  QString warning = m_robot.get_warning();
-  if (!warning.isEmpty()) {
-    test_result.append(tr("\n\nWarning: %1").arg(warning));
-  }
-
   if (has_wifi_config) {
     QMessageBox::information(this, tr("Test successful"), test_result);
   } else {

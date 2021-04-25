@@ -43,8 +43,6 @@ class Robot : public QObject {
 
   [[nodiscard]] QString get_error() const;
 
-  [[nodiscard]] QString get_warning() const;
-
   [[nodiscard]] bool is_connected() const;
 
   [[nodiscard]] bool is_connecting() const;
