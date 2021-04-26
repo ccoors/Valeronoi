@@ -110,6 +110,7 @@ set(SOURCE_FILES
     src/valeronoi.qrc
     src/valeronoi.cpp
     src/util/segment_generator.cpp
+    src/util/log_helper.cpp
     src/robot/robot.cpp
     src/robot/connection_configuration.cpp
     src/robot/robot_information.cpp
@@ -128,6 +129,8 @@ set(SOURCE_FILES
     src/gui/dialog/settings.cpp
     src/gui/dialog/export.ui
     src/gui/dialog/export.cpp
+    src/gui/dialog/log.ui
+    src/gui/dialog/log.cpp
     src/gui/widget/display_widget.cpp
     src/gui/graphics_item/map_based_item.cpp
     src/gui/graphics_item/map_item.cpp

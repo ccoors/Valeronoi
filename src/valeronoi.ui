@@ -650,6 +650,7 @@
     </property>
     <addaction name="actionCheckForUpdates"/>
     <addaction name="separator"/>
+    <addaction name="actionLog"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menu_Robot">
@@ -819,6 +820,14 @@
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionLog">
+   <property name="text">
+    <string>Log</string>
+   </property>
+   <property name="statusTip">
+    <string>View application log</string>
    </property>
   </action>
  </widget>

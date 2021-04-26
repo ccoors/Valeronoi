@@ -28,6 +28,7 @@
 
 #include "gui/dialog/about.h"
 #include "gui/dialog/export.h"
+#include "gui/dialog/log.h"
 #include "gui/dialog/robot_config.h"
 #include "gui/dialog/settings.h"
 #include "gui/dialog/update.h"
@@ -37,6 +38,7 @@
 #include "state/measurements.h"
 #include "state/robot_map.h"
 #include "util/colormap.h"
+#include "util/log_helper.h"
 
 namespace Valeronoi {
 constexpr const char *VALERONOI_FILE_EXTENSION = "vwm";  // Valeronoi WiFi Map
@@ -105,6 +107,7 @@ class ValeronoiWindow : public QMainWindow {
   Valeronoi::gui::dialog::SettingsDialog m_settings_dialog;
   Valeronoi::gui::dialog::AboutDialog m_about_dialog;
   Valeronoi::gui::dialog::UpdateDialog m_update_dialog;
+  Valeronoi::gui::dialog::LogDialog m_log_dialog;
 
   bool m_modified;
   QString m_current_file;

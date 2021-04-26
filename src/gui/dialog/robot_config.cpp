@@ -44,7 +44,7 @@ RobotConfigDialog::RobotConfigDialog(QWidget *parent)
 
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connecting_step, this,
           [=](float value) {
-            qDebug() << "Received connection step" << value;
+            qDebug().nospace() << "Received connection step " << value;
             if (!m_test_cancelled) {
               m_progress_dialog.setValue(10 + static_cast<int>(80 * value));
             }

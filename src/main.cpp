@@ -22,9 +22,12 @@
 
 #include "config.h"
 #include "state/state.h"
+#include "util/log_helper.h"
 #include "valeronoi.h"
 
 int main(int argc, char **argv) {
+  qInstallMessageHandler(Valeronoi::util::log_handler);
+
   QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("ccoors");
   QCoreApplication::setOrganizationDomain("ccoors.de");

@@ -77,7 +77,7 @@ void Robot::slot_get_wifi() {
       QJsonParseError error;
       auto json = QJsonDocument::fromJson(resp_data, &error);
       if (json.isNull()) {
-        qDebug() << "Invalid JSON:" << error.errorString();
+        qDebug().nospace() << "Invalid JSON: " << error.errorString();
       } else {
         if (json.object()["__class"].toString() ==
             "ValetudoWifiConfiguration") {

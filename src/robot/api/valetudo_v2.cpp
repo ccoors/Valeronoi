@@ -145,6 +145,7 @@ void ValetudoAPI::next_connection_step() {
 QNetworkReply *ValetudoAPI::request(const QString &verb, const QUrl &url,
                                     bool disconnect_on_failure, bool gc,
                                     const QByteArray *data) {
+  qDebug().nospace() << "Robot request: " << verb << " to " << url;
   if (!m_connected) {
     return nullptr;
   }

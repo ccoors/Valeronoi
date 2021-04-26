@@ -131,7 +131,8 @@ void RobotMap::generate_map() {
     if (layer_type == "floor" || layer_type == "wall") {
       const auto &pixels = layer_obj["pixels"].toArray();
       if ((pixels.size() % 2) != 0 || pixels.size() < 2) {
-        qDebug() << "Invalid layer, has" << pixels.size() << "points";
+        qDebug().nospace() << "Invalid layer, has " << pixels.size()
+                           << " points";
         continue;
       }
       floor_pixels[layer_type].reserve(pixels.size() / 2);
@@ -154,8 +155,8 @@ void RobotMap::generate_map() {
     const auto entity_metadata = entity_obj["metaData"].toObject();
     const auto &points = entity_obj["points"].toArray();
     if (entity_class == "PointMapEntity" && points.size() != 2) {
-      qDebug() << "Found PointMapEntity with not 2 points but" << points.size()
-               << ", ignoring";
+      qDebug().nospace() << "Found PointMapEntity with not 2 points but "
+                         << points.size() << ", ignoring";
       continue;
     }
     if (entity_type.endsWith("_position") && entity_class != "PointMapEntity") {

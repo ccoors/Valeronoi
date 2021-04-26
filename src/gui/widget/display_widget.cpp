@@ -87,6 +87,7 @@ DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
   connect(&m_segment_generator,
           &Valeronoi::util::SegmentGenerator::generated_segments, this,
           [=](const Valeronoi::state::DataSegments &segments) {
+            qDebug() << "Calculated new Voronoi segments";
             m_measurement_item->set_data_segments(segments);
           });
 
@@ -184,6 +185,7 @@ void DisplayWidget::slot_map_updated() {
 
 void DisplayWidget::slot_measurements_updated() {
   const auto &measurements = m_measurements.get_measurements();
+  qDebug() << "Requesting generation of Voronoi segments";
   m_segment_generator.generate(measurements, m_display_mode, m_simplify);
 }
 

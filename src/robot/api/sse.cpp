@@ -38,6 +38,7 @@ void SSEConnection::slot_connect() {
   if (m_connected) {
     return;
   }
+  qDebug() << "Starting SSE request";
   m_connected = true;
   slot_make_request();
 }
@@ -50,7 +51,7 @@ void SSEConnection::slot_ready_read() {
   // m_reply->readAll returns chunked data, so we put it back together and
   // parse it according to https://www.w3.org/TR/eventsource/
   const auto buffer = m_reply->readAll();
-  qDebug() << "Received SSE data: size" << buffer.size();
+  qDebug().nospace() << "Received SSE segment: size " << buffer.size();
   QStringList lines = QString(buffer).split("\n");
 
   for (const QString &raw_line : lines) {
@@ -83,6 +84,7 @@ void SSEConnection::slot_disconnect() {
   if (!m_connected) {
     return;
   }
+  qDebug() << "SSE connection closed";
   m_connected = false;
   if (m_reply) {
     m_reply->abort();
@@ -91,6 +93,7 @@ void SSEConnection::slot_disconnect() {
 }
 
 void SSEConnection::slot_stream_finished() {
+  qDebug() << "SSE connection finished";
   m_reply->deleteLater();
   m_reply = nullptr;
   if (m_connected) {

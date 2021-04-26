@@ -39,12 +39,19 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
       m_settings_dialog{this},
       m_about_dialog{this},
       m_update_dialog{this},
+      m_log_dialog{this},
       m_modified{false},
       m_current_file{""} {
+  Valeronoi::util::LogHelper::instance().set_log_dialog(&m_log_dialog);
+  qInfo().nospace() << "Starting Valeronoi " << VALERONOI_VERSION << " ("
+                    << VALERONOI_GIT_COMMIT << ")";
+
+  qDebug() << "Reading application settings";
   QSettings settings;
   const auto start_count = settings.value("app/startCount", 0).toInt();
   settings.setValue("app/startCount", start_count + 1);
 
+  qDebug() << "Setting up UI";
   ui->setupUi(this);
   auto verticalLayout = new QVBoxLayout(ui->displayFrame);
   m_display_widget = new Valeronoi::gui::widget::DisplayWidget(
@@ -58,6 +65,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
 
   m_wifi_measurements.set_map(m_robot_map);
 
+  qDebug() << "Connecting signals/slots";
   connect_actions();
   connect_robot_signals();
 
@@ -260,6 +268,7 @@ void ValeronoiWindow::set_open_save_dir(const QString &dir) {
 }
 
 void ValeronoiWindow::load_colormaps() {
+  qDebug() << "Loading colormaps";
   QSettings settings;
   QString selectedMap = settings.value("display/colorMap", "").toString();
   QFile loadFile{":/res/colormaps.json"};
@@ -534,6 +543,8 @@ void ValeronoiWindow::connect_actions() {
           [=]() { QCoreApplication::quit(); });
   connect(ui->actionCheckForUpdates, &QAction::triggered, this,
           [=]() { m_update_dialog.check_update(false, this); });
+  connect(ui->actionLog, &QAction::triggered, this,
+          [=]() { m_log_dialog.show(); });
   connect(ui->actionAbout, &QAction::triggered, this,
           [=]() { m_about_dialog.show(); });
   connect(ui->actionRobotManager, &QAction::triggered, this, [=]() {
