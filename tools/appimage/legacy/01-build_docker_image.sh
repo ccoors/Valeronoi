@@ -3,4 +3,4 @@
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-docker build -t valeronoi-appimage-legacy .
+docker build --pull -t valeronoi-appimage-legacy .
