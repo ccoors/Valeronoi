@@ -568,7 +568,9 @@ void ValeronoiWindow::connect_robot_signals() {
     ui->buttonHome->setEnabled(true);
     ui->buttonPause->setEnabled(true);
     ui->buttonStop->setEnabled(true);
-    ui->buttonLocate->setEnabled(true);
+
+    ui->buttonLocate->setEnabled(
+        m_robot.get_information()->m_capabilities.contains("LocateCapability"));
   });
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_ended, this,
           [=]() {

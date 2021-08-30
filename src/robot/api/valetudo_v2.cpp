@@ -20,6 +20,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QMessageBox>
 
 namespace Valeronoi::robot::api::v2 {
 
@@ -215,8 +216,6 @@ void ValetudoAPI::send_command(Valeronoi::robot::BASIC_COMMANDS command) {
               false, true, &data);
     } break;
     case BASIC_COMMANDS::LOCATE: {
-      // TODO: this is not a BasicControlCapability, but we assume it's present
-      // on every robot
       auto data = gen_document("locate").toJson();
       request("PUT", QUrl("/api/v2/robot/capabilities/LocateCapability"), false,
               true, &data);
@@ -226,6 +225,14 @@ void ValetudoAPI::send_command(Valeronoi::robot::BASIC_COMMANDS command) {
 
 void ValetudoAPI::relocate(int x, int y) {
   if (!m_connected) {
+    QMessageBox::information(nullptr, "Valeronoi",
+                             tr("Not connected to a robot."));
+    return;
+  }
+  if (!m_robot_information.m_capabilities.contains("GoToLocationCapability")) {
+    QMessageBox::information(
+        nullptr, "Valeronoi",
+        tr("This robot does not support the GoToLocationCapability."));
     return;
   }
   auto document = QJsonDocument();
