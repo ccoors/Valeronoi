@@ -1,6 +1,6 @@
 # Maintainer: Christian Friedrich Coors <me@ccoors.de>
 pkgname=valeronoi-git
-pkgver=r27.18a5aae
+pkgver=r38.b239f2e
 pkgrel=1
 pkgdesc="A companion app for Valetudo for creating WiFi maps"
 arch=('any')
