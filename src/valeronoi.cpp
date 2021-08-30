@@ -591,7 +591,7 @@ void ValeronoiWindow::connect_robot_signals() {
   connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_updated, this,
           [=](double value) {
             ui->labelLatestSignal->setText(
-                tr("%1 dB").arg(static_cast<int>(value)));
+                tr("%1 dBm").arg(static_cast<int>(value)));
             if (m_recording) {
               m_wifi_measurements.slot_add_measurement(value);
             }
