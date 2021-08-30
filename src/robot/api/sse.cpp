@@ -30,6 +30,8 @@ void SSEConnection::set_connection_configuration(
   m_connection_configuration = conf;
 }
 
+void SSEConnection::set_initial_url(const QUrl &url) { m_initial_url = url; }
+
 void SSEConnection::set_url(const QUrl &url) { m_url = url; }
 
 QString SSEConnection::current_data() const { return m_current_data; }
@@ -38,6 +40,36 @@ void SSEConnection::slot_connect() {
   if (m_connected) {
     return;
   }
+
+  if (!m_initial_url.isEmpty()) {
+    qDebug() << "Making initial request";
+    m_initial_current_data = "";
+    m_current_data = "";
+    QNetworkRequest request = prepare_request(m_initial_url);
+
+    auto reply = m_qnam.get(request);
+    connect(reply, &QNetworkReply::readyRead, this, [=]() {
+      qDebug() << "Received initial map data";
+      auto buffer = reply->readAll();
+      m_initial_current_data.append(buffer);
+    });
+    connect(reply, &QNetworkReply::errorOccurred, this,
+            [=](QNetworkReply::NetworkError error) {
+              if (error != QNetworkReply::NetworkError::NoError) {
+                qDebug().nospace()
+                    << "Initial request error: " << reply->errorString();
+              }
+            });
+    connect(reply, &QNetworkReply::finished, this, [=]() {
+      if (!m_initial_current_data.isEmpty() && m_current_data.isEmpty()) {
+        m_current_data = m_initial_current_data;
+        emit signal_data_updated();
+      }
+
+      reply->deleteLater();
+    });
+  }
+
   qDebug() << "Starting SSE request";
   m_connected = true;
   slot_make_request();

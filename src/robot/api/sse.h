@@ -45,6 +45,8 @@ class SSEConnection : public QObject {
 
   void set_connection_configuration(const ConnectionConfiguration &conf);
 
+  void set_initial_url(const QUrl &url);
+
   void set_url(const QUrl &url);
 
   void set_event(const QString &event);
@@ -70,11 +72,12 @@ class SSEConnection : public QObject {
   QNetworkRequest prepare_request(const QUrl &url) const;
 
   bool m_connected{false};
-  QString m_event, m_data_buffer, m_current_data, m_event_type;
+  QString m_event, m_data_buffer, m_initial_current_data, m_current_data,
+      m_event_type;
   ParserState m_parser_state{ParserState::IDLE};
   QTimer m_reconnect_timer;
   ConnectionConfiguration m_connection_configuration;
-  QUrl m_url;
+  QUrl m_initial_url, m_url;
   QNetworkReply *m_reply{nullptr};
   QNetworkAccessManager m_qnam;
 };
