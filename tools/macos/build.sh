@@ -8,7 +8,9 @@ set -euxo pipefail
 brew analytics off
 
 ## Install Valeronoi dependencies
-brew install cgal qt cmake create-dmg
+brew install cgal qt@5 cmake create-dmg
+## Add Qt to PATH (because it's not Qt 6)
+export PATH="/usr/local/opt/qt@5/bin:$PATH"
 
 # Build
 git clone https://github.com/ccoors/Valeronoi.git
