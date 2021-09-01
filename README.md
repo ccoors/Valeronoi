@@ -9,7 +9,7 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 Binary distributions are available for Linux, macOS and Windows (x86_64). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases).
 
 - Linux: "current" and "legacy" [AppImages](https://appimage.org/). Try "current" first, if that does not work, use "legacy". The "current" AppImage is built on Ubuntu 20.04 LTS (Focal) and Qt 6, so it probably won't run on anything older than that (specifically glibc 2.29). The "legacy" AppImage is built on Ubuntu 18.04 LTS (Bionic) and Qt 5.
-- macOS: Built with Qt 6 on macOS 10.15 Catalina, works on Catalina or later on Intel Macs. It also works with Rosetta 2 on M1-based Macs.
+- macOS: Built with Qt 5 on macOS 10.15 Catalina, works on Catalina or later on Intel Macs. It also works with Rosetta 2 on M1-based Macs.
 - Windows: Cross-compiled on Linux with mingw-w64 and Qt 6. Available as an installer and a portable zip.
 
 ## Basic Usage
