@@ -18,6 +18,7 @@
 #include "entity_item.h"
 
 #include <QPen>
+#include <algorithm>
 #include <cmath>
 
 namespace Valeronoi::gui::graphics_item {
@@ -33,35 +34,37 @@ void EntityItem::paint(QPainter *painter,
   if (m_robot_map.is_valid()) {
     const auto &map = m_robot_map.get_map();
     // Draw path(s) first
-    for (const auto &entity : map.entities) {
-      if ((entity.first == "path" || entity.second.cls == "PathMapEntity") &&
-          entity.second.points.size() > 1) {
-        QPen pen;
-        QColor path_color = Qt::white;
-        path_color.setAlphaF(0.5);
-        pen.setColor(path_color);
-        pen.setWidth(2);
-        painter->setPen(pen);
-        painter->setBrush(Qt::transparent);
-        QPainterPath path;
-        path.moveTo(entity.second.points[0].x, entity.second.points[0].y);
-        for (const auto &p : entity.second.points) {
-          path.lineTo(p.x, p.y);
-        }
-        painter->drawPath(path);
-      }
-    }
+    std::for_each(
+        map.entities.begin(), map.entities.end(), [=](const auto &entity) {
+          if ((entity.type == "path" || entity.cls == "PathMapEntity") &&
+              entity.points.size() > 1) {
+            QPen pen;
+            QColor path_color = Qt::white;
+            path_color.setAlphaF(0.5);
+            pen.setColor(path_color);
+            pen.setWidth(2);
+            painter->setPen(pen);
+            painter->setBrush(Qt::transparent);
+            QPainterPath path;
+            path.moveTo(entity.points[0].x, entity.points[0].y);
+            for (const auto &p : entity.points) {
+              path.lineTo(p.x, p.y);
+            }
+            painter->drawPath(path);
+          }
+        });
 
-    for (const auto &entity : map.entities) {
-      if (entity.second.points.empty()) {
-        continue;
-      }
-      if (entity.first == "charger_location") {
-        paint_charger(painter, entity.second);
-      } else if (entity.first == "robot_position") {
-        paint_robot(painter, entity.second);
-      }
-    }
+    std::for_each(map.entities.begin(), map.entities.end(),
+                  [=](const auto &entity) {
+                    if (entity.points.empty()) {
+                      return;
+                    }
+                    if (entity.type == "charger_location") {
+                      paint_charger(painter, entity);
+                    } else if (entity.type == "robot_position") {
+                      paint_robot(painter, entity);
+                    }
+                  });
   }
 }
 

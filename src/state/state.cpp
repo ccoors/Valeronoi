@@ -17,14 +17,18 @@
  */
 #include "state.h"
 
+#include <algorithm>
+
 namespace Valeronoi::state {
 
 std::optional<Point> Map::get_robot_position() const {
-  auto res = entities.find("robot_position");
+  auto res = std::find_if(entities.begin(), entities.end(), [=](const auto &e) {
+    return e.type == "robot_position";
+  });
   if (res == entities.end()) {
     return std::nullopt;
   }
-  return std::optional(res->second.points[0]);
+  return {res->points[0]};
 }
 
 }  // namespace Valeronoi::state

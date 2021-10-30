@@ -47,7 +47,7 @@ inline bool operator<(const Block &lhs, const Block &rhs) {
 }
 
 struct Entity {
-  std::string cls;
+  std::string type, cls;
   double angle;
   std::vector<Point> points;
 };
@@ -61,7 +61,7 @@ struct Map {
   int size_x, size_y;
   int crop_x, crop_y;
   std::unordered_map<std::string, Layer> layers;
-  std::unordered_map<std::string, Entity> entities;
+  std::vector<Entity> entities;
 
   std::optional<Point> get_robot_position() const;
 };

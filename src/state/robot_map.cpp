@@ -165,11 +165,14 @@ void RobotMap::generate_map() {
       continue;
     }
     const auto entity_type_str = entity_type.toStdString();
-    m_map.entities[entity_type_str].cls = entity_class.toStdString();
-    map_pixels(points, m_map.entities[entity_type_str].points, 1, &min_x,
-               &max_x, &min_y, &max_y);
-    m_map.entities[entity_type_str].angle =
+    Entity map_entity;
+    map_entity.type = entity_type_str;
+    map_entity.cls = entity_class.toStdString();
+    map_pixels(points, map_entity.points, 1, &min_x, &max_x, &min_y, &max_y);
+    map_entity.angle =
         (entity_metadata["angle"].toDouble() - 90.0) * M_PI / 180.0;
+
+    m_map.entities.push_back(map_entity);
   }
 
   for (auto &layer : m_map.layers) {
@@ -177,7 +180,7 @@ void RobotMap::generate_map() {
   }
 
   for (auto &layer : m_map.entities) {
-    move_pixels(layer.second.points, -min_x, -min_y);
+    move_pixels(layer.points, -min_x, -min_y);
   }
   m_map.size_x = max_x - min_x;
   m_map.size_y = max_y - min_y;
