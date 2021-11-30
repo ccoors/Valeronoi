@@ -54,6 +54,7 @@ class RobotMap : public QObject {
   void generate_map();
 
   QJsonObject m_map_json{};
+  int m_map_version{0};
   bool m_valid{false};
   QString m_error;
   Map m_map;

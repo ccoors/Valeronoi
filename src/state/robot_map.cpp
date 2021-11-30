@@ -58,7 +58,9 @@ void RobotMap::update_map_json(const QJsonObject &json_object) {
     emit signal_map_updated();
     return;
   }
-  if (json_object["metaData"].toObject()["version"].toInt() != 1) {
+
+  m_map_version = json_object["metaData"].toObject()["version"].toInt();
+  if (m_map_version < 1 || m_map_version > 2) {
     m_error = tr("Unknown map version");
     emit signal_map_updated();
     return;
@@ -129,17 +131,38 @@ void RobotMap::generate_map() {
       layer_type = "floor";
     }
     if (layer_type == "floor" || layer_type == "wall") {
-      const auto &pixels = layer_obj["pixels"].toArray();
-      if ((pixels.size() % 2) != 0 || pixels.size() < 2) {
-        qDebug().nospace() << "Invalid layer, has " << pixels.size()
-                           << " points";
-        continue;
-      }
-      floor_pixels[layer_type].reserve(pixels.size() / 2);
-      for (qsizetype i = 0; i + 1 < pixels.size(); i += 2) {
-        int block_x = pixels[i].toInt();
-        int block_y = pixels[i + 1].toInt();
-        floor_pixels[layer_type].insert({block_x, block_y});
+      if (m_map_version == 1) {
+        const auto &pixels = layer_obj["pixels"].toArray();
+        if ((pixels.size() % 2) != 0 || pixels.size() < 2) {
+          qDebug().nospace()
+              << "Invalid layer, has " << pixels.size() << " points";
+          continue;
+        }
+
+        floor_pixels[layer_type].reserve(pixels.size() / 2);
+        for (qsizetype i = 0; i + 1 < pixels.size(); i += 2) {
+          const int block_x = pixels[i].toInt();
+          const int block_y = pixels[i + 1].toInt();
+          floor_pixels[layer_type].insert({block_x, block_y});
+        }
+      } else if (m_map_version == 2) {
+        const auto &compressed_pixels = layer_obj["compressedPixels"].toArray();
+        if ((compressed_pixels.size() % 3) != 0 ||
+            compressed_pixels.size() < 3) {
+          qDebug().nospace()
+              << "Invalid layer, has " << compressed_pixels.size() << " points";
+          continue;
+        }
+
+        for (qsizetype i = 0; i + 1 < compressed_pixels.size(); i += 3) {
+          const int block_x = compressed_pixels[i].toInt();
+          const int block_y = compressed_pixels[i + 1].toInt();
+          const int block_count = compressed_pixels[i + 2].toInt();
+          for (qsizetype j = 0; j < block_count; j++) {
+            const auto pixel_x = static_cast<int>(block_x + j);
+            floor_pixels[layer_type].insert({pixel_x, block_y});
+          }
+        }
       }
     }
   }
