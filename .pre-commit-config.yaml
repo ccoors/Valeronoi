@@ -5,11 +5,11 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/ambv/black
-    rev: 21.11b1
+    rev: 21.12b0
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: check-merge-conflict
       - id: check-yaml
@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
       - id: fix-byte-order-marker
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.5.0
+    rev: v2.5.1
     hooks:
       - id: prettier
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
