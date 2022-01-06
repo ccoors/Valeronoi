@@ -14,7 +14,7 @@ Binary distributions are available for Linux, macOS and Windows (x86_64). They c
 
 ## Basic Usage
 
-1. Make sure you have a supported robot running a recent Valetudo version (API v2, Valetudo 2021.03.0 recommended). Having persistent maps is highly recommended.
+1. Make sure you have a supported robot running a recent Valetudo version (API v2). Having persistent maps is highly recommended.
 2. Set up the robot connection in Valeronoi (Robot -> Setup)
 3. Connect Valeronoi to the robot using the "Connect" button
 4. Verify that the complete, correct map is displayed (!) See below for an explanation.
@@ -25,9 +25,7 @@ Binary distributions are available for Linux, macOS and Windows (x86_64). They c
 
 ### Persistent maps
 
-If the robot decides to generate a new map while recording (which it _will_ do when it encounters enough new territory), all coordinates of the map can change and they will not match the recordings up to that point. **This will mess up your recording.** There is no way to prevent this from happening. If your robot does not support persistent maps, make sure to only record when doing partial cleanups, as a new map will always be generated on a full cleanup.
-
-If you do not have a map, you'll have to do a full cleanup before starting the recording and doing a second (partial) cleanup.
+If you have a robot that does not support persistent maps (Roborock V1) or don't have that feature enabled, make sure to only record when doing partial cleanups, as a new map will always be generated on a full cleanup. Major map changes during recording can change the internal map coordinates and mess up the recording.
 
 ## Support
 

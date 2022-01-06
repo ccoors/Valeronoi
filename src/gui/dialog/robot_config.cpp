@@ -129,14 +129,8 @@ void RobotConfigDialog::slot_robot_connected() {
 
   bool has_wifi_config =
       robot_information->m_capabilities.contains("WifiConfigurationCapability");
-  bool has_map_save_capability = robot_information->m_capabilities.contains(
-      "PersistentMapControlCapability");
-  bool map_saving_enabled =
-      robot_information
-          ->get_attribute("PersistentMapSettingStateAttribute")["value"]
-          .toString() == "enabled";
 
-  QString has_wifi_config_description, has_map_save_description;
+  QString has_wifi_config_description;
   if (has_wifi_config) {
     has_wifi_config_description =
         tr("✅ The robot has the WifiConfigurationCapability.");
@@ -145,30 +139,13 @@ void RobotConfigDialog::slot_robot_connected() {
         tr("❌ The robot does not have the WifiConfigurationCapability.");
   }
 
-  if (map_saving_enabled) {
-    has_map_save_description =
-        tr("✅ The robot has the PersistentMapSettingStateAttribute and it is "
-           "enabled.");
-  } else {
-    if (has_map_save_capability) {
-      has_map_save_description =
-          tr("❌ The robot has the PersistentMapControlCapability, but the "
-             "PersistentMapSettingStateAttribute is not enabled.");
-    } else {
-      has_map_save_description = tr(
-          "❌ The robot does not have the PersistentMapControlCapability! Make "
-          "sure to not do full cleans while recording.");
-    }
-  }
-
   m_robot.slot_disconnect();
 
   QString test_result =
-      tr("Connection successful. Detected:\n%1\nRunning Valetudo %2\n\n%3\n%4")
+      tr("Connection successful. Detected:\n%1\nRunning Valetudo %2\n\n%3")
           .arg(robot_description)
           .arg(robot_information->m_valetudo_version)
-          .arg(has_wifi_config_description)
-          .arg(has_map_save_description);
+          .arg(has_wifi_config_description);
 
   if (has_wifi_config) {
     QMessageBox::information(this, tr("Test successful"), test_result);
