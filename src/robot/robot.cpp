@@ -74,26 +74,29 @@ void Robot::slot_get_wifi() {
         m_api.request("GET", Valeronoi::robot::api::v2::ROBOT_WIFI_CAPABILITY);
     connect(reply, &QNetworkReply::finished, this, [=]() {
       auto resp_data = reply->readAll();
-      QJsonParseError error;
-      auto json = QJsonDocument::fromJson(resp_data, &error);
-      if (json.isNull()) {
-        qDebug().nospace() << "Invalid JSON: " << error.errorString();
-      } else {
-        if (json.object()["__class"].toString() ==
-            "ValetudoWifiConfiguration") {
-          const auto details_object = json.object()["details"].toObject();
-          const auto signal = details_object["signal"].toDouble();
-          if (details_object.contains("signal") && signal <= -1) {
-            emit signal_wifi_updated(signal);
-          } else {
-            qDebug()
-                << "Message did not contain a valid signal strength, ignoring";
-          }
-        } else {
-          qDebug() << "Received unexpected JSON object, ignoring";
-        }
-      }
       reply->deleteLater();
+      QJsonParseError error{};
+      const auto json = QJsonDocument::fromJson(resp_data, &error);
+      if (json.isNull()) {
+        qDebug() << "Invalid JSON:" << error.errorString();
+        return;
+      }
+
+      const auto response_class = json.object()["__class"].toString();
+      if (response_class == "ValetudoWifiStatus" ||
+          response_class == "ValetudoWifiConfiguration") {
+        const auto details_object = json.object()["details"].toObject();
+        const auto signal = details_object["signal"].toDouble();
+        if (details_object.contains("signal") && signal <= -1) {
+          emit signal_wifi_updated(signal);
+        } else {
+          qDebug()
+              << "Message did not contain a valid signal strength, ignoring";
+        }
+      } else {
+        qDebug().nospace() << "Received unexpected JSON object of class '"
+                           << response_class << "', ignoring";
+      }
     });
   }
 }
