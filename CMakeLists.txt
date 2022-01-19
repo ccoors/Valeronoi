@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(
     Valeronoi
-    VERSION 0.1.7
+    VERSION 0.1.8
     LANGUAGES CXX
 )
 
