@@ -1,0 +1,207 @@
+name: Continuous Integration
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - "created"
+
+jobs:
+  ci-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-10.15
+            qt: "6.2.3"
+            variant: "qt6"
+    #            Currently not needed
+    #          - os: macos-10.15
+    #            qt: "5.15.2"
+    #            variant: "legacy"
+    name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
+    runs-on: ${{ matrix.os }}
+    env:
+      HOMEBREW_NO_ANALYTICS: 1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew analytics off
+          brew install cgal cmake create-dmg openssl@1.1
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt }}
+          aqtversion: "==2.0.6"
+      - name: Build on macOS
+        env:
+          OS: ${{ matrix.os }}
+          QT_VERSION: ${{ matrix.qt }}
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1
+          make -j
+          ./valeronoi-tests
+          macdeployqt valeronoi.app
+          mkdir dist
+          mv valeronoi.app dist/Valeronoi.app
+          create-dmg --volname "Valeronoi Installer" --volicon "../assets/icon/valeronoi.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Valeronoi.app" 200 190 --hide-extension "Valeronoi.app" --app-drop-link 600 185 "Valeronoi-macOS-Intel-$VARIANT.dmg" "dist/"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: valeronoi-macos-${{ matrix.variant }}
+          path: build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg
+      - name: Upload release binary
+        if: ${{ github.event_name == 'release' }}
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg"]'
+  ci-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        sys: [mingw64] # mingw32, ucrt64 - Experimental
+    name: CI Windows/MSYS2
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+          install: >-
+            base-devel
+            git
+            make
+            zip
+          pacboy: >-
+            cmake:p
+            ninja:p
+            gcc:p
+            cc:p
+            qt6-tools:p
+            qt6-base:p
+            qt6-imageformats:p
+            qt6-svg:p
+            openssl:p
+            cgal:p
+            eigen3:p
+            intel-tbb:p
+            nsis:p
+          location: C:\msys2
+      - name: Build on Windows
+        shell: msys2 {0}
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+          ./valeronoi-tests.exe
+          mkdir dist
+          mv valeronoi.exe dist/valeronoi.exe
+          cp ../COPYING dist
+          cp ../assets/appinfo.rc dist
+          mkdir dist/icon
+          cp ../assets/icon/appicon.ico dist/icon
+          cd dist
+          python ../../tools/windows/copy_dlls.py
+          zip -r ../Valeronoi-Windows-portable-x86_64.zip .
+      - name: Upload portable archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: valeronoi-windows-portable-${{ matrix.sys }}
+          path: build/dist
+      - name: Upload release portable archive
+        if: ${{ github.event_name == 'release' }}
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["build/Valeronoi-Windows-portable-x86_64.zip"]'
+      - name: Build installer
+        shell: msys2 {0}
+        run: |
+          cd build/dist
+          cp ../../tools/windows/install.nsi .
+          makensis install.nsi
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: valeronoi-windows-installer-${{ matrix.sys }}
+          path: build/dist/Valeronoi-installer-x86_64.exe
+      - name: Upload release portable archive
+        if: ${{ github.event_name == 'release' }}
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["build/dist/Valeronoi-installer-x86_64.exe"]'
+  ci-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            qt: "6.2.3"
+            variant: "current"
+          - os: ubuntu-18.04
+            qt: "5.15.2"
+            variant: "legacy"
+    name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "GitHub Event: $EVENT"
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt }}
+          aqtversion: "==2.0.6"
+      - name: Build on Linux
+        env:
+          OS: ${{ matrix.os }}
+          QT_VERSION: ${{ matrix.qt }}
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          sudo apt-get install openssl libcgal-dev -y
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+          make -j install DESTDIR=AppDir
+          ./valeronoi-tests
+          mkdir tools
+          cd tools
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x *
+          cd ..
+          if [[ $QT_VERSION == 6* ]]; then
+            export PATH=$Qt6_DIR/bin:$PATH
+          else
+            export PATH=$Qt5_DIR/bin:$PATH
+          fi
+          tools/linuxdeploy-x86_64.AppImage --appdir AppDir -i ../assets/icon/icon-256.png -d AppDir/usr/share/applications/valeronoi.desktop --output appimage --plugin qt
+          mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-x86_64.AppImage"
+        shell: bash
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: valeronoi-linux-appimage-${{ matrix.variant }}
+          path: build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage
+      - name: Upload release AppImage
+        if: ${{ github.event_name == 'release' }}
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage"]'

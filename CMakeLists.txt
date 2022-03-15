@@ -16,6 +16,7 @@ execute_process(
 message(STATUS "Git commit is ${GIT_COMMIT}")
 
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 option(FORCE_QT5 "Force use of Qt 5 instead of Qt 6" OFF)
 if(FORCE_QT5)
@@ -43,8 +44,13 @@ message(STATUS "Using Qt ${QT_VERSION_MAJOR}")
 find_package(CGAL REQUIRED)
 
 set(VALERONOI_LINK_LIBRARIES
-    Threads::Threads Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Svg CGAL::CGAL
+    Threads::Threads
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::Svg
+    CGAL::CGAL
+    OpenSSL::SSL
 )
 
 if(NOT ${QT_VERSION_MAJOR} STREQUAL 5)
