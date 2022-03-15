@@ -9,7 +9,7 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 Binary distributions are available for Linux, macOS and Windows (x86_64). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases).
 
 - Linux: "current" and "legacy" [AppImages](https://appimage.org/). Try "current" first, if that does not work, use "legacy". The "current" AppImage is built on Ubuntu 20.04 LTS (Focal) and Qt 6, so it probably won't run on anything older than that (specifically glibc 2.29). The "legacy" AppImage is built on Ubuntu 18.04 LTS (Bionic) and Qt 5.
-- macOS: Built with Qt 5 on macOS 10.15 Catalina, works on Catalina or later on Intel Macs. It also works with Rosetta 2 on M1-based Macs.
+- macOS: Built with Qt 6 on macOS 10.15 Catalina, works on Catalina or later on Intel Macs. It also works with Rosetta 2 on M1-based Macs.
 - Windows: Cross-compiled on Linux with mingw-w64 and Qt 6. Available as an installer and a portable zip.
 
 ## Basic Usage
@@ -57,14 +57,11 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 ```
 
+Note that Qt 5.15 support is considered deprecated and only used to generate the "legacy" AppImages, as Qt 6 does not support Ubuntu 18.04.
+
 ### Arch Linux
 
 A `PKGBUILD` for the `valeronoi-git` package is provided in `tools/pkgbuild/valeronoi-git`. To build and install it run `makepkg -si`.
-
-### Building the binary distributions
-
-**You probably don't need this.**
-Generating binary distributions for projects using Qt is messy. That is why Valeronoi uses various Docker images known to work to build the Linux AppImage and the Windows Installer. You can find the required scripts and Dockerfiles in `tools/`.
 
 ## License
 
