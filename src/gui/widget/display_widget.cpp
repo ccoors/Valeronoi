@@ -54,10 +54,10 @@ DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
   m_background_color =
       settings.value("display/backgroundColor", QColor(20, 20, 20))
           .value<QColor>();
-  m_wall_color =
-      settings.value("display/wallColor", QColor(Qt::darkGray)).value<QColor>();
+  m_wall_color = settings.value("display/wallColor", QColor(180, 180, 180))
+                     .value<QColor>();
   m_floor_color =
-      settings.value("display/floorColor", QColor(0, 50, 100)).value<QColor>();
+      settings.value("display/floorColor", QColor(0, 77, 112)).value<QColor>();
   m_draw_floor = settings.value("display/drawFloor", true).toBool();
   m_draw_entities = settings.value("display/drawEntities", true).toBool();
   m_use_opengl = settings.value("display/useOpenGL", false).toBool();
