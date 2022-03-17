@@ -25,6 +25,7 @@ constexpr const int SCALE_HISTOGRAM_HEIGHT{70};
 constexpr const int SCALE_BAR_HEIGHT{30};
 constexpr const int SCALE_WIDTH{200};
 constexpr const int SCALE_MARGIN{5};
+constexpr const int PATH_DISTANCE{35};
 constexpr const QSize SCALE_SIZE{
     SCALE_WIDTH, SCALE_BAR_HEIGHT + SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT};
 
@@ -92,9 +93,8 @@ void MeasurementItem::set_color_map(
 
 QColor MeasurementItem::color_value(double normalized_value) const {
   auto color = m_color_map->get_color(normalized_value);
-  return QColor(static_cast<int>(255 * color[0]),
-                static_cast<int>(255 * color[1]),
-                static_cast<int>(255 * color[2]));
+  return {static_cast<int>(255 * color[0]), static_cast<int>(255 * color[1]),
+          static_cast<int>(255 * color[2])};
 }
 
 QColor MeasurementItem::get_color(double value) const {
@@ -119,7 +119,8 @@ void MeasurementItem::set_data_segments(const state::DataSegments &segments) {
     const auto int_value = static_cast<int>(s.value);
     m_histogram[int_value] += 1;
     m_histogram_max = std::max(m_histogram_max, m_histogram[int_value]);
-    m_points_path.addRect(s.x - 25, s.y - 25, 50, 50);
+    m_points_path.addRect(s.x - PATH_DISTANCE, s.y - PATH_DISTANCE,
+                          2 * PATH_DISTANCE, 2 * PATH_DISTANCE);
   }
   calculate_colors();
 }

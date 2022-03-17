@@ -61,7 +61,7 @@ class MeasurementItem : public MapBasedItem {
 
   double m_min{0.0}, m_max{0.0};
   std::unordered_map<int, int> m_histogram;
-  int m_histogram_max;
+  int m_histogram_max{0};
 
   const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
 
