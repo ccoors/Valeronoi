@@ -39,7 +39,7 @@ void MapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setBrush(m_wall_color);
     painter->setRenderHints(
         QPainter::Antialiasing,
-        false);  // Anti aliasing the walls leads to a thin grid
+        false);  // Antialiasing the walls leads to a thin grid
     const auto walls = map.layers.find("wall");
     if (walls != map.layers.end()) {
       for (const auto &block : walls->second.blocks) {
