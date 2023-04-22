@@ -52,7 +52,7 @@ jobs:
           path: build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg
       - name: Upload release binary
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.3.0
+        uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -114,7 +114,7 @@ jobs:
           path: build/dist
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.3.0
+        uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -132,7 +132,7 @@ jobs:
           path: build/dist/Valeronoi-installer-x86_64.exe
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.3.0
+        uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -186,7 +186,7 @@ jobs:
           path: build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage
       - name: Upload release AppImage
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.3.0
+        uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
