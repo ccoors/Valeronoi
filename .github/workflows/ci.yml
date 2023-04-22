@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-11
+          - os: macos-12
             qt: "6.5.0"
             variant: "qt6"
     name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
@@ -63,7 +63,7 @@ jobs:
       matrix:
         sys: [mingw64] # mingw32, ucrt64 - Experimental
     name: CI Windows/MSYS2
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
       - name: Install msys2
