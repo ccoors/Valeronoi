@@ -164,7 +164,7 @@ jobs:
           QT_VERSION: ${{ matrix.qt }}
           VARIANT: ${{ matrix.variant }}
         run: |
-          sudo apt-get install libfuse2 openssl libcgal-dev libxcb-xkb-dev -y
+          sudo apt-get install libfuse2 openssl libcgal-dev libxcb-xkb-dev libxcb-cursor-dev -y
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
