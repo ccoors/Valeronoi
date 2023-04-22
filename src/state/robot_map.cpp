@@ -195,7 +195,12 @@ void RobotMap::generate_map() {
     map_entity.angle =
         (entity_metadata["angle"].toDouble() - 90.0) * M_PI / 180.0;
 
-    m_map.entities.push_back(map_entity);
+    if (map_entity.type == "robot_position") {
+      // Insert robot position last to ensure the robot is drawn last
+      m_map.entities.push_back(map_entity);
+    } else {
+      m_map.entities.insert(m_map.entities.begin(), map_entity);
+    }
   }
 
   for (auto &layer : m_map.layers) {
