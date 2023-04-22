@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2022 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2023 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,8 +50,7 @@ void ConnectionConfiguration::prepare_request(QNetworkRequest &r) const {
   r.setMaximumRedirectsAllowed(10);  // Should not be needed anyway
   r.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
                  QNetworkRequest::AlwaysNetwork);
-  r.setTransferTimeout(
-      5000);  // TODO configurable? // Not availabe before Qt 5.15
+  r.setTransferTimeout(5000);  // TODO configurable?
   r.setHeader(QNetworkRequest::UserAgentHeader, "Valeronoi/" VALERONOI_VERSION);
   if (m_auth) {
     QString user_pw = m_username + ":" + m_password;

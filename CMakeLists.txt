@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(
     Valeronoi
-    VERSION 0.1.8
+    VERSION 0.1.9
     LANGUAGES CXX
 )
 
@@ -17,53 +17,13 @@ message(STATUS "Git commit is ${GIT_COMMIT}")
 
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
-
-option(FORCE_QT5 "Force use of Qt 5 instead of Qt 6" OFF)
-if(FORCE_QT5)
-    find_package(
-        QT NAMES Qt5
-        COMPONENTS Core
-        REQUIRED
-    )
-else()
-    find_package(
-        QT NAMES Qt6 Qt5
-        COMPONENTS Core
-        REQUIRED
-    )
-endif()
-
-find_package(
-    Qt${QT_VERSION_MAJOR}
-    COMPONENTS Core Widgets Network Svg
-    REQUIRED
-)
-
-message(STATUS "Using Qt ${QT_VERSION_MAJOR}")
-
 find_package(CGAL REQUIRED)
 
-set(VALERONOI_LINK_LIBRARIES
-    Threads::Threads
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
-    Qt${QT_VERSION_MAJOR}::Svg
-    CGAL::CGAL
-    OpenSSL::SSL
+find_package(
+    Qt6
+    COMPONENTS Core Widgets Network Svg OpenGLWidgets
+    REQUIRED
 )
-
-if(NOT ${QT_VERSION_MAJOR} STREQUAL 5)
-    find_package(
-        Qt${QT_VERSION_MAJOR}
-        COMPONENTS OpenGLWidgets
-        REQUIRED
-    )
-    set(VALERONOI_LINK_LIBRARIES ${VALERONOI_LINK_LIBRARIES}
-                                 Qt${QT_VERSION_MAJOR}::OpenGLWidgets
-    )
-endif()
-
 include(CheckIPOSupported)
 
 check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
@@ -150,7 +110,7 @@ set(TEST_FILES tests/test_main.cpp tests/test_colormap.cpp)
 set(MACOSX_BUNDLE_BUNDLE_NAME "Valeronoi")
 set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_COPYRIGHT
-    "2021-2022 Christian Friedrich Coors, released under GPLv3"
+    "2021-2023 Christian Friedrich Coors, released under GPLv3"
 )
 set(MACOSX_BUNDLE_ICON_FILE "valeronoi.icns")
 set(MACOSX_BUNDLE_LONG_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
@@ -164,7 +124,17 @@ add_executable(
 target_compile_options(valeronoi PRIVATE -fPIC)
 add_executable(valeronoi-tests ${TEST_FILES})
 
-target_link_libraries(valeronoi PRIVATE ${VALERONOI_LINK_LIBRARIES})
+target_link_libraries(
+    valeronoi
+    PRIVATE Threads::Threads
+            Qt6::Core
+            Qt6::Widgets
+            Qt6::Network
+            Qt6::Svg
+            Qt6::OpenGLWidgets
+            CGAL::CGAL
+            OpenSSL::SSL
+)
 
 if(APPLE)
     install(TARGETS valeronoi BUNDLE DESTINATION Valeronoi)

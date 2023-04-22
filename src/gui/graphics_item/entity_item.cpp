@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2022 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2023 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void EntityItem::paint_charger(QPainter *painter,
   painter->setPen(pen);
   painter->setBrush(Qt::lightGray);
   QPointF charger_center(entity.points[0].x, entity.points[0].y);
-  painter->drawEllipse(charger_center, 10, 10);
+  painter->drawEllipse(charger_center, 12, 12);
 
   QPainterPath path;
   path.moveTo(charger_center.x() + 2, charger_center.y() - 6);
