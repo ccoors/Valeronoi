@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
       - id: fix-byte-order-marker
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.6
+    rev: v3.0.0-alpha.9-for-vscode
     hooks:
       - id: prettier
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
