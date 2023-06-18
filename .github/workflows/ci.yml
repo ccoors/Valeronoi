@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-12
+          - os: macos-13
             qt: "6.5.1"
             variant: "qt6"
     name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
