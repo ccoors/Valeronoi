@@ -29,6 +29,7 @@
 #include "commands.h"
 #include "connection_configuration.h"
 #include "robot_information.h"
+#include "wifi_information.h"
 
 namespace Valeronoi::robot {
 
@@ -76,6 +77,8 @@ class Robot : public QObject {
   void signal_map_updated();
 
   void signal_wifi_updated(double value);
+
+  void signal_wifiInfo_updated(Wifi_Information wifiInfo);
 
  private slots:
   void slot_get_wifi();

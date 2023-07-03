@@ -87,8 +87,17 @@ void Robot::slot_get_wifi() {
           response_class == "ValetudoWifiConfiguration") {
         const auto details_object = json.object()["details"].toObject();
         const auto signal = details_object["signal"].toDouble();
+
         if (details_object.contains("signal") && signal <= -1) {
-          emit signal_wifi_updated(signal);
+            if (details_object.contains("ssid") &&
+                details_object.contains("bssid")) {
+                const QString ssid = details_object["ssid"].toString("");
+                const QString bssid = details_object["bssid"].toString("");
+                const Wifi_Information wifiInfo(signal,ssid,bssid);
+                emit signal_wifiInfo_updated(wifiInfo);
+            } else {
+                emit signal_wifi_updated(signal);
+            }
         } else {
           qDebug()
               << "Message did not contain a valid signal strength, ignoring";
