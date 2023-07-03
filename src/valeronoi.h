@@ -119,6 +119,7 @@ class ValeronoiWindow : public QMainWindow {
 
   Valeronoi::state::RobotMap m_robot_map;
 
+  QMap<QString,Valeronoi::robot::Wifi_Information> m_connectedWifis;
   Valeronoi::state::Measurements m_wifi_measurements;
 
   bool m_recording{false};

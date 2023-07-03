@@ -49,10 +49,10 @@ class Measurements : public QObject {
   void signal_measurements_updated();
 
  public slots:
-  void slot_add_measurement(double data);
+  void slot_add_measurement(double data, QString bssid);
 
  private:
-  void add_measurement(int x, int y, double value);
+  void add_measurement(int x, int y, double value, QString bssid);
 
   const RobotMap *m_map{nullptr};
 

@@ -68,6 +68,7 @@ struct Map {
 
 struct Measurement {
   int x, y;
+  QString bssid;
   std::vector<double> data;
   double average;
 };
