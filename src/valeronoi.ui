@@ -156,17 +156,24 @@
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
                 <layout class="QGridLayout" name="gridLayout">
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_8">
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_9">
                    <property name="text">
-                    <string>Weakest signal</string>
+                    <string>Strongest signal</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
-                  <widget class="QLabel" name="labelUniquePlaces">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_7">
                    <property name="text">
-                    <string>0</string>
+                    <string>Unique places</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>Latest signal</string>
                    </property>
                   </widget>
                  </item>
@@ -177,10 +184,17 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_7">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_6">
                    <property name="text">
-                    <string>Unique places</string>
+                    <string>Measurements</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Weakest signal</string>
                    </property>
                   </widget>
                  </item>
@@ -198,31 +212,31 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_9">
-                   <property name="text">
-                    <string>Strongest signal</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_6">
-                   <property name="text">
-                    <string>Measurements</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_10">
-                   <property name="text">
-                    <string>Latest signal</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="4" column="1">
                   <widget class="QLabel" name="labelLatestSignal">
                    <property name="text">
                     <string>-∞ dBm</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="labelUniquePlaces">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_12">
+                   <property name="text">
+                    <string>Uniqie Wifi APs</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLabel" name="lableUniqueWifiAPs">
+                   <property name="text">
+                    <string>0</string>
                    </property>
                   </widget>
                  </item>
@@ -619,7 +633,7 @@
      <x>0</x>
      <y>0</y>
      <width>920</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

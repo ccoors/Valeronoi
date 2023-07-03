@@ -78,6 +78,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
         const auto stats = m_wifi_measurements.get_statistics();
         ui->labelMeasurements->setText(QString::number(stats.measurements));
         ui->labelUniquePlaces->setText(QString::number(stats.unique_places));
+        ui->lableUniqueWifiAPs->setText(QString::number(stats.unique_Wifi_APs));
         if (stats.measurements > 0) {
           ui->labelWeakestSignal->setText(
               QString::number(stats.weakest).append(" dBm"));

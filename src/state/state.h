@@ -76,7 +76,7 @@ struct Measurement {
 typedef std::vector<Measurement> RawMeasurements;
 
 struct MeasurementStatistics {
-  int measurements, unique_places;
+  int measurements, unique_places, unique_Wifi_APs;
   double strongest, weakest;
 };
 

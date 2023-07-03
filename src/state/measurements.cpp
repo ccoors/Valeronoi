@@ -91,7 +91,13 @@ MeasurementStatistics Measurements::get_statistics() const {
   ret.unique_places = m_data.size();
   ret.weakest = 0;
   ret.strongest = -1000;
+  ret.unique_Wifi_APs = 0;
+  QVector<QString> tmpWifiCount;
   for (auto &m : m_data) {
+    if (!tmpWifiCount.contains(m.bssid)) {
+      tmpWifiCount.push_back(m.bssid);
+      ret.unique_Wifi_APs++;
+    }
     for (auto &d : m.data) {
       ret.measurements++;
       ret.weakest = std::min(ret.weakest, d);
