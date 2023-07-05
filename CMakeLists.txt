@@ -86,6 +86,7 @@ set(SOURCE_FILES
     src/state/state.cpp
     src/state/robot_map.cpp
     src/state/measurements.cpp
+    src/state/wifi_collection.cpp
     src/gui/dialog/robot_config.ui
     src/gui/dialog/robot_config.cpp
     src/gui/dialog/about.ui

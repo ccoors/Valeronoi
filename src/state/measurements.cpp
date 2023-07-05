@@ -21,10 +21,11 @@ namespace Valeronoi::state {
 
 void Measurements::set_map(const RobotMap &map) { m_map = &map; }
 
-void Measurements::slot_add_measurement(double data, QString bssid) {
+void Measurements::slot_add_measurement(Valeronoi::robot::Wifi_Information wifiInfo) {
+  int wifiId = m_wifiCollection.get_or_create_wifiId(wifiInfo);
   if (m_map != nullptr && m_map->is_valid()) {
     if (auto robot_position = m_map->get_map().get_robot_position()) {
-      add_measurement(robot_position.value().x, robot_position.value().y, data, bssid);
+      add_measurement(robot_position.value().x, robot_position.value().y, wifiInfo.signal(), wifiId);
       emit signal_measurements_updated();
     } else {
       qDebug() << "Could not find robot on map";
@@ -38,7 +39,7 @@ QJsonArray Measurements::get_json() const {
     auto obj = QJsonObject();
     obj.insert("x", d.x);
     obj.insert("y", d.y);
-    obj.insert("bssid", d.bssid);
+    obj.insert("wifi", d.wifiId);
     auto data = QJsonArray();
     for (auto v : d.data) {
       data.append(v);
@@ -60,19 +61,19 @@ void Measurements::set_json(const QJsonArray &json) {
     const auto obj = v.toObject();
     int x = obj["x"].toInt();
     int y = obj["y"].toInt();
-    QString bssid = obj["bssid"].toString();
+    int wifiId = obj["wifi"].toInt();
     for (auto m : obj["data"].toArray()) {
-      add_measurement(x, y, m.toDouble(), bssid);
+      add_measurement(x, y, m.toDouble(), wifiId);
     }
   }
   emit signal_measurements_updated();
 }
 
-void Measurements::add_measurement(int x, int y, double value, QString bssid) {
+void Measurements::add_measurement(int x, int y, double value, int wifiId) {
   for (auto &d : m_data) {
     if (d.x == x
         && d.y == y
-        && d.bssid == bssid) {
+        && d.wifiId == wifiId) {
       d.data.push_back(value);
       double avg = 0;
       for (const auto &m : d.data) {
@@ -82,7 +83,7 @@ void Measurements::add_measurement(int x, int y, double value, QString bssid) {
       return;
     }
   }
-  m_data.push_back(Measurement{x, y, bssid, {value}, value});
+  m_data.push_back(Measurement{x, y, wifiId, {value}, value});
 }
 
 MeasurementStatistics Measurements::get_statistics() const {

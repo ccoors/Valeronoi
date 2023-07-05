@@ -591,28 +591,14 @@ void ValeronoiWindow::connect_robot_signals() {
             QMessageBox::warning(this, tr("Error"),
                                  tr("Connection error: %1").arg(error));
           });
-  connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_updated, this,
-          [=](double value) {
-            ui->labelLatestSignal->setText(
-                tr("%1 dBm").arg(static_cast<int>(value)));
-            if (m_recording) {
-              m_wifi_measurements.slot_add_measurement(value, "");
-            }
-          });
-
   connect(&m_robot, &Valeronoi::robot::Robot::signal_wifiInfo_updated, this,
           [=](robot::Wifi_Information wifiInfo) {
               ui->labelLatestSignal->setText(
                   tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
               if (m_recording) {
-                  if (!m_connectedWifis.contains(wifiInfo.bssid())) {
-                      m_connectedWifis.insert(wifiInfo.bssid(), wifiInfo);
-                  }
-                  ///@todo maybe save Wifis as well and Add BSSID Info
-                  m_wifi_measurements.slot_add_measurement(wifiInfo.signal(), wifiInfo.bssid());
+                  m_wifi_measurements.slot_add_measurement(wifiInfo);
               }
           });
-
   connect(&m_robot, &Valeronoi::robot::Robot::signal_map_updated, this, [=]() {
     m_robot_map.update_map_json(m_robot.get_map_data());
     set_modified(true);

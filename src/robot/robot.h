@@ -76,8 +76,6 @@ class Robot : public QObject {
 
   void signal_map_updated();
 
-  void signal_wifi_updated(double value);
-
   void signal_wifiInfo_updated(Wifi_Information wifiInfo);
 
  private slots:

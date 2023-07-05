@@ -95,8 +95,6 @@ void Robot::slot_get_wifi() {
                 const QString bssid = details_object["bssid"].toString("");
                 const Wifi_Information wifiInfo(signal,ssid,bssid);
                 emit signal_wifiInfo_updated(wifiInfo);
-            } else {
-                emit signal_wifi_updated(signal);
             }
         } else {
           qDebug()
