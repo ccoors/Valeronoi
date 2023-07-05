@@ -16,14 +16,13 @@ public:
 
     int add_wifi(Valeronoi::robot::Wifi_Information wifiInfo);
 
-    int get_wifiId();
+    QVector<Valeronoi::robot::Wifi_Information> get_known_wifis() const;
 
-    QVector<Valeronoi::robot::Wifi_Information> get_known_wifis();
-
-    QJsonObject get_Json();
-    void set_Json(QJsonObject jsonObj);
+    QJsonArray get_json() const;
+    void set_json(const QJsonArray &json);
 
 protected:
+    int get_wifiId(QString bssid) const;
 
 private:
     QVector<Valeronoi::robot::Wifi_Information> m_knownWifis;

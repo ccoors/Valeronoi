@@ -119,6 +119,8 @@ class ValeronoiWindow : public QMainWindow {
 
   Valeronoi::state::RobotMap m_robot_map;
 
+  Valeronoi::state::wifi_collection m_wifi_collection;
+
   Valeronoi::state::Measurements m_wifi_measurements;
 
   bool m_recording{false};

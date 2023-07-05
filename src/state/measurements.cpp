@@ -21,11 +21,10 @@ namespace Valeronoi::state {
 
 void Measurements::set_map(const RobotMap &map) { m_map = &map; }
 
-void Measurements::slot_add_measurement(Valeronoi::robot::Wifi_Information wifiInfo) {
-  int wifiId = m_wifiCollection.get_or_create_wifiId(wifiInfo);
+void Measurements::slot_add_measurement(double signal, int wifiId) {
   if (m_map != nullptr && m_map->is_valid()) {
     if (auto robot_position = m_map->get_map().get_robot_position()) {
-      add_measurement(robot_position.value().x, robot_position.value().y, wifiInfo.signal(), wifiId);
+      add_measurement(robot_position.value().x, robot_position.value().y, signal, wifiId);
       emit signal_measurements_updated();
     } else {
       qDebug() << "Could not find robot on map";
@@ -93,10 +92,10 @@ MeasurementStatistics Measurements::get_statistics() const {
   ret.weakest = 0;
   ret.strongest = -1000;
   ret.unique_Wifi_APs = 0;
-  QVector<QString> tmpWifiCount;
+  QVector<int> tmpWifiCount;
   for (auto &m : m_data) {
-    if (!tmpWifiCount.contains(m.bssid)) {
-      tmpWifiCount.push_back(m.bssid);
+    if (!tmpWifiCount.contains(m.wifiId)) {
+      tmpWifiCount.push_back(m.wifiId);
       ret.unique_Wifi_APs++;
     }
     for (auto &d : m.data) {

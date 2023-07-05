@@ -191,6 +191,7 @@ bool ValeronoiWindow::save() {
   auto object = QJsonObject();
   object.insert("map", m_robot_map.get_map_json());
   object.insert("measurements", m_wifi_measurements.get_json());
+  object.insert("wifis", m_wifi_collection.get_json());
   object.insert("version", FILE_FORMAT_VERSION);
   auto data = QJsonDocument(object);
   file.write(data.toJson(QJsonDocument::Compact));
@@ -344,6 +345,9 @@ bool ValeronoiWindow::load_file(const QString &path) {
   m_robot_map.update_map_json(json_document.object()["map"].toObject());
   m_wifi_measurements.set_json(
       json_document.object()["measurements"].toArray());
+
+  m_wifi_collection.set_json(
+      json_document.object()["wifis"].toArray());
 
   set_open_save_dir(info.absoluteDir().absolutePath());
   m_current_file = info.absoluteFilePath();
@@ -596,7 +600,8 @@ void ValeronoiWindow::connect_robot_signals() {
               ui->labelLatestSignal->setText(
                   tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
               if (m_recording) {
-                  m_wifi_measurements.slot_add_measurement(wifiInfo);
+                  int wifiId = m_wifi_collection.get_or_create_wifiId(wifiInfo);
+                  m_wifi_measurements.slot_add_measurement(wifiInfo.signal(), wifiId);
               }
           });
   connect(&m_robot, &Valeronoi::robot::Robot::signal_map_updated, this, [=]() {

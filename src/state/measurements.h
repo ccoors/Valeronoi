@@ -50,14 +50,12 @@ class Measurements : public QObject {
   void signal_measurements_updated();
 
  public slots:
-  void slot_add_measurement(Valeronoi::robot::Wifi_Information wifiInfo);
+  void slot_add_measurement(double signal, int wifiId);
 
  private:
   void add_measurement(int x, int y, double value, int wifiId);
 
   const RobotMap *m_map{nullptr};
-
-  wifi_collection m_wifiCollection;
 
   //  QJsonArray m_data;
   std::vector<Measurement> m_data;
