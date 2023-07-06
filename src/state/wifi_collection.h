@@ -26,6 +26,7 @@ protected:
 
 private:
     QVector<Valeronoi::robot::Wifi_Information> m_knownWifis;
+    QVector<int> m_knownWifiIds;
 };
 
 }

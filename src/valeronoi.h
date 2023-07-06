@@ -36,6 +36,7 @@
 #include "robot/connection_configuration.h"
 #include "robot/robot.h"
 #include "state/measurements.h"
+#include "state/wifi_collection.h"
 #include "state/robot_map.h"
 #include "util/colormap.h"
 #include "util/log_helper.h"

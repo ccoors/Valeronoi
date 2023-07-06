@@ -27,7 +27,6 @@
 
 #include "robot_map.h"
 #include "state.h"
-#include "wifi_collection.h"
 
 namespace Valeronoi::state {
 
@@ -46,6 +45,8 @@ class Measurements : public QObject {
 
   [[nodiscard]] MeasurementStatistics get_statistics() const;
 
+  int unkownWifiId;
+
  signals:
   void signal_measurements_updated();
 
@@ -57,8 +58,8 @@ class Measurements : public QObject {
 
   const RobotMap *m_map{nullptr};
 
-  //  QJsonArray m_data;
   std::vector<Measurement> m_data;
+
 };
 
 }  // namespace Valeronoi::state

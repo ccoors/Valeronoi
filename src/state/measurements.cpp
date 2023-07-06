@@ -60,7 +60,10 @@ void Measurements::set_json(const QJsonArray &json) {
     const auto obj = v.toObject();
     int x = obj["x"].toInt();
     int y = obj["y"].toInt();
-    int wifiId = obj["wifi"].toInt();
+    int wifiId = unkownWifiId;
+    if (obj.contains("wifi")) {
+      wifiId = obj["wifi"].toInt(unkownWifiId);
+    }
     for (auto m : obj["data"].toArray()) {
       add_measurement(x, y, m.toDouble(), wifiId);
     }

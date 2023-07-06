@@ -343,11 +343,17 @@ bool ValeronoiWindow::load_file(const QString &path) {
     return false;
   }
   m_robot_map.update_map_json(json_document.object()["map"].toObject());
+
+  if (json_document.object().contains("wifis")) {
+      m_wifi_collection.set_json(
+        json_document.object()["wifis"].toArray());
+  } else {
+      // add dummy wifi for Import.
+      m_wifi_measurements.unkownWifiId = m_wifi_collection.get_or_create_wifiId(Valeronoi::robot::Wifi_Information());
+  }
+
   m_wifi_measurements.set_json(
       json_document.object()["measurements"].toArray());
-
-  m_wifi_collection.set_json(
-      json_document.object()["wifis"].toArray());
 
   set_open_save_dir(info.absoluteDir().absolutePath());
   m_current_file = info.absoluteFilePath();

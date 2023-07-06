@@ -2,6 +2,7 @@
 #define WIFI_INFORMATION_H
 
 #include <QSharedDataPointer>
+#include <QJsonObject>
 
 namespace Valeronoi::robot {
 
@@ -11,6 +12,7 @@ class Wifi_Information
 {
 public:
     Wifi_Information();
+    Wifi_Information(const QJsonObject& jsonObj);
     Wifi_Information(const double signal);
     Wifi_Information(const double signal, const QString ssid, const QString bssid);
 
@@ -26,7 +28,11 @@ public:
     QString bssid() const;
     double signal() const;
 
-private:
+    QJsonObject get_json() const;
+    void set_json(QJsonObject jsonObj);
+
+    bool has_valid_signal() const;
+private:  
     QSharedDataPointer<Wifi_InformationData> data;
 };
 
