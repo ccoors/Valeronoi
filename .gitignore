@@ -489,3 +489,4 @@ build*/
 /tools/archlinux/**/pkg/
 /tools/archlinux/**/valeronoi*/
 /tools/archlinux/**/*.pkg.tar
+.vscode/settings.json

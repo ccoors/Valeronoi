@@ -98,6 +98,8 @@ class ValeronoiWindow : public QMainWindow {
 
   void connect_display_widget();
 
+  void connect_wifi_widget();
+
   void connect_actions();
 
   Ui::ValeronoiWindow *ui;

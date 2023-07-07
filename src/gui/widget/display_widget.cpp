@@ -186,7 +186,7 @@ void DisplayWidget::slot_map_updated() {
 void DisplayWidget::slot_measurements_updated() {
   const auto &measurements = m_measurements.get_measurements();
   qDebug() << "Requesting generation of Voronoi segments";
-  m_segment_generator.generate(measurements, m_display_mode, m_simplify);
+  m_segment_generator.generate(measurements, m_display_mode, m_simplify, m_wifiFilter);
 }
 
 void DisplayWidget::slot_set_display_mode(int display_mode) {
@@ -271,5 +271,19 @@ void DisplayWidget::slot_set_simplify(int value) {
     slot_measurements_updated();
   }
 }
+
+int DisplayWidget::get_wifiIdFilter() const
+{
+  return m_wifiFilter;
+}
+
+void DisplayWidget::slot_set_wifiIdFilter(int newWifiIdFilter)
+{
+  if (m_wifiFilter != newWifiIdFilter) {
+    m_wifiFilter = newWifiIdFilter;
+    slot_measurements_updated();
+  }
+}
+
 
 }  // namespace Valeronoi::gui::widget

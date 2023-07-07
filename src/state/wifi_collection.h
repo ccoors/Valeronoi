@@ -1,18 +1,22 @@
 #ifndef WIFI_COLLECTION_H
 #define WIFI_COLLECTION_H
 
+#include <QObject>
 #include <QVector>
 #include <QJsonObject>
 #include "../robot/wifi_information.h"
 
 namespace Valeronoi::state {
 
-class wifi_collection
+class wifi_collection : public QObject
 {
+    Q_OBJECT
 public:
     wifi_collection();
 
     int get_or_create_wifiId(Valeronoi::robot::Wifi_Information wifiInfo);
+
+    int get_wifiId(QString bssid) const;
 
     int add_wifi(Valeronoi::robot::Wifi_Information wifiInfo);
 
@@ -21,8 +25,12 @@ public:
     QJsonArray get_json() const;
     void set_json(const QJsonArray &json);
 
+signals:
+    void signal_wifiListChanged();
+    void signal_newWifiAdded(Valeronoi::robot::Wifi_Information wifiInfo);
+
 protected:
-    int get_wifiId(QString bssid) const;
+
 
 private:
     QVector<Valeronoi::robot::Wifi_Information> m_knownWifis;

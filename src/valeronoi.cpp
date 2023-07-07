@@ -41,7 +41,8 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
       m_update_dialog{this},
       m_log_dialog{this},
       m_modified{false},
-      m_current_file{""} {
+      m_current_file{""}
+{
   Valeronoi::util::LogHelper::instance().set_log_dialog(&m_log_dialog);
   qInfo().nospace() << "Starting Valeronoi " << VALERONOI_VERSION << " ("
                     << VALERONOI_GIT_COMMIT << ")";
@@ -116,6 +117,8 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
 
   load_colormaps();
   connect_display_widget();
+
+  connect_wifi_widget();
 
   update_title();
   if (m_settings_dialog.should_auto_check_for_updates(this)) {
@@ -460,6 +463,31 @@ void ValeronoiWindow::connect_display_widget() {
   update_display_settings();
 }
 
+void ValeronoiWindow::connect_wifi_widget()
+{
+  connect(&m_wifi_collection, &Valeronoi::state::wifi_collection::signal_wifiListChanged, this,
+      [=]() {
+          auto wifiVect = m_wifi_collection.get_known_wifis();
+          ui->wifiList->clear();
+          for (auto& wifiInfo : wifiVect) {
+              ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() + "]");
+          }
+      });
+
+  connect(ui->wifiList, &QListWidget::currentItemChanged, this,
+      [=](QListWidgetItem *current, QListWidgetItem *previous) {
+        (void)previous;
+        int newWifiFilter = -1;
+        QRegularExpression regEx_bssid("\\[(.+)\\]");
+        QString bssid = regEx_bssid.match(current->text()).captured(1);
+        if (!bssid.isEmpty())
+        {
+            newWifiFilter = m_wifi_collection.get_wifiId(bssid);
+        }
+        m_display_widget->slot_set_wifiIdFilter(newWifiFilter);
+      });
+}
+
 void ValeronoiWindow::connect_actions() {
   connect(ui->actionNew, &QAction::triggered, this, &ValeronoiWindow::newFile);
   connect(ui->actionOpen, &QAction::triggered, this,
@@ -605,11 +633,25 @@ void ValeronoiWindow::connect_robot_signals() {
           [=](robot::Wifi_Information wifiInfo) {
               ui->labelLatestSignal->setText(
                   tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
+              //ui->labelCurrentWifi->setText(wifiInfo.ssid() + " ["+ wifiInfo.bssid() +"]");
               if (m_recording) {
                   int wifiId = m_wifi_collection.get_or_create_wifiId(wifiInfo);
                   m_wifi_measurements.slot_add_measurement(wifiInfo.signal(), wifiId);
               }
           });
+
+  connect(&m_robot, &Valeronoi::robot::Robot::signal_currentWifi_updated, this,
+          [=](robot::Wifi_Information wifiInfo) {
+
+              auto items = ui->wifiList->findItems(wifiInfo.bssid(), Qt::MatchContains);
+              const QBrush highlight(Qt::green);
+              for(auto& widgetItem : items) {
+                    widgetItem->setForeground(highlight);
+                  }
+  });
+
+
+
   connect(&m_robot, &Valeronoi::robot::Robot::signal_map_updated, this, [=]() {
     m_robot_map.update_map_json(m_robot.get_map_data());
     set_modified(true);

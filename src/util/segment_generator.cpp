@@ -51,12 +51,13 @@ SegmentGenerator::~SegmentGenerator() {
 
 void SegmentGenerator::generate(
     const Valeronoi::state::RawMeasurements &measurements,
-    Valeronoi::state::DISPLAY_MODE display_mode, int simplify) {
+    Valeronoi::state::DISPLAY_MODE display_mode, int simplify, int wifiIdFilter) {
   QMutexLocker locker(&m_mutex);
 
   m_measurements = measurements;
   m_display_mode = display_mode;
   m_simplify = simplify;
+  m_wifiIdFilter = wifiIdFilter;
 
   if (!isRunning()) {
     start(LowPriority);
@@ -72,14 +73,26 @@ void SegmentGenerator::run() {
     auto measurements = m_measurements;
     const auto display_mode = m_display_mode;
     const auto simplify = m_simplify;
+    const auto wifiIdFilter = m_wifiIdFilter;
     m_mutex.unlock();
     if (m_abort) {
       return;
     }
 
+    Valeronoi::state::RawMeasurements filtered_measurements;
+    if (wifiIdFilter != -1) {
+      for (auto &m : measurements) {
+          if (m.wifiId == wifiIdFilter) {
+              filtered_measurements.push_back(m);
+          }
+      }
+    } else {
+      filtered_measurements = std::move(measurements);
+    }
+
     Valeronoi::state::RawMeasurements simplified_measurements;
     if (simplify > 1) {
-      for (auto &m : measurements) {
+      for (auto &m : filtered_measurements) {
         m.x = (m.x / simplify) * simplify;
         m.y = (m.y / simplify) * simplify;
 

@@ -32,6 +32,9 @@ int wifi_collection::add_wifi(Valeronoi::robot::Wifi_Information wifiInfo)
         throw "Vector size missmatch! this is bad";
     }
 
+    emit signal_wifiListChanged();
+    emit signal_newWifiAdded(wifiInfo);
+
     return m_knownWifiIds.last();
 }
 
@@ -71,6 +74,8 @@ void wifi_collection::set_json(const QJsonArray &json)
         m_knownWifiIds.append(index);
         m_knownWifis.append(Valeronoi::robot::Wifi_Information(wifiAp));
     }
+
+    emit signal_wifiListChanged();
 
     return;
 }

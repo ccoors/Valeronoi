@@ -87,6 +87,10 @@ void Robot::slot_get_wifi() {
           response_class == "ValetudoWifiConfiguration") {
         const QJsonObject details_object = json.object()["details"].toObject();
         const Wifi_Information wifiInfo(details_object);
+        if (wifiInfo.bssid() != m_currentWifiCon.bssid()) {
+            m_currentWifiCon = wifiInfo;
+            emit signal_currentWifi_updated(wifiInfo);
+        }
         if (wifiInfo.has_valid_signal()) {
             emit signal_wifiInfo_updated(wifiInfo);
         } else {

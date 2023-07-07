@@ -78,10 +78,13 @@ class Robot : public QObject {
 
   void signal_wifiInfo_updated(Wifi_Information wifiInfo);
 
+  void signal_currentWifi_updated(Wifi_Information wifiInfo);
+
  private slots:
   void slot_get_wifi();
 
  private:
+  Wifi_Information m_currentWifiCon;
   QTimer m_wifi_timer;
   Valeronoi::robot::api::v2::ValetudoAPI m_api;
 };
