@@ -79,40 +79,37 @@ void SegmentGenerator::run() {
       return;
     }
 
-    Valeronoi::state::RawMeasurements filtered_measurements;
-    if (wifiIdFilter != -1) {
+    Valeronoi::state::RawMeasurements processed_measurements;
+    if (simplify > 1 || wifiIdFilter != -1) {
       for (auto &m : measurements) {
-          if (m.wifiId == wifiIdFilter) {
-              filtered_measurements.push_back(m);
-          }
-      }
-    } else {
-      filtered_measurements = std::move(measurements);
-    }
+        bool saveValue = true;
 
-    Valeronoi::state::RawMeasurements simplified_measurements;
-    if (simplify > 1) {
-      for (auto &m : filtered_measurements) {
-        m.x = (m.x / simplify) * simplify;
-        m.y = (m.y / simplify) * simplify;
-
-        bool found = false;
-        for (auto &sm : simplified_measurements) {
-          if (sm.x == m.x && sm.y == m.y) {
-            // I'd like to use std::transform with std::back_inserter instead,
-            // but that doesn't work for doubles
-            for (const auto d : m.data) {
-              sm.data.push_back(d);
-            }
-            found = true;
-          }
+        if (wifiIdFilter != -1 && m.wifiId != wifiIdFilter) {
+            continue; // skip and probe next one
         }
-        if (!found) {
-          simplified_measurements.push_back(m);
+
+        if (simplify > 1) {
+            m.x = (m.x / simplify) * simplify;
+            m.y = (m.y / simplify) * simplify;
+
+            for (auto &sm : processed_measurements) {
+                if (sm.x == m.x && sm.y == m.y) {
+                    // I'd like to use std::transform with std::back_inserter instead,
+                    // but that doesn't work for doubles
+                    for (const auto d : m.data) {
+                        sm.data.push_back(d);
+                    }
+                    saveValue = false;
+                }
+            }
+        }
+
+        if (saveValue) {
+          processed_measurements.push_back(m);
         }
       }
       // Update averages
-      for (auto &sm : simplified_measurements) {
+      for (auto &sm : processed_measurements) {
         double avg = 0;
         for (const auto &m : sm.data) {
           avg += m;
@@ -120,17 +117,17 @@ void SegmentGenerator::run() {
         sm.average = avg / sm.data.size();
       }
     } else {
-      simplified_measurements = std::move(measurements);
+      processed_measurements = std::move(measurements);
     }
 
     Valeronoi::state::DataSegments segments;
 
     switch (display_mode) {
       case state::DISPLAY_MODE::Voronoi:
-        generate_voronoi(simplified_measurements, segments);
+        generate_voronoi(processed_measurements, segments);
         break;
       case state::DISPLAY_MODE::DataPoints:
-        for (const auto &m : simplified_measurements) {
+        for (const auto &m : processed_measurements) {
           Valeronoi::state::DataSegment s;
           s.x = m.x;
           s.y = m.y;
