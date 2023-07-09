@@ -12,8 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-12
-            qt: "6.5.0"
+          - os: macos-13
+            qt: "6.5.1"
             variant: "qt6"
     name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
@@ -44,7 +44,7 @@ jobs:
           macdeployqt valeronoi.app
           mkdir dist
           mv valeronoi.app dist/Valeronoi.app
-          create-dmg --volname "Valeronoi Installer" --volicon "../assets/icon/valeronoi.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Valeronoi.app" 200 190 --hide-extension "Valeronoi.app" --app-drop-link 600 185 "Valeronoi-macOS-Intel-$VARIANT.dmg" "dist/"
+          create-dmg --skip-jenkins --volname "Valeronoi Installer" --volicon "../assets/icon/valeronoi.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Valeronoi.app" 200 190 --hide-extension "Valeronoi.app" --app-drop-link 600 185 "Valeronoi-macOS-Intel-$VARIANT.dmg" "dist/"
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -143,7 +143,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            qt: "6.5.0"
+            qt: "6.5.1"
             variant: "current"
     name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
