@@ -170,7 +170,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>561</width>
+            <width>743</width>
             <height>11088</height>
            </rect>
           </property>
@@ -834,14 +834,23 @@ above cannot be given local legal effect </string>
             <x>0</x>
             <y>0</y>
             <width>743</width>
-            <height>2552</height>
+            <height>2600</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This software uses some &lt;a href=&quot;https://matplotlib.org/stable/gallery/color/colormap_reference.html&quot;&gt;Color Maps&lt;/a&gt; from &lt;a href=&quot;https://matplotlib.org/&quot;&gt;Matplotlib&lt;/a&gt;, which is released under the PSF License.&lt;/p&gt;&lt;p&gt;This software uses some icons inspired by &lt;a href=&quot;https://valetudo.cloud&quot;&gt;Valetudo&lt;/a&gt;, which is released under the Apache License 2.0&lt;/p&gt;&lt;p&gt;This software uses the &lt;a href=&quot;https://www.qt.io/&quot;&gt;Qt Library&lt;/a&gt;. Binary releases of this software containing Qt use it under the GPLv3.&lt;/p&gt;&lt;p&gt;This software uses the &lt;a href=&quot;https://www.cgal.org/&quot;&gt;CGAL Library&lt;/a&gt;, which is released under the GPLv3 or later.&lt;/p&gt;&lt;p&gt;OpenGL is a trademark of Silicon Graphics, Inc. in the United States and other countries.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;
+&lt;body&gt;
+&lt;p&gt;This software uses some &lt;a href=&quot;https://matplotlib.org/stable/gallery/color/colormap_reference.html&quot;&gt;Color Maps&lt;/a&gt; from &lt;a href=&quot;https://matplotlib.org/&quot;&gt;Matplotlib&lt;/a&gt;, which is released under the PSF License.&lt;/p&gt;
+&lt;p&gt;This software uses the &lt;a href=&quot;https://www.fabiocrameri.ch/colourmaps/&quot;&gt;Scientific colour maps&lt;/a&gt; 8.0.0 (DOI &lt;a href=&quot;https://doi.org/10.5281/zenodo.8035877&quot;&gt;10.5281/zenodo.8035877&lt;/a&gt;) by &lt;a href=&quot;https://www.fabiocrameri.ch/&quot;&gt;Fabio Crameri&lt;/a&gt;, which are released under the MIT License.&lt;/p&gt;
+&lt;p&gt;This software uses some icons inspired by &lt;a href=&quot;https://valetudo.cloud&quot;&gt;Valetudo&lt;/a&gt;, which is released under the Apache License 2.0&lt;/p&gt;
+&lt;p&gt;This software uses the &lt;a href=&quot;https://www.qt.io/&quot;&gt;Qt Library&lt;/a&gt;. Binary releases of this software containing Qt use it under the GPLv3.&lt;/p&gt;
+&lt;p&gt;This software uses the &lt;a href=&quot;https://www.cgal.org/&quot;&gt;CGAL Library&lt;/a&gt;, which is released under the GPLv3 or later.&lt;/p&gt;
+&lt;p&gt;OpenGL is a trademark of Silicon Graphics, Inc. in the United States and other countries.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
