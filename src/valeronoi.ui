@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>920</width>
-    <height>600</height>
+    <height>694</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -149,6 +149,41 @@
              </spacer>
             </item>
             <item>
+             <widget class="QGroupBox" name="wifiInfoGroup">
+              <property name="title">
+               <string>Wifi AccessPoints</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_9">
+               <item>
+                <widget class="QListWidget" name="wifiList">
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>10</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QGroupBox" name="recordingStatsGroup">
               <property name="title">
                <string>Recording statistics</string>
@@ -156,24 +191,10 @@
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
                 <layout class="QGridLayout" name="gridLayout">
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_8">
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_9">
                    <property name="text">
-                    <string>Weakest signal</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLabel" name="labelUniquePlaces">
-                   <property name="text">
-                    <string>0</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLabel" name="labelMeasurements">
-                   <property name="text">
-                    <string>0</string>
+                    <string>Strongest signal</string>
                    </property>
                   </widget>
                  </item>
@@ -181,6 +202,20 @@
                   <widget class="QLabel" name="label_7">
                    <property name="text">
                     <string>Unique places</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_6">
+                   <property name="text">
+                    <string>Measurements</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Weakest signal</string>
                    </property>
                   </widget>
                  </item>
@@ -198,24 +233,31 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_9">
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="labelUniquePlaces">
                    <property name="text">
-                    <string>Strongest signal</string>
+                    <string>0</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_6">
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_12">
                    <property name="text">
-                    <string>Measurements</string>
+                    <string>Uniqie Wifi APs</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_10">
+                 <item row="5" column="1">
+                  <widget class="QLabel" name="lableUniqueWifiAPs">
                    <property name="text">
-                    <string>Latest signal</string>
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="labelMeasurements">
+                   <property name="text">
+                    <string>0</string>
                    </property>
                   </widget>
                  </item>
@@ -223,6 +265,13 @@
                   <widget class="QLabel" name="labelLatestSignal">
                    <property name="text">
                     <string>-∞ dBm</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>Latest signal</string>
                    </property>
                   </widget>
                  </item>
@@ -619,7 +668,7 @@
      <x>0</x>
      <y>0</y>
      <width>920</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

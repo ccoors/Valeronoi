@@ -45,19 +45,21 @@ class Measurements : public QObject {
 
   [[nodiscard]] MeasurementStatistics get_statistics() const;
 
+  int unkownWifiId;
+
  signals:
   void signal_measurements_updated();
 
  public slots:
-  void slot_add_measurement(double data);
+  void slot_add_measurement(double signal, int wifiId);
 
  private:
-  void add_measurement(int x, int y, double value);
+  void add_measurement(int x, int y, double value, int wifiId);
 
   const RobotMap *m_map{nullptr};
 
-  //  QJsonArray m_data;
   std::vector<Measurement> m_data;
+
 };
 
 }  // namespace Valeronoi::state

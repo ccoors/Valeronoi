@@ -82,7 +82,9 @@ class DisplayWidget : public QGraphicsView {
 
   [[nodiscard]] int get_simplify() const;
 
- signals:
+  [[nodiscard]] int get_wifiIdFilter() const;
+
+  signals:
   void signal_relocate(int x, int y);
 
  public slots:
@@ -96,6 +98,8 @@ class DisplayWidget : public QGraphicsView {
 
   void slot_set_simplify(int value);
 
+  void slot_set_wifiIdFilter(int newWifiIdFilter);
+
  protected:
   void wheelEvent(QWheelEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
@@ -107,6 +111,7 @@ class DisplayWidget : public QGraphicsView {
   bool m_draw_floor{true}, m_draw_entities{true}, m_use_opengl{false},
       m_antialiasing{true}, m_restrict_floor{true}, m_restrict_path{true};
   int m_simplify{1};
+  int m_wifiFilter{-1};
   const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
   Valeronoi::util::SegmentGenerator m_segment_generator;
 

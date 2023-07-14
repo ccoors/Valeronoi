@@ -36,6 +36,7 @@
 #include "robot/connection_configuration.h"
 #include "robot/robot.h"
 #include "state/measurements.h"
+#include "state/wifi_collection.h"
 #include "state/robot_map.h"
 #include "util/colormap.h"
 #include "util/log_helper.h"
@@ -97,6 +98,8 @@ class ValeronoiWindow : public QMainWindow {
 
   void connect_display_widget();
 
+  void connect_wifi_widget();
+
   void connect_actions();
 
   Ui::ValeronoiWindow *ui;
@@ -118,7 +121,11 @@ class ValeronoiWindow : public QMainWindow {
   Valeronoi::robot::Robot m_robot;
 
   Valeronoi::state::RobotMap m_robot_map;
+
+  Valeronoi::state::wifi_collection m_wifi_collection;
+
   Valeronoi::state::Measurements m_wifi_measurements;
+
   bool m_recording{false};
   void connect_robot_signals();
 };

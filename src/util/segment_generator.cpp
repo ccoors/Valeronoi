@@ -51,12 +51,13 @@ SegmentGenerator::~SegmentGenerator() {
 
 void SegmentGenerator::generate(
     const Valeronoi::state::RawMeasurements &measurements,
-    Valeronoi::state::DISPLAY_MODE display_mode, int simplify) {
+    Valeronoi::state::DISPLAY_MODE display_mode, int simplify, int wifiIdFilter) {
   QMutexLocker locker(&m_mutex);
 
   m_measurements = measurements;
   m_display_mode = display_mode;
   m_simplify = simplify;
+  m_wifiIdFilter = wifiIdFilter;
 
   if (!isRunning()) {
     start(LowPriority);
@@ -72,34 +73,43 @@ void SegmentGenerator::run() {
     auto measurements = m_measurements;
     const auto display_mode = m_display_mode;
     const auto simplify = m_simplify;
+    const auto wifiIdFilter = m_wifiIdFilter;
     m_mutex.unlock();
     if (m_abort) {
       return;
     }
 
-    Valeronoi::state::RawMeasurements simplified_measurements;
-    if (simplify > 1) {
+    Valeronoi::state::RawMeasurements processed_measurements;
+    if (simplify > 1 || wifiIdFilter != -1) {
       for (auto &m : measurements) {
-        m.x = (m.x / simplify) * simplify;
-        m.y = (m.y / simplify) * simplify;
+        bool saveValue = true;
 
-        bool found = false;
-        for (auto &sm : simplified_measurements) {
-          if (sm.x == m.x && sm.y == m.y) {
-            // I'd like to use std::transform with std::back_inserter instead,
-            // but that doesn't work for doubles
-            for (const auto d : m.data) {
-              sm.data.push_back(d);
-            }
-            found = true;
-          }
+        if (wifiIdFilter != -1 && m.wifiId != wifiIdFilter) {
+            continue; // skip and probe next one
         }
-        if (!found) {
-          simplified_measurements.push_back(m);
+
+        if (simplify > 1) {
+            m.x = (m.x / simplify) * simplify;
+            m.y = (m.y / simplify) * simplify;
+
+            for (auto &sm : processed_measurements) {
+                if (sm.x == m.x && sm.y == m.y) {
+                    // I'd like to use std::transform with std::back_inserter instead,
+                    // but that doesn't work for doubles
+                    for (const auto d : m.data) {
+                        sm.data.push_back(d);
+                    }
+                    saveValue = false;
+                }
+            }
+        }
+
+        if (saveValue) {
+          processed_measurements.push_back(m);
         }
       }
       // Update averages
-      for (auto &sm : simplified_measurements) {
+      for (auto &sm : processed_measurements) {
         double avg = 0;
         for (const auto &m : sm.data) {
           avg += m;
@@ -107,17 +117,17 @@ void SegmentGenerator::run() {
         sm.average = avg / sm.data.size();
       }
     } else {
-      simplified_measurements = std::move(measurements);
+      processed_measurements = std::move(measurements);
     }
 
     Valeronoi::state::DataSegments segments;
 
     switch (display_mode) {
       case state::DISPLAY_MODE::Voronoi:
-        generate_voronoi(simplified_measurements, segments);
+        generate_voronoi(processed_measurements, segments);
         break;
       case state::DISPLAY_MODE::DataPoints:
-        for (const auto &m : simplified_measurements) {
+        for (const auto &m : processed_measurements) {
           Valeronoi::state::DataSegment s;
           s.x = m.x;
           s.y = m.y;
