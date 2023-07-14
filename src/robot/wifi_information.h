@@ -1,5 +1,5 @@
-#ifndef WIFI_INFORMATION_H
-#define WIFI_INFORMATION_H
+#ifndef VALETUDO_ROBOT_WIFI_INFORMATION_H
+#define VALETUDO_ROBOT_WIFI_INFORMATION_H
 
 #include <QSharedDataPointer>
 #include <QJsonObject>
@@ -32,9 +32,9 @@ public:
     void set_json(QJsonObject jsonObj);
 
     bool has_valid_signal() const;
-private:  
-    QSharedDataPointer<Wifi_InformationData> data;
+private:
+    QSharedDataPointer<Wifi_InformationData> m_data;
 };
 
 }
-#endif // WIFI_INFORMATION_H
+#endif // VALETUDO_ROBOT_WIFI_INFORMATION_H

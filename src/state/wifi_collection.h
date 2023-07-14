@@ -1,5 +1,5 @@
-#ifndef WIFI_COLLECTION_H
-#define WIFI_COLLECTION_H
+#ifndef VALERONOI_STATE_WIFI_COLLECTION_H
+#define VALERONOI_STATE_WIFI_COLLECTION_H
 
 #include <QObject>
 #include <QVector>
@@ -33,12 +33,11 @@ signals:
 
 protected:
 
-
 private:
-    QVector<Valeronoi::robot::Wifi_Information> m_knownWifis;
-    QVector<int> m_knownWifiIds;
+    QVector<Valeronoi::robot::Wifi_Information> m_known_wifis;
+    QVector<int> m_known_wifi_ids;
 };
 
 }
 
-#endif // WIFI_COLLECTION_H
+#endif // VALERONOI_STATE_WIFI_COLLECTION_H
