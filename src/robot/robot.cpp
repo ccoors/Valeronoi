@@ -57,11 +57,14 @@ const RobotInformation *Robot::get_information() const {
   return m_api.get_information();
 }
 
-void Robot::slot_connect() { m_currentWifiCon = Wifi_Information(); m_api.slot_connect(); }
+void Robot::slot_connect() {
+  m_current_wifi_connection = WifiInformation();
+  m_api.slot_connect();
+}
 
 void Robot::slot_disconnect() {
   m_api.slot_disconnect();
-  m_currentWifiCon = Wifi_Information();
+  m_current_wifi_connection = WifiInformation();
 }
 
 void Robot::slot_subscribe_wifi(double interval) {
@@ -89,13 +92,13 @@ void Robot::slot_get_wifi() {
       if (response_class == "ValetudoWifiStatus" ||
           response_class == "ValetudoWifiConfiguration") {
         const QJsonObject details_object = json.object()["details"].toObject();
-        const Wifi_Information wifiInfo(details_object);
-        if (wifiInfo.bssid() != m_currentWifiCon.bssid()) {
-            m_currentWifiCon = wifiInfo;
-            emit signal_currentWifi_updated(wifiInfo);
+        const WifiInformation wifi_info(details_object);
+        if (wifi_info.bssid() != m_current_wifi_connection.bssid()) {
+            m_current_wifi_connection = wifi_info;
+            emit signal_current_wifi_updated(wifi_info);
         }
-        if (wifiInfo.has_valid_signal()) {
-            emit signal_wifiInfo_updated(wifiInfo);
+        if (wifi_info.has_valid_signal()) {
+            emit signal_wifi_info_updated(wifi_info);
         } else {
           qDebug()
               << "Message did not contain a valid signal strength, ignoring";

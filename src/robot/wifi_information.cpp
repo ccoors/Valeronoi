@@ -2,23 +2,23 @@
 
 namespace Valeronoi::robot {
 
-class Wifi_InformationData : public QSharedData
+class WifiInformationData : public QSharedData
 {
 public:
-    Wifi_InformationData() {
+    WifiInformationData() {
         m_bssid = "00:00:00:00:00:00";
         m_ssid = "Unknown Wifi";
         m_signal = 0.0;
     }
 
-    Wifi_InformationData(const Wifi_InformationData &other)
+    WifiInformationData(const WifiInformationData &other)
         : QSharedData(other),
         m_ssid(other.m_ssid),
         m_bssid(other.m_bssid),
         m_signal(other.m_signal)
     { }
 
-    ~Wifi_InformationData() { }
+    ~WifiInformationData() { }
 
     QString m_ssid;
     QString m_bssid;
@@ -32,78 +32,78 @@ public:
 //    double m_upspeed; // Measurement
 };
 
-Wifi_Information::Wifi_Information() : m_data(new Wifi_InformationData)
+WifiInformation::WifiInformation() : m_data(new WifiInformationData)
 {
 
 }
 
-Wifi_Information::Wifi_Information(const QJsonObject &jsonObj) : m_data(new Wifi_InformationData)
+WifiInformation::WifiInformation(const QJsonObject &jsonObj) : m_data(new WifiInformationData)
 {
     set_json(jsonObj);
 }
 
-Wifi_Information::Wifi_Information(const double signal)
-    : m_data(new Wifi_InformationData)
+WifiInformation::WifiInformation(const double signal)
+    : m_data(new WifiInformationData)
 {
-    setSignal(signal);
+    set_signal(signal);
 }
 
-Wifi_Information::Wifi_Information(const double signal, const QString ssid, const QString bssid)
-    : m_data(new Wifi_InformationData)
+WifiInformation::WifiInformation(const double signal, const QString ssid, const QString bssid)
+    : m_data(new WifiInformationData)
 {
-    setSignal(signal);
-    setSsid(ssid);
-    setBssid(bssid);
+    set_signal(signal);
+    set_ssid(ssid);
+    set_bssid(bssid);
 }
 
-Wifi_Information::Wifi_Information(const Wifi_Information &other)
+WifiInformation::WifiInformation(const WifiInformation &other)
     : m_data(other.m_data)
 {
 }
 
-Wifi_Information &Wifi_Information::operator=(const Wifi_Information &rhs)
+WifiInformation &WifiInformation::operator=(const WifiInformation &rhs)
 {
     if (this != &rhs)
         m_data.operator=(rhs.m_data);
     return *this;
 }
 
-Wifi_Information::~Wifi_Information()
+WifiInformation::~WifiInformation()
 {
 
 }
 
-void Wifi_Information::setSsid(const QString ssid)
+void WifiInformation::set_ssid(const QString ssid)
 {
     m_data->m_ssid = ssid;
 }
 
-void Wifi_Information::setBssid(const QString bssid)
+void WifiInformation::set_bssid(const QString bssid)
 {
     m_data->m_bssid = bssid;
 }
 
-void Wifi_Information::setSignal(const double signal)
+void WifiInformation::set_signal(const double signal)
 {
     m_data->m_signal = signal;
 }
 
-QString Wifi_Information::ssid() const
+QString WifiInformation::ssid() const
 {
     return m_data->m_ssid;
 }
 
-QString Wifi_Information::bssid() const
+QString WifiInformation::bssid() const
 {
     return m_data->m_bssid;
 }
 
-double Wifi_Information::signal() const
+double WifiInformation::signal() const
 {
     return m_data->m_signal;
 }
 
-QJsonObject Wifi_Information::get_json() const
+QJsonObject WifiInformation::get_json() const
 {
     QJsonObject retObj;
 
@@ -114,7 +114,7 @@ QJsonObject Wifi_Information::get_json() const
     return retObj;
 }
 
-void Wifi_Information::set_json(QJsonObject jsonObj)
+void WifiInformation::set_json(QJsonObject jsonObj)
 {
     if (jsonObj.contains("signal") && jsonObj["signal"].isDouble()) {
         m_data->m_signal = jsonObj["signal"].toDouble();
@@ -130,7 +130,7 @@ void Wifi_Information::set_json(QJsonObject jsonObj)
 
 }
 
-bool Wifi_Information::has_valid_signal() const
+bool WifiInformation::has_valid_signal() const
 {
     return (m_data->m_signal < -1);
 }

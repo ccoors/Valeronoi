@@ -79,7 +79,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
         const auto stats = m_wifi_measurements.get_statistics();
         ui->labelMeasurements->setText(QString::number(stats.measurements));
         ui->labelUniquePlaces->setText(QString::number(stats.unique_places));
-        ui->lableUniqueWifiAPs->setText(QString::number(stats.unique_Wifi_APs));
+        ui->lableUniqueWifiAPs->setText(QString::number(stats.unique_wifi_APs));
         if (stats.measurements > 0) {
           ui->labelWeakestSignal->setText(
               QString::number(stats.weakest).append(" dBm"));
@@ -353,7 +353,7 @@ bool ValeronoiWindow::load_file(const QString &path) {
   } else {
       // add dummy wifi for Import.
       m_wifi_collection.clear();
-      m_wifi_measurements.unkownWifiId = m_wifi_collection.get_or_create_wifiId(Valeronoi::robot::Wifi_Information());
+      m_wifi_measurements.unkown_wifi_id = m_wifi_collection.get_or_create_wifi_id(Valeronoi::robot::WifiInformation());
   }
 
   m_wifi_measurements.set_json(
@@ -466,7 +466,7 @@ void ValeronoiWindow::connect_display_widget() {
 
 void ValeronoiWindow::connect_wifi_widget()
 {
-  connect(&m_wifi_collection, &Valeronoi::state::wifi_collection::signal_wifiListChanged, this,
+  connect(&m_wifi_collection, &Valeronoi::state::wifi_collection::signal_wifi_list_updated, this,
       [=]() {
           auto wifiVect = m_wifi_collection.get_known_wifis();
           ui->wifiList->clear();
@@ -487,9 +487,9 @@ void ValeronoiWindow::connect_wifi_widget()
 
         if (!bssid.isEmpty())
         {
-            newWifiFilter = m_wifi_collection.get_wifiId(bssid);
+            newWifiFilter = m_wifi_collection.get_wifi_id(bssid);
         }
-        m_display_widget->slot_set_wifiIdFilter(newWifiFilter);
+        m_display_widget->slot_set_wifi_id_filter(newWifiFilter);
       });
 }
 
@@ -634,30 +634,30 @@ void ValeronoiWindow::connect_robot_signals() {
             QMessageBox::warning(this, tr("Error"),
                                  tr("Connection error: %1").arg(error));
           });
-  connect(&m_robot, &Valeronoi::robot::Robot::signal_wifiInfo_updated, this,
-          [=](robot::Wifi_Information wifiInfo) {
+  connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_info_updated, this,
+          [=](robot::WifiInformation wifiInfo) {
               ui->labelLatestSignal->setText(
                   tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
               //ui->labelCurrentWifi->setText(wifiInfo.ssid() + " ["+ wifiInfo.bssid() +"]");
               if (m_recording) {
-                  int wifiId = m_wifi_collection.get_or_create_wifiId(wifiInfo);
+                  int wifiId = m_wifi_collection.get_or_create_wifi_id(wifiInfo);
                   m_wifi_measurements.slot_add_measurement(wifiInfo.signal(), wifiId);
               }
           });
-
-  connect(&m_robot, &Valeronoi::robot::Robot::signal_currentWifi_updated, this,
-          [=](robot::Wifi_Information wifiInfo) {
+  
+  connect(&m_robot, &Valeronoi::robot::Robot::signal_current_wifi_updated, this,
+          [=](robot::WifiInformation wifi_info) {
               // Add to list if needed..
-              (void)m_wifi_collection.get_or_create_wifiId(wifiInfo);
-              static const auto defaultColor = QListWidgetItem().foreground();
-              static const QBrush highlightColor(Qt::darkGreen);
+      (void)m_wifi_collection.get_or_create_wifi_id(wifi_info);
+              static const auto color_default = QListWidgetItem().foreground();
+              static const QBrush color_highlight(Qt::darkGreen);
               // reset & set Highlighting
               for(int i = 0; i < ui->wifiList->count(); ++i) {
                   QListWidgetItem* item = ui->wifiList->item(i);
-                  if (item->text().contains(wifiInfo.bssid())) {
-                      item->setForeground(highlightColor);
+                  if (item->text().contains(wifi_info.bssid())) {
+                      item->setForeground(color_highlight);
                   } else {
-                      item->setForeground(defaultColor);
+                      item->setForeground(color_default);
                   }
               }
   });

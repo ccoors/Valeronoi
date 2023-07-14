@@ -45,16 +45,16 @@ class Measurements : public QObject {
 
   [[nodiscard]] MeasurementStatistics get_statistics() const;
 
-  int unkownWifiId;
+  int unkown_wifi_id;
 
  signals:
   void signal_measurements_updated();
 
  public slots:
-  void slot_add_measurement(double signal, int wifiId);
+  void slot_add_measurement(double signal, int wifi_id);
 
  private:
-  void add_measurement(int x, int y, double value, int wifiId);
+  void add_measurement(int x, int y, double value, int wifi_id);
 
   const RobotMap *m_map{nullptr};
 

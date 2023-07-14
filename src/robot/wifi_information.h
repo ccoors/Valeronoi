@@ -6,23 +6,23 @@
 
 namespace Valeronoi::robot {
 
-class Wifi_InformationData;
+class WifiInformationData;
 
-class Wifi_Information
+class WifiInformation
 {
 public:
-    Wifi_Information();
-    Wifi_Information(const QJsonObject& jsonObj);
-    Wifi_Information(const double signal);
-    Wifi_Information(const double signal, const QString ssid, const QString bssid);
+    WifiInformation();
+    WifiInformation(const QJsonObject& jsonObj);
+    WifiInformation(const double signal);
+    WifiInformation(const double signal, const QString ssid, const QString bssid);
 
-    Wifi_Information(const Wifi_Information &);
-    Wifi_Information &operator=(const Wifi_Information &);
-    ~Wifi_Information();
+    WifiInformation(const WifiInformation &);
+    WifiInformation &operator=(const WifiInformation &);
+    ~WifiInformation();
 
-    void setSsid(const QString ssid);
-    void setBssid(const QString bssid);
-    void setSignal(const double signal);
+    void set_ssid(const QString ssid);
+    void set_bssid(const QString bssid);
+    void set_signal(const double signal);
 
     QString ssid() const;
     QString bssid() const;
@@ -33,7 +33,7 @@ public:
 
     bool has_valid_signal() const;
 private:
-    QSharedDataPointer<Wifi_InformationData> m_data;
+    QSharedDataPointer<WifiInformationData> m_data;
 };
 
 }

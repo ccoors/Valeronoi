@@ -68,7 +68,7 @@ struct Map {
 
 struct Measurement {
   int x, y;
-  int wifiId;
+  int wifi_id;
   std::vector<double> data;
   double average;
 };
@@ -76,7 +76,7 @@ struct Measurement {
 typedef std::vector<Measurement> RawMeasurements;
 
 struct MeasurementStatistics {
-  int measurements, unique_places, unique_Wifi_APs;
+  int measurements, unique_places, unique_wifi_APs;
   double strongest, weakest;
 };
 
