@@ -352,6 +352,7 @@ bool ValeronoiWindow::load_file(const QString &path) {
         json_document.object()["wifis"].toArray());
   } else {
       // add dummy wifi for Import.
+      m_wifi_collection.clear();
       m_wifi_measurements.unkownWifiId = m_wifi_collection.get_or_create_wifiId(Valeronoi::robot::Wifi_Information());
   }
 
@@ -478,8 +479,12 @@ void ValeronoiWindow::connect_wifi_widget()
       [=](QListWidgetItem *current, QListWidgetItem *previous) {
         (void)previous;
         int newWifiFilter = -1;
-        QRegularExpression regEx_bssid("\\[(.+)\\]");
-        QString bssid = regEx_bssid.match(current->text()).captured(1);
+        static QRegularExpression regEx_bssid("\\[(.+)\\]");
+        QString bssid;
+        if (current != 0) {
+            bssid = regEx_bssid.match(current->text()).captured(1);
+        }
+
         if (!bssid.isEmpty())
         {
             newWifiFilter = m_wifi_collection.get_wifiId(bssid);
@@ -651,7 +656,6 @@ void ValeronoiWindow::connect_robot_signals() {
                   QListWidgetItem* item = ui->wifiList->item(i);
                   if (item->text().contains(wifiInfo.bssid())) {
                       item->setForeground(highlightColor);
-                      item->setSelected(true);
                   } else {
                       item->setForeground(defaultColor);
                   }

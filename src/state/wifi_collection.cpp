@@ -6,6 +6,11 @@ namespace Valeronoi::state {
 
 wifi_collection::wifi_collection()
 {
+    clear();
+}
+
+void wifi_collection::clear()
+{
     m_knownWifis.clear();
     m_knownWifiIds.clear();
 }
@@ -58,8 +63,7 @@ QJsonArray wifi_collection::get_json() const
 
 void wifi_collection::set_json(const QJsonArray &json)
 {
-    m_knownWifiIds.clear();
-    m_knownWifis.clear();
+    clear();
 
     foreach (auto wifiApVal, json) {
         if (!wifiApVal.isObject()) {

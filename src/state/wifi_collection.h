@@ -14,6 +14,8 @@ class wifi_collection : public QObject
 public:
     wifi_collection();
 
+    void clear();
+
     int get_or_create_wifiId(Valeronoi::robot::Wifi_Information wifiInfo);
 
     int get_wifiId(QString bssid) const;
