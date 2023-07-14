@@ -642,12 +642,20 @@ void ValeronoiWindow::connect_robot_signals() {
 
   connect(&m_robot, &Valeronoi::robot::Robot::signal_currentWifi_updated, this,
           [=](robot::Wifi_Information wifiInfo) {
-
-              auto items = ui->wifiList->findItems(wifiInfo.bssid(), Qt::MatchContains);
-              const QBrush highlight(Qt::green);
-              for(auto& widgetItem : items) {
-                    widgetItem->setForeground(highlight);
+              // Add to list if needed..
+              (void)m_wifi_collection.get_or_create_wifiId(wifiInfo);
+              static const auto defaultColor = QListWidgetItem().foreground();
+              static const QBrush highlightColor(Qt::darkGreen);
+              // reset & set Highlighting
+              for(int i = 0; i < ui->wifiList->count(); ++i) {
+                  QListWidgetItem* item = ui->wifiList->item(i);
+                  if (item->text().contains(wifiInfo.bssid())) {
+                      item->setForeground(highlightColor);
+                      item->setSelected(true);
+                  } else {
+                      item->setForeground(defaultColor);
                   }
+              }
   });
 
 

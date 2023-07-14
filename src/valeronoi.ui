@@ -151,7 +151,7 @@
             <item>
              <widget class="QGroupBox" name="wifiInfoGroup">
               <property name="title">
-               <string>Wifi info</string>
+               <string>Wifi AccessPoints</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>

@@ -57,9 +57,12 @@ const RobotInformation *Robot::get_information() const {
   return m_api.get_information();
 }
 
-void Robot::slot_connect() { m_api.slot_connect(); }
+void Robot::slot_connect() { m_currentWifiCon = Wifi_Information(); m_api.slot_connect(); }
 
-void Robot::slot_disconnect() { m_api.slot_disconnect(); }
+void Robot::slot_disconnect() {
+  m_api.slot_disconnect();
+  m_currentWifiCon = Wifi_Information();
+}
 
 void Robot::slot_subscribe_wifi(double interval) {
   m_wifi_timer.start(static_cast<int>(1000 * interval));
