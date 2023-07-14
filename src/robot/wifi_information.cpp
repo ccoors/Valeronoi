@@ -70,7 +70,7 @@ WifiInformation &WifiInformation::operator=(const WifiInformation &rhs)
 
 WifiInformation::~WifiInformation()
 {
-
+    m_data.reset();
 }
 
 void WifiInformation::set_ssid(const QString ssid)
