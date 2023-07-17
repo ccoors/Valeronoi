@@ -84,7 +84,7 @@ class DisplayWidget : public QGraphicsView {
 
   [[nodiscard]] int get_wifi_id_filter() const;
 
-  signals:
+ signals:
   void signal_relocate(int x, int y);
 
  public slots:

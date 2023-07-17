@@ -59,7 +59,6 @@ class Measurements : public QObject {
   const RobotMap *m_map{nullptr};
 
   std::vector<Measurement> m_data;
-
 };
 
 }  // namespace Valeronoi::state

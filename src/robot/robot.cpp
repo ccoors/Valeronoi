@@ -94,11 +94,11 @@ void Robot::slot_get_wifi() {
         const QJsonObject details_object = json.object()["details"].toObject();
         const WifiInformation wifi_info(details_object);
         if (wifi_info.bssid() != m_current_wifi_connection.bssid()) {
-            m_current_wifi_connection = wifi_info;
-            emit signal_current_wifi_updated(wifi_info);
+          m_current_wifi_connection = wifi_info;
+          emit signal_current_wifi_updated(wifi_info);
         }
         if (wifi_info.has_valid_signal()) {
-            emit signal_wifi_info_updated(wifi_info);
+          emit signal_wifi_info_updated(wifi_info);
         } else {
           qDebug()
               << "Message did not contain a valid signal strength, ignoring";

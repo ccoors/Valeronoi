@@ -51,7 +51,8 @@ SegmentGenerator::~SegmentGenerator() {
 
 void SegmentGenerator::generate(
     const Valeronoi::state::RawMeasurements &measurements,
-    Valeronoi::state::DISPLAY_MODE display_mode, int simplify, int wifi_id_filter) {
+    Valeronoi::state::DISPLAY_MODE display_mode, int simplify,
+    int wifi_id_filter) {
   QMutexLocker locker(&m_mutex);
 
   m_measurements = measurements;
@@ -84,24 +85,24 @@ void SegmentGenerator::run() {
       for (auto &m : measurements) {
         bool saveValue = true;
 
-          if (wifi_id_filter != -1 && m.wifi_id != wifi_id_filter) {
-            continue; // skip and probe next one
+        if (wifi_id_filter != -1 && m.wifi_id != wifi_id_filter) {
+          continue;  // skip and probe next one
         }
 
         if (simplify > 1) {
-            m.x = (m.x / simplify) * simplify;
-            m.y = (m.y / simplify) * simplify;
+          m.x = (m.x / simplify) * simplify;
+          m.y = (m.y / simplify) * simplify;
 
-            for (auto &sm : processed_measurements) {
-                if (sm.x == m.x && sm.y == m.y) {
-                    // I'd like to use std::transform with std::back_inserter instead,
-                    // but that doesn't work for doubles
-                    for (const auto d : m.data) {
-                        sm.data.push_back(d);
-                    }
-                    saveValue = false;
-                }
+          for (auto &sm : processed_measurements) {
+            if (sm.x == m.x && sm.y == m.y) {
+              // I'd like to use std::transform with std::back_inserter instead,
+              // but that doesn't work for doubles
+              for (const auto d : m.data) {
+                sm.data.push_back(d);
+              }
+              saveValue = false;
             }
+          }
         }
 
         if (saveValue) {

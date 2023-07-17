@@ -24,7 +24,8 @@ void Measurements::set_map(const RobotMap &map) { m_map = &map; }
 void Measurements::slot_add_measurement(double signal, int wifi_id) {
   if (m_map != nullptr && m_map->is_valid()) {
     if (auto robot_position = m_map->get_map().get_robot_position()) {
-      add_measurement(robot_position.value().x, robot_position.value().y, signal, wifi_id);
+      add_measurement(robot_position.value().x, robot_position.value().y,
+                      signal, wifi_id);
       emit signal_measurements_updated();
     } else {
       qDebug() << "Could not find robot on map";
@@ -73,9 +74,7 @@ void Measurements::set_json(const QJsonArray &json) {
 
 void Measurements::add_measurement(int x, int y, double value, int wifi_id) {
   for (auto &d : m_data) {
-    if (d.x == x
-        && d.y == y
-        && d.wifi_id == wifi_id) {
+    if (d.x == x && d.y == y && d.wifi_id == wifi_id) {
       d.data.push_back(value);
       double avg = 0;
       for (const auto &m : d.data) {

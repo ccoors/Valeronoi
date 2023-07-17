@@ -41,8 +41,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
       m_update_dialog{this},
       m_log_dialog{this},
       m_modified{false},
-      m_current_file{""}
-{
+      m_current_file{""} {
   Valeronoi::util::LogHelper::instance().set_log_dialog(&m_log_dialog);
   qInfo().nospace() << "Starting Valeronoi " << VALERONOI_VERSION << " ("
                     << VALERONOI_GIT_COMMIT << ")";
@@ -349,12 +348,13 @@ bool ValeronoiWindow::load_file(const QString &path) {
   m_robot_map.update_map_json(json_document.object()["map"].toObject());
 
   if (json_document.object().contains("wifis")) {
-      m_wifi_collection.set_json(
-        json_document.object()["wifis"].toArray());
+    m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
   } else {
-      // add dummy wifi for Import.
-      m_wifi_collection.clear();
-      m_wifi_measurements.unkown_wifi_id = m_wifi_collection.get_or_create_wifi_id(Valeronoi::robot::WifiInformation());
+    // add dummy wifi for Import.
+    m_wifi_collection.clear();
+    m_wifi_measurements.unkown_wifi_id =
+        m_wifi_collection.get_or_create_wifi_id(
+            Valeronoi::robot::WifiInformation());
   }
 
   m_wifi_measurements.set_json(
@@ -465,33 +465,33 @@ void ValeronoiWindow::connect_display_widget() {
   update_display_settings();
 }
 
-void ValeronoiWindow::connect_wifi_widget()
-{
-  connect(&m_wifi_collection, &Valeronoi::state::wifi_collection::signal_wifi_list_updated, this,
-      [=]() {
-          auto wifiVect = m_wifi_collection.get_known_wifis();
-          ui->wifiList->clear();
-          for (auto& wifiInfo : wifiVect) {
-              ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() + "]");
-          }
-      });
+void ValeronoiWindow::connect_wifi_widget() {
+  connect(&m_wifi_collection,
+          &Valeronoi::state::wifi_collection::signal_wifi_list_updated, this,
+          [=]() {
+            auto wifiVect = m_wifi_collection.get_known_wifis();
+            ui->wifiList->clear();
+            for (auto &wifiInfo : wifiVect) {
+              ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() +
+                                    "]");
+            }
+          });
 
   connect(ui->wifiList, &QListWidget::currentItemChanged, this,
-      [=](QListWidgetItem *current, QListWidgetItem *previous) {
-        (void)previous;
-        int newWifiFilter = -1;
-        static QRegularExpression regEx_bssid("\\[(.+)\\]");
-        QString bssid;
-        if (current != nullptr) {
-            bssid = regEx_bssid.match(current->text()).captured(1);
-        }
+          [=](QListWidgetItem *current, QListWidgetItem *previous) {
+            (void)previous;
+            int newWifiFilter = -1;
+            static QRegularExpression regEx_bssid("\\[(.+)\\]");
+            QString bssid;
+            if (current != nullptr) {
+              bssid = regEx_bssid.match(current->text()).captured(1);
+            }
 
-        if (!bssid.isEmpty())
-        {
-            newWifiFilter = m_wifi_collection.get_wifi_id(bssid);
-        }
-        m_display_widget->slot_set_wifi_id_filter(newWifiFilter);
-      });
+            if (!bssid.isEmpty()) {
+              newWifiFilter = m_wifi_collection.get_wifi_id(bssid);
+            }
+            m_display_widget->slot_set_wifi_id_filter(newWifiFilter);
+          });
 }
 
 void ValeronoiWindow::connect_actions() {
@@ -637,33 +637,33 @@ void ValeronoiWindow::connect_robot_signals() {
           });
   connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_info_updated, this,
           [=](robot::WifiInformation wifiInfo) {
-              ui->labelLatestSignal->setText(
-                  tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
-              //ui->labelCurrentWifi->setText(wifiInfo.ssid() + " ["+ wifiInfo.bssid() +"]");
-              if (m_recording) {
-                  int wifiId = m_wifi_collection.get_or_create_wifi_id(wifiInfo);
-                  m_wifi_measurements.slot_add_measurement(wifiInfo.signal(), wifiId);
-              }
+            ui->labelLatestSignal->setText(
+                tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
+            // ui->labelCurrentWifi->setText(wifiInfo.ssid() + " ["+
+            // wifiInfo.bssid() +"]");
+            if (m_recording) {
+              int wifiId = m_wifi_collection.get_or_create_wifi_id(wifiInfo);
+              m_wifi_measurements.slot_add_measurement(wifiInfo.signal(),
+                                                       wifiId);
+            }
           });
-  
+
   connect(&m_robot, &Valeronoi::robot::Robot::signal_current_wifi_updated, this,
           [=](robot::WifiInformation wifi_info) {
-              // Add to list if needed..
-      (void)m_wifi_collection.get_or_create_wifi_id(wifi_info);
-              static const auto color_default = QListWidgetItem().foreground();
-              static const QBrush color_highlight(Qt::darkGreen);
-              // reset & set Highlighting
-              for(int i = 0; i < ui->wifiList->count(); ++i) {
-                  QListWidgetItem* item = ui->wifiList->item(i);
-                  if (item->text().contains(wifi_info.bssid())) {
-                      item->setForeground(color_highlight);
-                  } else {
-                      item->setForeground(color_default);
-                  }
+            // Add to list if needed..
+            (void)m_wifi_collection.get_or_create_wifi_id(wifi_info);
+            static const auto color_default = QListWidgetItem().foreground();
+            static const QBrush color_highlight(Qt::darkGreen);
+            // reset & set Highlighting
+            for (int i = 0; i < ui->wifiList->count(); ++i) {
+              QListWidgetItem *item = ui->wifiList->item(i);
+              if (item->text().contains(wifi_info.bssid())) {
+                item->setForeground(color_highlight);
+              } else {
+                item->setForeground(color_default);
               }
-  });
-
-
+            }
+          });
 
   connect(&m_robot, &Valeronoi::robot::Robot::signal_map_updated, this, [=]() {
     m_robot_map.update_map_json(m_robot.get_map_data());
