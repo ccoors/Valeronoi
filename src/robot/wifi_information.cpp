@@ -7,7 +7,7 @@ class WifiInformationData : public QSharedData
 public:
     WifiInformationData() {
         m_bssid = "00:00:00:00:00:00";
-        m_ssid = "Unknown Wifi";
+        m_ssid = "Unknown WiFi";
         m_signal = 0.0;
     }
 

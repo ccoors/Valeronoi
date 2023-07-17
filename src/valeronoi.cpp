@@ -143,6 +143,7 @@ void ValeronoiWindow::newFile() {
     m_current_file.clear();
     m_robot_map.reset();
     m_wifi_measurements.reset();
+    m_wifi_collection.clear();
     set_modified(false);
     update_title();
   }
@@ -481,7 +482,7 @@ void ValeronoiWindow::connect_wifi_widget()
         int newWifiFilter = -1;
         static QRegularExpression regEx_bssid("\\[(.+)\\]");
         QString bssid;
-        if (current != 0) {
+        if (current != nullptr) {
             bssid = regEx_bssid.match(current->text()).captured(1);
         }
 
