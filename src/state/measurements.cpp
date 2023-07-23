@@ -21,10 +21,11 @@ namespace Valeronoi::state {
 
 void Measurements::set_map(const RobotMap &map) { m_map = &map; }
 
-void Measurements::slot_add_measurement(double data) {
+void Measurements::slot_add_measurement(double signal, int wifi_id) {
   if (m_map != nullptr && m_map->is_valid()) {
     if (auto robot_position = m_map->get_map().get_robot_position()) {
-      add_measurement(robot_position.value().x, robot_position.value().y, data);
+      add_measurement(robot_position.value().x, robot_position.value().y,
+                      signal, wifi_id);
       emit signal_measurements_updated();
     } else {
       qDebug() << "Could not find robot on map";
@@ -38,6 +39,7 @@ QJsonArray Measurements::get_json() const {
     auto obj = QJsonObject();
     obj.insert("x", d.x);
     obj.insert("y", d.y);
+    obj.insert("wifi", d.wifi_id);
     auto data = QJsonArray();
     for (auto v : d.data) {
       data.append(v);
@@ -59,16 +61,20 @@ void Measurements::set_json(const QJsonArray &json) {
     const auto obj = v.toObject();
     int x = obj["x"].toInt();
     int y = obj["y"].toInt();
+    int wifiId = unkown_wifi_id;
+    if (obj.contains("wifi")) {
+      wifiId = obj["wifi"].toInt(unkown_wifi_id);
+    }
     for (auto m : obj["data"].toArray()) {
-      add_measurement(x, y, m.toDouble());
+      add_measurement(x, y, m.toDouble(), wifiId);
     }
   }
   emit signal_measurements_updated();
 }
 
-void Measurements::add_measurement(int x, int y, double value) {
+void Measurements::add_measurement(int x, int y, double value, int wifi_id) {
   for (auto &d : m_data) {
-    if (d.x == x && d.y == y) {
+    if (d.x == x && d.y == y && d.wifi_id == wifi_id) {
       d.data.push_back(value);
       double avg = 0;
       for (const auto &m : d.data) {
@@ -78,7 +84,7 @@ void Measurements::add_measurement(int x, int y, double value) {
       return;
     }
   }
-  m_data.push_back(Measurement{x, y, {value}, value});
+  m_data.push_back(Measurement{x, y, wifi_id, {value}, value});
 }
 
 MeasurementStatistics Measurements::get_statistics() const {
@@ -87,7 +93,13 @@ MeasurementStatistics Measurements::get_statistics() const {
   ret.unique_places = m_data.size();
   ret.weakest = 0;
   ret.strongest = -1000;
+  ret.unique_wifi_APs = 0;
+  QVector<int> temp_wifi_count;
   for (auto &m : m_data) {
+    if (!temp_wifi_count.contains(m.wifi_id)) {
+      temp_wifi_count.push_back(m.wifi_id);
+      ret.unique_wifi_APs++;
+    }
     for (auto &d : m.data) {
       ret.measurements++;
       ret.weakest = std::min(ret.weakest, d);

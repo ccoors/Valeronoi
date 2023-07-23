@@ -80,11 +80,13 @@ set(SOURCE_FILES
     src/robot/robot.cpp
     src/robot/connection_configuration.cpp
     src/robot/robot_information.cpp
+    src/robot/wifi_information.cpp
     src/robot/api/sse.cpp
     src/robot/api/valetudo_v2.cpp
     src/state/state.cpp
     src/state/robot_map.cpp
     src/state/measurements.cpp
+    src/state/wifi_collection.cpp
     src/gui/dialog/robot_config.ui
     src/gui/dialog/robot_config.cpp
     src/gui/dialog/about.ui

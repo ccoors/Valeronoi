@@ -186,7 +186,8 @@ void DisplayWidget::slot_map_updated() {
 void DisplayWidget::slot_measurements_updated() {
   const auto &measurements = m_measurements.get_measurements();
   qDebug() << "Requesting generation of Voronoi segments";
-  m_segment_generator.generate(measurements, m_display_mode, m_simplify);
+  m_segment_generator.generate(measurements, m_display_mode, m_simplify,
+                               m_wifi_id_filter);
 }
 
 void DisplayWidget::slot_set_display_mode(int display_mode) {
@@ -268,6 +269,15 @@ void DisplayWidget::slot_set_simplify(int value) {
     QSettings settings;
     m_simplify = new_value;
     settings.setValue("display/simplify", m_simplify);
+    slot_measurements_updated();
+  }
+}
+
+int DisplayWidget::get_wifi_id_filter() const { return m_wifi_id_filter; }
+
+void DisplayWidget::slot_set_wifi_id_filter(int wifi_id_filter) {
+  if (m_wifi_id_filter != wifi_id_filter) {
+    m_wifi_id_filter = wifi_id_filter;
     slot_measurements_updated();
   }
 }

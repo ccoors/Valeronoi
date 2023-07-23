@@ -57,9 +57,15 @@ const RobotInformation *Robot::get_information() const {
   return m_api.get_information();
 }
 
-void Robot::slot_connect() { m_api.slot_connect(); }
+void Robot::slot_connect() {
+  m_current_wifi_connection = WifiInformation();
+  m_api.slot_connect();
+}
 
-void Robot::slot_disconnect() { m_api.slot_disconnect(); }
+void Robot::slot_disconnect() {
+  m_api.slot_disconnect();
+  m_current_wifi_connection = WifiInformation();
+}
 
 void Robot::slot_subscribe_wifi(double interval) {
   m_wifi_timer.start(static_cast<int>(1000 * interval));
@@ -85,10 +91,14 @@ void Robot::slot_get_wifi() {
       const auto response_class = json.object()["__class"].toString();
       if (response_class == "ValetudoWifiStatus" ||
           response_class == "ValetudoWifiConfiguration") {
-        const auto details_object = json.object()["details"].toObject();
-        const auto signal = details_object["signal"].toDouble();
-        if (details_object.contains("signal") && signal <= -1) {
-          emit signal_wifi_updated(signal);
+        const QJsonObject details_object = json.object()["details"].toObject();
+        const WifiInformation wifi_info(details_object);
+        if (wifi_info.bssid() != m_current_wifi_connection.bssid()) {
+          m_current_wifi_connection = wifi_info;
+          emit signal_current_wifi_updated(wifi_info);
+        }
+        if (wifi_info.has_valid_signal()) {
+          emit signal_wifi_info_updated(wifi_info);
         } else {
           qDebug()
               << "Message did not contain a valid signal strength, ignoring";

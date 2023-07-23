@@ -78,6 +78,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
         const auto stats = m_wifi_measurements.get_statistics();
         ui->labelMeasurements->setText(QString::number(stats.measurements));
         ui->labelUniquePlaces->setText(QString::number(stats.unique_places));
+        ui->lableUniqueWifiAPs->setText(QString::number(stats.unique_wifi_APs));
         if (stats.measurements > 0) {
           ui->labelWeakestSignal->setText(
               QString::number(stats.weakest).append(" dBm"));
@@ -116,6 +117,8 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
   load_colormaps();
   connect_display_widget();
 
+  connect_wifi_widget();
+
   update_title();
   if (m_settings_dialog.should_auto_check_for_updates(this)) {
     m_update_dialog.check_update(true, this);
@@ -139,6 +142,7 @@ void ValeronoiWindow::newFile() {
     m_current_file.clear();
     m_robot_map.reset();
     m_wifi_measurements.reset();
+    m_wifi_collection.clear();
     set_modified(false);
     update_title();
   }
@@ -190,6 +194,7 @@ bool ValeronoiWindow::save() {
   auto object = QJsonObject();
   object.insert("map", m_robot_map.get_map_json());
   object.insert("measurements", m_wifi_measurements.get_json());
+  object.insert("wifis", m_wifi_collection.get_json());
   object.insert("version", FILE_FORMAT_VERSION);
   auto data = QJsonDocument(object);
   file.write(data.toJson(QJsonDocument::Compact));
@@ -341,6 +346,17 @@ bool ValeronoiWindow::load_file(const QString &path) {
     return false;
   }
   m_robot_map.update_map_json(json_document.object()["map"].toObject());
+
+  if (json_document.object().contains("wifis")) {
+    m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
+  } else {
+    // add dummy wifi for Import.
+    m_wifi_collection.clear();
+    m_wifi_measurements.unkown_wifi_id =
+        m_wifi_collection.get_or_create_wifi_id(
+            Valeronoi::robot::WifiInformation());
+  }
+
   m_wifi_measurements.set_json(
       json_document.object()["measurements"].toArray());
 
@@ -447,6 +463,35 @@ void ValeronoiWindow::connect_display_widget() {
 #endif
 
   update_display_settings();
+}
+
+void ValeronoiWindow::connect_wifi_widget() {
+  connect(&m_wifi_collection,
+          &Valeronoi::state::wifi_collection::signal_wifi_list_updated, this,
+          [=]() {
+            auto wifiVect = m_wifi_collection.get_known_wifis();
+            ui->wifiList->clear();
+            for (auto &wifiInfo : wifiVect) {
+              ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() +
+                                    "]");
+            }
+          });
+
+  connect(ui->wifiList, &QListWidget::currentItemChanged, this,
+          [=](QListWidgetItem *current, QListWidgetItem *previous) {
+            (void)previous;
+            int newWifiFilter = -1;
+            static QRegularExpression regEx_bssid("\\[(.+)\\]");
+            QString bssid;
+            if (current != nullptr) {
+              bssid = regEx_bssid.match(current->text()).captured(1);
+            }
+
+            if (!bssid.isEmpty()) {
+              newWifiFilter = m_wifi_collection.get_wifi_id(bssid);
+            }
+            m_display_widget->slot_set_wifi_id_filter(newWifiFilter);
+          });
 }
 
 void ValeronoiWindow::connect_actions() {
@@ -590,14 +635,36 @@ void ValeronoiWindow::connect_robot_signals() {
             QMessageBox::warning(this, tr("Error"),
                                  tr("Connection error: %1").arg(error));
           });
-  connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_updated, this,
-          [=](double value) {
+  connect(&m_robot, &Valeronoi::robot::Robot::signal_wifi_info_updated, this,
+          [=](robot::WifiInformation wifiInfo) {
             ui->labelLatestSignal->setText(
-                tr("%1 dBm").arg(static_cast<int>(value)));
+                tr("%1 dBm").arg(static_cast<int>(wifiInfo.signal())));
+            // ui->labelCurrentWifi->setText(wifiInfo.ssid() + " ["+
+            // wifiInfo.bssid() +"]");
             if (m_recording) {
-              m_wifi_measurements.slot_add_measurement(value);
+              int wifiId = m_wifi_collection.get_or_create_wifi_id(wifiInfo);
+              m_wifi_measurements.slot_add_measurement(wifiInfo.signal(),
+                                                       wifiId);
             }
           });
+
+  connect(&m_robot, &Valeronoi::robot::Robot::signal_current_wifi_updated, this,
+          [=](robot::WifiInformation wifi_info) {
+            // Add to list if needed..
+            (void)m_wifi_collection.get_or_create_wifi_id(wifi_info);
+            static const auto color_default = QListWidgetItem().foreground();
+            static const QBrush color_highlight(Qt::darkGreen);
+            // reset & set Highlighting
+            for (int i = 0; i < ui->wifiList->count(); ++i) {
+              QListWidgetItem *item = ui->wifiList->item(i);
+              if (item->text().contains(wifi_info.bssid())) {
+                item->setForeground(color_highlight);
+              } else {
+                item->setForeground(color_default);
+              }
+            }
+          });
+
   connect(&m_robot, &Valeronoi::robot::Robot::signal_map_updated, this, [=]() {
     m_robot_map.update_map_json(m_robot.get_map_data());
     set_modified(true);

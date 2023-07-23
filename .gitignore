@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/qt,qtcreator,c++,c,linux,windows,macos,clion+all,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=qt,qtcreator,c++,c,linux,windows,macos,clion+all,python
+# Created by https://www.toptal.com/developers/gitignore/api/c,qt,c++,linux,macos,python,windows,clion+all,qtcreator,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=c,qt,c++,linux,macos,python,windows,clion+all,qtcreator,visualstudiocode
 
 ### C ###
 # Prerequisites
@@ -158,6 +158,9 @@ fabric.properties
 # that are supposed to be shared within teams.
 
 .idea/*
+
+!.idea/codeStyles
+!.idea/runConfigurations
 
 ### Linux ###
 *~
@@ -456,6 +459,25 @@ compile_commands.json
 *.cflags
 
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -482,7 +504,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/qt,qtcreator,c++,c,linux,windows,macos,clion+all,python
+# End of https://www.toptal.com/developers/gitignore/api/c,qt,c++,linux,macos,python,windows,clion+all,qtcreator,visualstudiocode
 
 build*/
 /tools/archlinux/**/src/
