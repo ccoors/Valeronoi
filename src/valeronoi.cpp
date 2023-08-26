@@ -350,12 +350,7 @@ bool ValeronoiWindow::load_file(const QString &path) {
 
   ui->wifiInfoGroup->setChecked(false);
   if (json_document.object().contains("wifis")) {
-    try {
-      m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
-    } catch (const std::runtime_error &e) {
-      QMessageBox::warning(nullptr, "Error", e.what());
-      return false;
-    }
+    m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
   } else {
     // add dummy WiFi for Import.
     m_wifi_collection.clear();
