@@ -143,6 +143,7 @@ void ValeronoiWindow::newFile() {
     m_robot_map.reset();
     m_wifi_measurements.reset();
     m_wifi_collection.clear();
+    ui->wifiInfoGroup->setChecked(false);
     set_modified(false);
     update_title();
   }
@@ -346,6 +347,7 @@ bool ValeronoiWindow::load_file(const QString &path) {
     return false;
   }
 
+  ui->wifiInfoGroup->setChecked(false);
   if (json_document.object().contains("wifis")) {
     try {
       m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
@@ -461,6 +463,15 @@ void ValeronoiWindow::connect_display_widget() {
   });
   connect(ui->simplifySlider, &QSlider::valueChanged, m_display_widget,
           &Valeronoi::gui::widget::DisplayWidget::slot_set_simplify);
+  connect(ui->wifiInfoGroup, &QGroupBox::clicked, this, [=]() {
+    if (!ui->wifiInfoGroup->isChecked()) {
+      m_display_widget->slot_set_wifi_id_filter(-1);
+    } else if (ui->wifiList->count() > 0) {
+      auto *item = ui->wifiList->item(0);
+      ui->wifiList->setCurrentItem(item);
+      set_selected_wifi_item(item);
+    }
+  });
 
 #ifdef QT_NO_OPENGL
   ui->useOpenGL->setChecked(false);
@@ -474,29 +485,45 @@ void ValeronoiWindow::connect_wifi_widget() {
   connect(&m_wifi_collection,
           &Valeronoi::state::wifi_collection::signal_wifi_list_updated, this,
           [=]() {
-            auto wifiVect = m_wifi_collection.get_known_wifis();
+            auto wifi_vector = m_wifi_collection.get_known_wifis();
+            auto selected_item = ui->wifiList->currentRow();
+
             ui->wifiList->clear();
-            for (auto &wifiInfo : wifiVect) {
+            for (auto &wifiInfo : wifi_vector) {
               ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() +
                                     "]");
+              ui->wifiList->item(ui->wifiList->count() - 1)
+                  ->setData(Qt::UserRole, wifiInfo.bssid());
+            }
+
+            if (selected_item >= 0 && selected_item < ui->wifiList->count()) {
+              ui->wifiList->setCurrentRow(selected_item);
+            } else {
+              // Should not happen, but let's do this anyway
+              set_selected_wifi_item(nullptr);
             }
           });
 
   connect(ui->wifiList, &QListWidget::currentItemChanged, this,
           [=](QListWidgetItem *current, QListWidgetItem *previous) {
             (void)previous;
-            int newWifiFilter = -1;
-            static QRegularExpression regEx_bssid("\\[(.+)\\]");
-            QString bssid;
-            if (current != nullptr) {
-              bssid = regEx_bssid.match(current->text()).captured(1);
-            }
-
-            if (!bssid.isEmpty()) {
-              newWifiFilter = m_wifi_collection.get_wifi_id(bssid);
-            }
-            m_display_widget->slot_set_wifi_id_filter(newWifiFilter);
+            set_selected_wifi_item(current);
           });
+}
+
+void ValeronoiWindow::set_selected_wifi_item(
+    const QListWidgetItem *widget_item) {
+  int new_wifi_filter = -1;
+  QString bssid;
+  if (widget_item != nullptr) {
+    bssid = widget_item->data(Qt::UserRole).toString();
+  }
+
+  if (!bssid.isEmpty()) {
+    new_wifi_filter = m_wifi_collection.get_wifi_id(bssid);
+  }
+  qDebug() << "Setting WiFi filter" << new_wifi_filter;
+  m_display_widget->slot_set_wifi_id_filter(new_wifi_filter);
 }
 
 void ValeronoiWindow::connect_actions() {

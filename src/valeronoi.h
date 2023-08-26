@@ -102,6 +102,8 @@ class ValeronoiWindow : public QMainWindow {
 
   void connect_actions();
 
+  void set_selected_wifi_item(const QListWidgetItem *widget_item);
+
   Ui::ValeronoiWindow *ui;
   Valeronoi::gui::widget::DisplayWidget *m_display_widget;
 
