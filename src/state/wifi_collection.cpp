@@ -65,7 +65,7 @@ QJsonArray wifi_collection::get_json() const {
 void wifi_collection::set_json(const QJsonArray& json) {
   clear();
 
-  foreach (auto wifi_access_point_value, json) {
+  for (const auto& wifi_access_point_value : json) {
     if (!wifi_access_point_value.isObject()) {
       // Wrong format.
       return;
