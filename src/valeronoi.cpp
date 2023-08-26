@@ -144,6 +144,7 @@ void ValeronoiWindow::newFile() {
     m_wifi_measurements.reset();
     m_wifi_collection.clear();
     ui->wifiInfoGroup->setChecked(false);
+    ui->wifiList->clear();
     set_modified(false);
     update_title();
   }

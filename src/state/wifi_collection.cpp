@@ -24,10 +24,7 @@ namespace Valeronoi::state {
 
 wifi_collection::wifi_collection() { clear(); }
 
-void wifi_collection::clear() {
-  m_known_wifis.clear();
-  m_known_wifi_ids.clear();
-}
+void wifi_collection::clear() { m_known_wifis.clear(); }
 
 int wifi_collection::get_or_create_wifi_id(
     const Valeronoi::robot::WifiInformation& wifi_info) {
@@ -43,17 +40,11 @@ int wifi_collection::get_or_create_wifi_id(
 int wifi_collection::add_wifi(
     const Valeronoi::robot::WifiInformation& wifi_info) {
   m_known_wifis.append(wifi_info);
-  m_known_wifi_ids.append(m_known_wifis.size() - 1);
-
-  if (m_known_wifis.size() != m_known_wifi_ids.size()) {
-    // out of sync.
-    throw std::runtime_error("Vector size mismatch! The data got corrupted.");
-  }
 
   emit signal_wifi_list_updated();
   emit signal_new_wifi_added(wifi_info);
 
-  return m_known_wifi_ids.last();
+  return m_known_wifis.size() - 1;
 }
 
 QVector<Valeronoi::robot::WifiInformation> wifi_collection::get_known_wifis()
@@ -62,15 +53,13 @@ QVector<Valeronoi::robot::WifiInformation> wifi_collection::get_known_wifis()
 }
 
 QJsonArray wifi_collection::get_json() const {
-  QJsonArray jArr;
+  QJsonArray ret;
 
-  for (int index = 0; m_known_wifis.size() > index; ++index) {
-    QJsonObject wifi_access_point = m_known_wifis.at(index).get_json();
-    wifi_access_point.insert("wifi_id", m_known_wifi_ids.at(index));
-    jArr.append(wifi_access_point);
+  for (const auto& m_known_wifi : m_known_wifis) {
+    ret.append(m_known_wifi.get_json());
   }
 
-  return jArr;
+  return ret;
 }
 
 void wifi_collection::set_json(const QJsonArray& json) {
@@ -82,17 +71,6 @@ void wifi_collection::set_json(const QJsonArray& json) {
       return;
     }
     QJsonObject wifi_access_point = wifi_access_point_value.toObject();
-    int wifi_id = wifi_access_point["wifi_id"].toInt(-1);
-    if (wifi_id < 0) {
-      // Error parsing wifi_id.
-      // This should not happen and there is no good way to handle this.
-      throw std::runtime_error(
-          "The \"wifi_id\" for the saved WiFis could not be parsed.");
-
-      // creating new WiFi Ids or remapping here would leave unmapped(lost)
-      // measurement Data.
-    }
-    m_known_wifi_ids.append(wifi_id);
     m_known_wifis.append(Valeronoi::robot::WifiInformation(wifi_access_point));
   }
 
@@ -102,7 +80,7 @@ void wifi_collection::set_json(const QJsonArray& json) {
 int wifi_collection::get_wifi_id(const QString& bssid) const {
   for (int index = 0; m_known_wifis.size() > index; ++index) {
     if (m_known_wifis.at(index).bssid() == bssid) {
-      return m_known_wifi_ids.at(index);
+      return index;
     }
   }
 

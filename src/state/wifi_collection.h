@@ -51,10 +51,8 @@ class wifi_collection : public QObject {
 
   void signal_new_wifi_added(Valeronoi::robot::WifiInformation wifi_info);
 
- protected:
  private:
   QVector<Valeronoi::robot::WifiInformation> m_known_wifis;
-  QVector<int> m_known_wifi_ids;
 };
 
 }  // namespace Valeronoi::state
