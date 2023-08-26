@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - os: macos-13
-            qt: "6.5.1"
+            qt: "6.5.2"
             variant: "qt6"
     name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
@@ -143,7 +143,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            qt: "6.5.1"
+            qt: "6.5.2"
             variant: "current"
     name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
