@@ -345,17 +345,22 @@ bool ValeronoiWindow::load_file(const QString &path) {
     QMessageBox::warning(nullptr, "Error", tr("File is corrupted"));
     return false;
   }
-  m_robot_map.update_map_json(json_document.object()["map"].toObject());
 
   if (json_document.object().contains("wifis")) {
-    m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
+    try {
+      m_wifi_collection.set_json(json_document.object()["wifis"].toArray());
+    } catch (const std::runtime_error &e) {
+      QMessageBox::warning(nullptr, "Error", e.what());
+      return false;
+    }
   } else {
-    // add dummy wifi for Import.
+    // add dummy WiFi for Import.
     m_wifi_collection.clear();
-    m_wifi_measurements.unkown_wifi_id =
+    m_wifi_measurements.unknown_wifi_id =
         m_wifi_collection.get_or_create_wifi_id(
             Valeronoi::robot::WifiInformation());
   }
+  m_robot_map.update_map_json(json_document.object()["map"].toObject());
 
   m_wifi_measurements.set_json(
       json_document.object()["measurements"].toArray());

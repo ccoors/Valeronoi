@@ -110,8 +110,7 @@ class DisplayWidget : public QGraphicsView {
   QColor m_background_color, m_wall_color, m_floor_color;
   bool m_draw_floor{true}, m_draw_entities{true}, m_use_opengl{false},
       m_antialiasing{true}, m_restrict_floor{true}, m_restrict_path{true};
-  int m_simplify{1};
-  int m_wifi_id_filter{-1};
+  int m_simplify{1}, m_wifi_id_filter{-1};
   const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
   Valeronoi::util::SegmentGenerator m_segment_generator;
 

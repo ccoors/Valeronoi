@@ -33,19 +33,22 @@ class wifi_collection : public QObject {
 
   void clear();
 
-  int get_or_create_wifi_id(Valeronoi::robot::WifiInformation wifi_info);
+  int get_or_create_wifi_id(const Valeronoi::robot::WifiInformation& wifi_info);
 
-  int get_wifi_id(QString bssid) const;
+  [[nodiscard]] int get_wifi_id(const QString& bssid) const;
 
-  int add_wifi(Valeronoi::robot::WifiInformation wifi_info);
+  int add_wifi(const Valeronoi::robot::WifiInformation& wifi_info);
 
-  QVector<Valeronoi::robot::WifiInformation> get_known_wifis() const;
+  [[nodiscard]] QVector<Valeronoi::robot::WifiInformation> get_known_wifis()
+      const;
 
-  QJsonArray get_json() const;
-  void set_json(const QJsonArray &json);
+  [[nodiscard]] QJsonArray get_json() const;
+
+  void set_json(const QJsonArray& json);
 
  signals:
   void signal_wifi_list_updated();
+
   void signal_new_wifi_added(Valeronoi::robot::WifiInformation wifi_info);
 
  protected:

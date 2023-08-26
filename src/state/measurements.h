@@ -45,7 +45,7 @@ class Measurements : public QObject {
 
   [[nodiscard]] MeasurementStatistics get_statistics() const;
 
-  int unkown_wifi_id = 0;
+  int unknown_wifi_id = 0;
 
  signals:
   void signal_measurements_updated();

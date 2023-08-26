@@ -86,7 +86,7 @@ void SegmentGenerator::run() {
         bool saveValue = true;
 
         if (wifi_id_filter != -1 && m.wifi_id != wifi_id_filter) {
-          continue;  // skip and probe next one
+          continue;  // Skip and probe next one
         }
 
         if (simplify > 1) {
