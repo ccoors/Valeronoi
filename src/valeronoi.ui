@@ -208,7 +208,7 @@
                  <item row="5" column="0">
                   <widget class="QLabel" name="label_12">
                    <property name="text">
-                    <string>Uniqie WiFi APs</string>
+                    <string>Unique WiFi APs</string>
                    </property>
                   </widget>
                  </item>
