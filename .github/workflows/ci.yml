@@ -20,7 +20,7 @@ jobs:
     env:
       HOMEBREW_NO_ANALYTICS: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -65,7 +65,7 @@ jobs:
     name: CI Windows/MSYS2
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install msys2
         uses: msys2/setup-msys2@v2
         with:
@@ -148,11 +148,7 @@ jobs:
     name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - env:
-          EVENT: ${{ github.event_name }}
-        run: |
-          echo "GitHub Event: $EVENT"
+      - uses: actions/checkout@v4
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
