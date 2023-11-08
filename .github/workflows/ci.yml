@@ -13,14 +13,14 @@ jobs:
       matrix:
         include:
           - os: macos-13
-            qt: "6.5.2"
+            qt: "6.6.0"
             variant: "qt6"
     name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_ANALYTICS: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -65,7 +65,7 @@ jobs:
     name: CI Windows/MSYS2
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install msys2
         uses: msys2/setup-msys2@v2
         with:
@@ -143,16 +143,12 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            qt: "6.5.2"
+            qt: "6.6.0"
             variant: "current"
     name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - env:
-          EVENT: ${{ github.event_name }}
-        run: |
-          echo "GitHub Event: $EVENT"
+      - uses: actions/checkout@v4
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:

@@ -65,7 +65,7 @@ endif()
 
 configure_file(src/config.h.in config.h)
 
-set(CMAKE_AUTOGEN_PARALLEL ON)
+set(CMAKE_AUTOGEN_PARALLEL 1)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
