@@ -25,7 +25,17 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           brew analytics off
-          brew install cgal cmake create-dmg openssl@1.1
+          brew install cmake create-dmg openssl@1.1
+      - name: Install CGAL
+        run: |
+          mkdir /tmp/cgal
+          cd /tmp/cgal
+          wget https://github.com/CGAL/cgal/releases/download/v6.0.1/CGAL-6.0.1.tar.xz
+          tar xf CGAL-6.0.1.tar.xz
+          mkdir CGAL-6.0.1/build
+          cd CGAL-6.0.1/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make install
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -153,13 +163,25 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 -y
+      - name: Install CGAL
+        run: |
+          mkdir /tmp/cgal
+          cd /tmp/cgal
+          wget https://github.com/CGAL/cgal/releases/download/v6.0.1/CGAL-6.0.1.tar.xz
+          tar xf CGAL-6.0.1.tar.xz
+          mkdir CGAL-6.0.1/build
+          cd CGAL-6.0.1/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make install
       - name: Build on Linux
         env:
           OS: ${{ matrix.os }}
           QT_VERSION: ${{ matrix.qt }}
           VARIANT: ${{ matrix.variant }}
         run: |
-          sudo apt-get install libfuse2 openssl libcgal-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 -y
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
