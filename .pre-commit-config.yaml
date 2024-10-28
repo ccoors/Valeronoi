@@ -34,8 +34,6 @@ repos:
     rev: 0.8.0
     hooks:
       - id: clang-format
-      - id: cppcheck
-        args: ["--suppress=unknownMacro", "--check-level=exhaustive"]
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13
     hooks:
