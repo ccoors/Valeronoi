@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-python@v5
+      - uses: actions/setup-go@v5
         with:
           go-version: "stable"
       - name: Install dependencies
         run: |
           sudo apt-get install cppcheck -y
           go install mvdan.cc/sh/v3/cmd/shfmt@latest
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1

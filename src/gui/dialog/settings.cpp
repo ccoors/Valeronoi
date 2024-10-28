@@ -29,7 +29,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   ui->setupUi(this);
   setWindowFlags(Qt::Sheet);
 
-  connect(ui->checkUpdates, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->checkUpdates, &QCheckBox::checkStateChanged, this, [=]() {
     QSettings settings;
     settings.setValue("app/autoUpdateCheck", ui->checkUpdates->isChecked());
   });

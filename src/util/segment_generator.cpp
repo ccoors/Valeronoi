@@ -187,7 +187,7 @@ void SegmentGenerator::generate_voronoi(
   for (const auto &m : measurements) {
     Point_2 p(m.x, m.y);
     auto result = vd.locate(p);
-    if (Face_handle *v = boost::get<Face_handle>(&result)) {
+    if (auto *v = std::get_if<Face_handle>(&result)) {
       Valeronoi::state::DataSegment s;
       s.x = m.x;
       s.y = m.y;
