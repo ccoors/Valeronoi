@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef VALERONOI_CONFIG_H
-#define VALERONOI_CONFIG_H
+#ifndef VALERONOI_UTIL_COMPAT_H
+#define VALERONOI_UTIL_COMPAT_H
 
-// Configured by CMake
+#include <QCheckBox>
+#include <QtGlobal>
 
-#define VALERONOI_GIT_COMMIT "@GIT_COMMIT@"
-#define VALERONOI_VERSION_MAJOR "@Valeronoi_VERSION_MAJOR@"
-#define VALERONOI_VERSION_MINOR "@Valeronoi_VERSION_MINOR@"
-#define VALERONOI_VERSION_PATCH "@Valeronoi_VERSION_PATCH@"
-
-#define VALERONOI_VERSION VALERONOI_VERSION_MAJOR "." VALERONOI_VERSION_MINOR "." VALERONOI_VERSION_PATCH
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+#define CHECKBOX_SIGNAL_CHANGED QCheckBox::stateChanged
+#else
+#define CHECKBOX_SIGNAL_CHANGED QCheckBox::checkStateChanged
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2023 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <QTextStream>
 
 #include "config.h"
+#include "util/compat.h"
 
 namespace Valeronoi {
 
@@ -417,7 +418,7 @@ void ValeronoiWindow::connect_display_widget() {
   });
 
   ui->drawFloor->setChecked(m_display_widget->get_floor_enabled());
-  connect(ui->drawFloor, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->drawFloor, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     m_display_widget->set_floor(ui->drawFloor->isChecked(),
                                 m_display_widget->get_floor_color());
   });
@@ -427,7 +428,7 @@ void ValeronoiWindow::connect_display_widget() {
       m_display_widget->set_floor(m_display_widget->get_floor_enabled(), color);
     }
   });
-  connect(ui->displayEntities, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->displayEntities, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     m_display_widget->set_entities(ui->displayEntities->isChecked());
   });
 
@@ -446,15 +447,15 @@ void ValeronoiWindow::connect_display_widget() {
   connect(m_display_widget,
           &Valeronoi::gui::widget::DisplayWidget::signal_relocate, &m_robot,
           &Valeronoi::robot::Robot::slot_relocate);
-  connect(ui->useOpenGL, &QCheckBox::stateChanged, this,
+  connect(ui->useOpenGL, &CHECKBOX_SIGNAL_CHANGED, this,
           [=]() { m_display_widget->set_opengl(ui->useOpenGL->isChecked()); });
-  connect(ui->antialiasing, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->antialiasing, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     m_display_widget->set_antialiasing(ui->antialiasing->isChecked());
   });
-  connect(ui->displayRestrictFloor, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->displayRestrictFloor, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     m_display_widget->set_restrict_floor(ui->displayRestrictFloor->isChecked());
   });
-  connect(ui->displayRestrictPath, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->displayRestrictPath, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     m_display_widget->set_restrict_path(ui->displayRestrictPath->isChecked());
   });
   connect(ui->simplifySlider, &QSlider::valueChanged, m_display_widget,

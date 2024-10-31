@@ -12,10 +12,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: macos-14
+            qt: "6.8.0"
+            cgal: "6.0.1"
+            variant: "current"
           - os: macos-13
-            qt: "6.6.0"
-            variant: "qt6"
-    name: CI macOS/install-qt (${{ matrix.os }}/${{ matrix.qt }})
+            qt: "6.5.3"
+            cgal: "5.6.2"
+            variant: "legacy"
+    name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_ANALYTICS: 1
@@ -25,11 +30,23 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           brew analytics off
-          brew install cgal cmake create-dmg openssl@1.1
+          brew install cmake create-dmg mpfr boost openssl@1.1
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
+      - name: Install CGAL
+        env:
+          CGAL_VERSION: ${{ matrix.cgal }}
+        run: |
+          mkdir /tmp/cgal
+          cd /tmp/cgal
+          wget https://github.com/CGAL/cgal/releases/download/v$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz
+          tar xf CGAL-$CGAL_VERSION.tar.xz
+          mkdir CGAL-$CGAL_VERSION/build
+          cd CGAL-$CGAL_VERSION/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          sudo make install
       - name: Build on macOS
         env:
           OS: ${{ matrix.os }}
@@ -46,13 +63,13 @@ jobs:
           mv valeronoi.app dist/Valeronoi.app
           create-dmg --hdiutil-verbose --no-internet-enable --skip-jenkins --volname "Valeronoi Installer" --volicon "../assets/icon/valeronoi.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Valeronoi.app" 200 190 --hide-extension "Valeronoi.app" --app-drop-link 600 185 "Valeronoi-macOS-Intel-$VARIANT.dmg" "dist/"
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: valeronoi-macos-${{ matrix.variant }}
           path: build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg
       - name: Upload release binary
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.4.0
+        uses: alexellis/upload-assets@0.4.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -108,13 +125,13 @@ jobs:
           python ../../tools/windows/copy_dlls.py
           zip -r ../Valeronoi-Windows-portable-x86_64.zip .
       - name: Upload portable archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: valeronoi-windows-portable-${{ matrix.sys }}
           path: build/dist
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.4.0
+        uses: alexellis/upload-assets@0.4.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -126,13 +143,13 @@ jobs:
           cp ../../tools/windows/install.nsi .
           makensis install.nsi
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: valeronoi-windows-installer-${{ matrix.sys }}
           path: build/dist/Valeronoi-installer-x86_64.exe
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.4.0
+        uses: alexellis/upload-assets@0.4.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -142,24 +159,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
-            qt: "6.6.0"
+          - os: ubuntu-24.04
+            qt: "6.8.0"
+            cgal: "6.0.1"
             variant: "current"
-    name: CI Linux/AppImage (${{ matrix.os }}/${{ matrix.qt }})
+          - os: ubuntu-22.04
+            qt: "6.5.3"
+            cgal: "5.6.2"
+            variant: "legacy"
+    name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils libmpfr-dev libboost-dev -y
+      - name: Install CGAL
+        env:
+          CGAL_VERSION: ${{ matrix.cgal }}
+        run: |
+          mkdir -p /tmp/cgal
+          cd /tmp/cgal
+          wget https://github.com/CGAL/cgal/releases/download/v$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz
+          tar xf CGAL-$CGAL_VERSION.tar.xz
+          mkdir CGAL-$CGAL_VERSION/build
+          cd CGAL-$CGAL_VERSION/build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          sudo make install
       - name: Build on Linux
         env:
           OS: ${{ matrix.os }}
           QT_VERSION: ${{ matrix.qt }}
           VARIANT: ${{ matrix.variant }}
         run: |
-          sudo apt-get install libfuse2 openssl libcgal-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 -y
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
@@ -176,13 +212,13 @@ jobs:
           mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-x86_64.AppImage"
         shell: bash
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: valeronoi-linux-appimage-${{ matrix.variant }}
           path: build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage
       - name: Upload release AppImage
         if: ${{ github.event_name == 'release' }}
-        uses: alexellis/upload-assets@0.4.0
+        uses: alexellis/upload-assets@0.4.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:

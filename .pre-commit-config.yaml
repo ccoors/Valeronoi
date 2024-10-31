@@ -1,15 +1,15 @@
 # See https://pre-commit.com for more information
 repos:
   - repo: https://github.com/timothycrosley/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
   - repo: https://github.com/ambv/black
-    rev: 23.7.0
+    rev: 24.10.0
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: check-yaml
@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
       - id: fix-byte-order-marker
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.2
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
@@ -34,8 +34,6 @@ repos:
     rev: 0.8.0
     hooks:
       - id: clang-format
-      - id: cppcheck
-        args: ["--suppress=unknownMacro"]
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13
     hooks:

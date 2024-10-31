@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2023 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,12 @@ typedef VD::Locate_result Locate_result;
 typedef VD::Face_handle Face_handle;
 typedef VD::Halfedge_handle Halfedge_handle;
 typedef VD::Ccb_halfedge_circulator Ccb_halfedge_circulator;
+
+#if CGAL_VERSION_NR < CGAL_VERSION_NUMBER(6, 0, 0)
+#define GET_IF boost::get<Face_handle>
+#else
+#define GET_IF std::get_if<Face_handle>
+#endif
 
 namespace Valeronoi::util {
 
@@ -187,7 +193,7 @@ void SegmentGenerator::generate_voronoi(
   for (const auto &m : measurements) {
     Point_2 p(m.x, m.y);
     auto result = vd.locate(p);
-    if (Face_handle *v = boost::get<Face_handle>(&result)) {
+    if (auto *v = GET_IF(&result)) {
       Valeronoi::state::DataSegment s;
       s.x = m.x;
       s.y = m.y;

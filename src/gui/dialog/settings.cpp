@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2023 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QTextStream>
 
+#include "../../util/compat.h"
 #include "ui_settings.h"
 
 namespace Valeronoi::gui::dialog {
@@ -29,7 +30,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   ui->setupUi(this);
   setWindowFlags(Qt::Sheet);
 
-  connect(ui->checkUpdates, &QCheckBox::stateChanged, this, [=]() {
+  connect(ui->checkUpdates, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     QSettings settings;
     settings.setValue("app/autoUpdateCheck", ui->checkUpdates->isChecked());
   });
