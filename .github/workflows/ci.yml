@@ -20,7 +20,7 @@ jobs:
             qt: "6.5.3"
             cgal: "5.6.2"
             variant: "legacy"
-    name: CI macOS (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
+    name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_ANALYTICS: 1
@@ -167,7 +167,7 @@ jobs:
             qt: "6.5.3"
             cgal: "5.6.2"
             variant: "legacy"
-    name: CI Linux/AppImage (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
+    name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
