@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QTextStream>
 
+#include "../../util/compat.h"
 #include "ui_settings.h"
 
 namespace Valeronoi::gui::dialog {
@@ -29,7 +30,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   ui->setupUi(this);
   setWindowFlags(Qt::Sheet);
 
-  connect(ui->checkUpdates, &QCheckBox::checkStateChanged, this, [=]() {
+  connect(ui->checkUpdates, &CHECKBOX_SIGNAL_CHANGED, this, [=]() {
     QSettings settings;
     settings.setValue("app/autoUpdateCheck", ui->checkUpdates->isChecked());
   });
