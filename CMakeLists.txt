@@ -112,7 +112,7 @@ set(TEST_FILES tests/test_main.cpp tests/test_colormap.cpp)
 set(MACOSX_BUNDLE_BUNDLE_NAME "Valeronoi")
 set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_COPYRIGHT
-    "2021-2023 Christian Friedrich Coors, released under GPLv3"
+    "2021-2024 Christian Friedrich Coors, released under GPLv3"
 )
 set(MACOSX_BUNDLE_ICON_FILE "valeronoi.icns")
 set(MACOSX_BUNDLE_LONG_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
