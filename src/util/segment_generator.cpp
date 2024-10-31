@@ -38,6 +38,12 @@ typedef VD::Face_handle Face_handle;
 typedef VD::Halfedge_handle Halfedge_handle;
 typedef VD::Ccb_halfedge_circulator Ccb_halfedge_circulator;
 
+#if CGAL_VERSION_NR < CGAL_VERSION_NUMBER(6, 0, 0)
+#define GET_IF boost::get<Face_handle>
+#else
+#define GET_IF std::get_if<Face_handle>
+#endif
+
 namespace Valeronoi::util {
 
 SegmentGenerator::~SegmentGenerator() {
@@ -187,7 +193,7 @@ void SegmentGenerator::generate_voronoi(
   for (const auto &m : measurements) {
     Point_2 p(m.x, m.y);
     auto result = vd.locate(p);
-    if (auto *v = std::get_if<Face_handle>(&result)) {
+    if (auto *v = GET_IF(&result)) {
       Valeronoi::state::DataSegment s;
       s.x = m.x;
       s.y = m.y;

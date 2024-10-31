@@ -45,7 +45,7 @@ If the graphics are slow and unresponsive, try the following things in the "Disp
 Install the required Libraries using the method of your choice:
 
 - Qt 6
-- CGAL (4.x/5.x should work)
+- CGAL (4.x/5.x/6.x should work)
 
 You also need a C++-Compiler capable of C++17. g++ 7 or later works.
 
