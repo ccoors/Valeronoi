@@ -25,7 +25,7 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           brew analytics off
-          brew install cmake create-dmg openssl@1.1
+          brew install cmake create-dmg mpfr boost openssl@1.1
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -165,7 +165,7 @@ jobs:
           version: ${{ matrix.qt }}
       - name: Install dependencies
         run: |
-          sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils -y
+          sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils libmpfr-defv libboost-dev -y
       - name: Install CGAL
         run: |
           mkdir -p /tmp/cgal
