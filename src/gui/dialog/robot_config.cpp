@@ -162,7 +162,8 @@ void RobotConfigDialog::slot_robot_connection_failed() {
 
 void RobotConfigDialog::ensure_http() {
   const auto current_text = ui->valetudoAddress->text().trimmed();
-  if (!current_text.startsWith("http://")) {
+  if (!current_text.startsWith("http://") &&
+      !current_text.startsWith("https://")) {
     ui->valetudoAddress->setText(QString("http://").append(current_text));
   }
 }
