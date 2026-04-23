@@ -32,21 +32,21 @@ namespace Valeronoi::gui::graphics_item {
 
 class MeasurementItem : public MapBasedItem {
  public:
-  explicit MeasurementItem(const Valeronoi::state::RobotMap &robot_map,
-                           QGraphicsItem *parent = nullptr);
+  explicit MeasurementItem(const Valeronoi::state::RobotMap& robot_map,
+                           QGraphicsItem* parent = nullptr);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget) override;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
 
-  void set_data_segments(const Valeronoi::state::DataSegments &segments);
+  void set_data_segments(const Valeronoi::state::DataSegments& segments);
 
   void set_display_mode(Valeronoi::state::DISPLAY_MODE display_mode);
 
-  void set_color_map(const Valeronoi::util::RGBColorMap *color_map);
+  void set_color_map(const Valeronoi::util::RGBColorMap* color_map);
 
   void set_restrict_path(bool enabled);
 
-  void set_restrict_path(const QPainterPath &path);
+  void set_restrict_path(const QPainterPath& path);
 
   void set_restrict_points(bool enabled);
 
@@ -63,7 +63,7 @@ class MeasurementItem : public MapBasedItem {
   std::unordered_map<int, int> m_histogram;
   int m_histogram_max{0};
 
-  const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
+  const Valeronoi::util::RGBColorMap* m_color_map{nullptr};
 
   Valeronoi::state::DISPLAY_MODE m_display_mode{
       Valeronoi::state::DISPLAY_MODE::Voronoi};

@@ -25,7 +25,7 @@
 #include "ui_settings.h"
 
 namespace Valeronoi::gui::dialog {
-SettingsDialog::SettingsDialog(QWidget *parent)
+SettingsDialog::SettingsDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::SettingsDialog) {
   ui->setupUi(this);
   setWindowFlags(Qt::Sheet);
@@ -42,7 +42,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
 SettingsDialog::~SettingsDialog() { delete ui; }
 
-bool SettingsDialog::should_auto_check_for_updates(QWidget *parent) {
+bool SettingsDialog::should_auto_check_for_updates(QWidget* parent) {
   QSettings settings;
   bool check_for_updates{false};
   auto update_check = settings.value("app/autoUpdateCheck");

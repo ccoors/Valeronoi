@@ -42,7 +42,7 @@
 #include "util/log_helper.h"
 
 namespace Valeronoi {
-constexpr const char *VALERONOI_FILE_EXTENSION = "vwm";  // Valeronoi WiFi Map
+constexpr const char* VALERONOI_FILE_EXTENSION = "vwm";  // Valeronoi WiFi Map
 constexpr const int FILE_FORMAT_VERSION = 1;
 
 QT_BEGIN_NAMESPACE
@@ -54,13 +54,13 @@ QT_END_NAMESPACE
 class ValeronoiWindow : public QMainWindow {
   Q_OBJECT
  public:
-  explicit ValeronoiWindow(QWidget *parent = nullptr);
+  explicit ValeronoiWindow(QWidget* parent = nullptr);
 
   ~ValeronoiWindow() override;
 
-  bool load_file(const QString &path);
+  bool load_file(const QString& path);
 
-  void closeEvent(QCloseEvent *event) override;
+  void closeEvent(QCloseEvent* event) override;
 
  private slots:
   void newFile();
@@ -90,7 +90,7 @@ class ValeronoiWindow : public QMainWindow {
 
   [[nodiscard]] QString get_open_save_dir() const;
 
-  void set_open_save_dir(const QString &dir);
+  void set_open_save_dir(const QString& dir);
 
   [[nodiscard]] QString get_open_save_filter() const;
 
@@ -102,10 +102,10 @@ class ValeronoiWindow : public QMainWindow {
 
   void connect_actions();
 
-  void set_selected_wifi_item(const QListWidgetItem *widget_item);
+  void set_selected_wifi_item(const QListWidgetItem* widget_item);
 
-  Ui::ValeronoiWindow *ui;
-  Valeronoi::gui::widget::DisplayWidget *m_display_widget;
+  Ui::ValeronoiWindow* ui;
+  Valeronoi::gui::widget::DisplayWidget* m_display_widget;
 
   Valeronoi::gui::dialog::ExportDialog m_export_dialog;
   Valeronoi::gui::dialog::RobotConfigDialog m_robot_config_dialog;

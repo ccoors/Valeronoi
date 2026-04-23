@@ -22,12 +22,12 @@
 
 namespace Valeronoi::util {
 
-LogHelper &LogHelper::instance() {
+LogHelper& LogHelper::instance() {
   static LogHelper _instance;
   return _instance;
 }
 
-void LogHelper::log(const QString &msg) {
+void LogHelper::log(const QString& msg) {
   if (!m_log_dialog) {
     m_buffer.append(msg);
   } else {
@@ -35,16 +35,16 @@ void LogHelper::log(const QString &msg) {
   }
 }
 
-void LogHelper::set_log_dialog(Valeronoi::gui::dialog::LogDialog *log_dialog) {
+void LogHelper::set_log_dialog(Valeronoi::gui::dialog::LogDialog* log_dialog) {
   m_log_dialog = log_dialog;
   m_log_dialog->log_message(m_buffer);
   m_buffer.clear();
 }
 
-void log_handler(QtMsgType type, const QMessageLogContext &context,
-                 const QString &msg) {
+void log_handler(QtMsgType type, const QMessageLogContext& context,
+                 const QString& msg) {
   (void)context;
-  auto &helper = LogHelper::instance();
+  auto& helper = LogHelper::instance();
   QString level;
   switch (type) {
     case QtDebugMsg:

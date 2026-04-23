@@ -38,11 +38,11 @@ struct Block {
   int x, y;
 };
 
-inline bool operator==(const Block &lhs, const Block &rhs) {
+inline bool operator==(const Block& lhs, const Block& rhs) {
   return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-inline bool operator<(const Block &lhs, const Block &rhs) {
+inline bool operator<(const Block& lhs, const Block& rhs) {
   return (lhs.x + lhs.y) < (rhs.x + rhs.y);
 }
 
@@ -100,7 +100,7 @@ typedef QList<Valeronoi::state::DataSegment> DataSegments;
 namespace std {
 template <>
 struct hash<Valeronoi::state::Block> {
-  std::size_t operator()(Valeronoi::state::Block const &s) const noexcept {
+  std::size_t operator()(Valeronoi::state::Block const& s) const noexcept {
     std::size_t h1 = std::hash<int>{}(s.x);
     std::size_t h2 = std::hash<int>{}(s.y);
     return h1 ^ (h2 << 1);

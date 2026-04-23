@@ -33,20 +33,20 @@ class SegmentGenerator : public QThread {
  public:
   ~SegmentGenerator() override;
 
-  void generate(const Valeronoi::state::RawMeasurements &measurements,
+  void generate(const Valeronoi::state::RawMeasurements& measurements,
                 Valeronoi::state::DISPLAY_MODE display_mode, int simplify,
                 int wifi_id_filter = -1);
 
  signals:
-  void generated_segments(const Valeronoi::state::DataSegments &segments);
+  void generated_segments(const Valeronoi::state::DataSegments& segments);
 
  protected:
   void run() override;
 
  private:
   static void generate_voronoi(
-      const Valeronoi::state::RawMeasurements &measurements,
-      Valeronoi::state::DataSegments &segments);
+      const Valeronoi::state::RawMeasurements& measurements,
+      Valeronoi::state::DataSegments& segments);
 
   bool m_abort{false}, m_restart{false};
   QMutex m_mutex;

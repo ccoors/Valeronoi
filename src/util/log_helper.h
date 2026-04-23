@@ -27,25 +27,25 @@ namespace Valeronoi::util {
 
 class LogHelper {
  public:
-  static LogHelper &instance();
+  static LogHelper& instance();
 
-  LogHelper(const LogHelper &) = delete;
+  LogHelper(const LogHelper&) = delete;
 
-  LogHelper &operator=(const LogHelper &) = delete;
+  LogHelper& operator=(const LogHelper&) = delete;
 
-  void set_log_dialog(Valeronoi::gui::dialog::LogDialog *log_dialog);
+  void set_log_dialog(Valeronoi::gui::dialog::LogDialog* log_dialog);
 
-  void log(const QString &msg);
+  void log(const QString& msg);
 
  private:
   LogHelper() = default;
 
   QString m_buffer;
-  Valeronoi::gui::dialog::LogDialog *m_log_dialog{nullptr};
+  Valeronoi::gui::dialog::LogDialog* m_log_dialog{nullptr};
 };
 
-void log_handler(QtMsgType type, const QMessageLogContext &context,
-                 const QString &msg);
+void log_handler(QtMsgType type, const QMessageLogContext& context,
+                 const QString& msg);
 
 }  // namespace Valeronoi::util
 

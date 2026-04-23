@@ -38,9 +38,9 @@ namespace Valeronoi::gui::widget {
 class DisplayWidget : public QGraphicsView {
   Q_OBJECT
  public:
-  explicit DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
-                         const Valeronoi::state::Measurements &measurements,
-                         QWidget *parent);
+  explicit DisplayWidget(const Valeronoi::state::RobotMap& robot_map,
+                         const Valeronoi::state::Measurements& measurements,
+                         QWidget* parent);
 
   [[nodiscard]] QColor get_background_color() const;
 
@@ -50,7 +50,7 @@ class DisplayWidget : public QGraphicsView {
 
   void set_wall_color(QColor color);
 
-  void set_color_map(const Valeronoi::util::RGBColorMap *color_map);
+  void set_color_map(const Valeronoi::util::RGBColorMap* color_map);
 
   void set_floor(bool enabled, QColor color);
 
@@ -101,8 +101,8 @@ class DisplayWidget : public QGraphicsView {
   void slot_set_wifi_id_filter(int wifi_id_filter);
 
  protected:
-  void wheelEvent(QWheelEvent *event) override;
-  void paintEvent(QPaintEvent *event) override;
+  void wheelEvent(QWheelEvent* event) override;
+  void paintEvent(QPaintEvent* event) override;
 
  private:
   void zoom_by(qreal factor);
@@ -111,18 +111,18 @@ class DisplayWidget : public QGraphicsView {
   bool m_draw_floor{true}, m_draw_entities{true}, m_use_opengl{false},
       m_antialiasing{true}, m_restrict_floor{true}, m_restrict_path{true};
   int m_simplify{1}, m_wifi_id_filter{-1};
-  const Valeronoi::util::RGBColorMap *m_color_map{nullptr};
+  const Valeronoi::util::RGBColorMap* m_color_map{nullptr};
   Valeronoi::util::SegmentGenerator m_segment_generator;
 
   Valeronoi::state::DISPLAY_MODE m_display_mode{
       Valeronoi::state::DISPLAY_MODE::Voronoi};
 
-  const Valeronoi::state::Measurements &m_measurements;
+  const Valeronoi::state::Measurements& m_measurements;
 
-  Valeronoi::gui::graphics_item::MapItem *m_map_item;
-  Valeronoi::gui::graphics_item::FloorItem *m_floor_item;
-  Valeronoi::gui::graphics_item::EntityItem *m_entity_item;
-  Valeronoi::gui::graphics_item::MeasurementItem *m_measurement_item;
+  Valeronoi::gui::graphics_item::MapItem* m_map_item;
+  Valeronoi::gui::graphics_item::FloorItem* m_floor_item;
+  Valeronoi::gui::graphics_item::EntityItem* m_entity_item;
+  Valeronoi::gui::graphics_item::MeasurementItem* m_measurement_item;
 
   QPainterPath m_floor_path;
 };

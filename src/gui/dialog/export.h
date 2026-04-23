@@ -35,18 +35,18 @@ namespace Valeronoi::gui::dialog {
 class ExportDialog : public QDialog {
   Q_OBJECT
  public:
-  explicit ExportDialog(QWidget *parent = nullptr);
+  explicit ExportDialog(QWidget* parent = nullptr);
 
   ~ExportDialog() override;
 
-  void set_size(const QSize &size);
+  void set_size(const QSize& size);
 
   [[nodiscard]] QSize get_size() const;
 
   [[nodiscard]] bool get_transparent() const;
 
  private:
-  Ui::ExportDialog *ui;
+  Ui::ExportDialog* ui;
   double m_ratio;
 };
 }  // namespace Valeronoi::gui::dialog

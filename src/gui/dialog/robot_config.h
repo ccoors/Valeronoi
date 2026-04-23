@@ -40,7 +40,7 @@ namespace Valeronoi::gui::dialog {
 class RobotConfigDialog : public QDialog {
   Q_OBJECT
  public:
-  explicit RobotConfigDialog(QWidget *parent = nullptr);
+  explicit RobotConfigDialog(QWidget* parent = nullptr);
 
   ~RobotConfigDialog() override;
 
@@ -63,7 +63,7 @@ class RobotConfigDialog : public QDialog {
  private:
   void ensure_http();
 
-  Ui::RobotConfigDialog *ui;
+  Ui::RobotConfigDialog* ui;
   QProgressDialog m_progress_dialog;
   bool m_test_cancelled{false};
 

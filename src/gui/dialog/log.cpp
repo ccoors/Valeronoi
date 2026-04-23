@@ -21,7 +21,7 @@
 
 namespace Valeronoi::gui::dialog {
 
-LogDialog::LogDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LogDialog) {
+LogDialog::LogDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LogDialog) {
   ui->setupUi(this);
 
   ui->logText->setFontFamily("Source Code Pro");
@@ -29,6 +29,6 @@ LogDialog::LogDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LogDialog) {
 
 LogDialog::~LogDialog() { delete ui; }
 
-void LogDialog::log_message(const QString &msg) { ui->logText->append(msg); }
+void LogDialog::log_message(const QString& msg) { ui->logText->append(msg); }
 
 }  // namespace Valeronoi::gui::dialog

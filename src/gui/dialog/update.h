@@ -32,14 +32,14 @@ namespace Valeronoi::gui::dialog {
 class UpdateDialog : public QDialog {
   Q_OBJECT
  public:
-  explicit UpdateDialog(QWidget *parent = nullptr);
+  explicit UpdateDialog(QWidget* parent = nullptr);
 
   ~UpdateDialog() override;
 
-  void check_update(bool silent = false, QWidget *error_parent = nullptr);
+  void check_update(bool silent = false, QWidget* error_parent = nullptr);
 
  private:
-  Ui::UpdateDialog *ui;
+  Ui::UpdateDialog* ui;
 
   QUrl m_goto_url;
 

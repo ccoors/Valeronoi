@@ -26,13 +26,13 @@ SSEConnection::SSEConnection() {
 }
 
 void SSEConnection::set_connection_configuration(
-    const ConnectionConfiguration &conf) {
+    const ConnectionConfiguration& conf) {
   m_connection_configuration = conf;
 }
 
-void SSEConnection::set_initial_url(const QUrl &url) { m_initial_url = url; }
+void SSEConnection::set_initial_url(const QUrl& url) { m_initial_url = url; }
 
-void SSEConnection::set_url(const QUrl &url) { m_url = url; }
+void SSEConnection::set_url(const QUrl& url) { m_url = url; }
 
 QString SSEConnection::current_data() const { return m_current_data; }
 
@@ -86,7 +86,7 @@ void SSEConnection::slot_ready_read() {
   qDebug().nospace() << "Received SSE segment: size " << buffer.size();
   QStringList lines = QString(buffer).split("\n");
 
-  for (const QString &raw_line : lines) {
+  for (const QString& raw_line : lines) {
     QString line = raw_line.simplified();
 
     switch (m_parser_state) {
@@ -146,13 +146,13 @@ void SSEConnection::slot_make_request() {
           &SSEConnection::slot_stream_finished);
 }
 
-QNetworkRequest SSEConnection::prepare_request(const QUrl &url) const {
+QNetworkRequest SSEConnection::prepare_request(const QUrl& url) const {
   QNetworkRequest request(m_connection_configuration.m_url.resolved(url));
   m_connection_configuration.prepare_request(request);
   request.setRawHeader("Accept", "text/event-stream");
   return request;
 }
 
-void SSEConnection::set_event(const QString &event) { m_event = event; }
+void SSEConnection::set_event(const QString& event) { m_event = event; }
 
 }  // namespace Valeronoi::robot::api

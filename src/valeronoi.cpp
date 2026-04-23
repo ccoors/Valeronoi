@@ -32,7 +32,7 @@ namespace Valeronoi {
 
 #include "ui_valeronoi.h"
 
-ValeronoiWindow::ValeronoiWindow(QWidget *parent)
+ValeronoiWindow::ValeronoiWindow(QWidget* parent)
     : QMainWindow(parent),
       ui(new Ui::ValeronoiWindow),
       m_export_dialog{this},
@@ -129,7 +129,7 @@ ValeronoiWindow::ValeronoiWindow(QWidget *parent)
 
 ValeronoiWindow::~ValeronoiWindow() { delete ui; }
 
-void ValeronoiWindow::closeEvent(QCloseEvent *event) {
+void ValeronoiWindow::closeEvent(QCloseEvent* event) {
   if (maybe_save()) {
     event->accept();
   } else {
@@ -270,7 +270,7 @@ QString ValeronoiWindow::get_open_save_dir() const {
   return settings.value("app/lastOpenSavePath", QDir::homePath()).toString();
 }
 
-void ValeronoiWindow::set_open_save_dir(const QString &dir) {
+void ValeronoiWindow::set_open_save_dir(const QString& dir) {
   QSettings settings;
   settings.setValue("app/lastOpenSavePath", dir);
 }
@@ -294,7 +294,7 @@ void ValeronoiWindow::load_colormaps() {
 
   int map_index_to_set = 0;
 
-  for (const auto &&json : colormap_json) {
+  for (const auto&& json : colormap_json) {
     auto colormap = json.toObject();
     auto name = colormap["name"].toString();
     auto colors = colormap["colors"].toArray();
@@ -317,7 +317,7 @@ void ValeronoiWindow::load_colormaps() {
   m_display_widget->set_color_map(&m_color_maps[map_index_to_set]);
 }
 
-bool ValeronoiWindow::load_file(const QString &path) {
+bool ValeronoiWindow::load_file(const QString& path) {
   QFileInfo info{path};
   if (!info.exists()) {
     QMessageBox::warning(nullptr, "Error", tr("File does not exist"));
@@ -464,7 +464,7 @@ void ValeronoiWindow::connect_display_widget() {
     if (!ui->wifiInfoGroup->isChecked()) {
       m_display_widget->slot_set_wifi_id_filter(-1);
     } else if (ui->wifiList->count() > 0) {
-      auto *item = ui->wifiList->item(0);
+      auto* item = ui->wifiList->item(0);
       ui->wifiList->setCurrentItem(item);
       set_selected_wifi_item(item);
     }
@@ -486,7 +486,7 @@ void ValeronoiWindow::connect_wifi_widget() {
             auto selected_item = ui->wifiList->currentRow();
 
             ui->wifiList->clear();
-            for (auto &wifiInfo : wifi_vector) {
+            for (auto& wifiInfo : wifi_vector) {
               ui->wifiList->addItem(wifiInfo.ssid() + " [" + wifiInfo.bssid() +
                                     "]");
               ui->wifiList->item(ui->wifiList->count() - 1)
@@ -502,14 +502,14 @@ void ValeronoiWindow::connect_wifi_widget() {
           });
 
   connect(ui->wifiList, &QListWidget::currentItemChanged, this,
-          [=](QListWidgetItem *current, QListWidgetItem *previous) {
+          [=](QListWidgetItem* current, QListWidgetItem* previous) {
             (void)previous;
             set_selected_wifi_item(current);
           });
 }
 
 void ValeronoiWindow::set_selected_wifi_item(
-    const QListWidgetItem *widget_item) {
+    const QListWidgetItem* widget_item) {
   int new_wifi_filter = -1;
   QString bssid;
   if (widget_item != nullptr) {
@@ -543,7 +543,7 @@ void ValeronoiWindow::connect_actions() {
     file_dialog.setDirectory(get_open_save_dir());
     QStringList mime_types;
     const auto supported_mime_types = QImageWriter::supportedMimeTypes();
-    for (const QByteArray &mimeType : supported_mime_types) {
+    for (const QByteArray& mimeType : supported_mime_types) {
       auto name = QLatin1String(mimeType);
       if (name != "image/jpeg" && name != "image/jp2") {
         mime_types.append(name);
@@ -685,7 +685,7 @@ void ValeronoiWindow::connect_robot_signals() {
             static const QBrush color_highlight(Qt::darkGreen);
             // reset & set Highlighting
             for (int i = 0; i < ui->wifiList->count(); ++i) {
-              QListWidgetItem *item = ui->wifiList->item(i);
+              QListWidgetItem* item = ui->wifiList->item(i);
               if (item->text().contains(wifi_info.bssid())) {
                 item->setForeground(color_highlight);
               } else {

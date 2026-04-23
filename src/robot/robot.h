@@ -38,9 +38,9 @@ class Robot : public QObject {
  public:
   Robot();
 
-  void set_connection_configuration(const ConnectionConfiguration &conf);
+  void set_connection_configuration(const ConnectionConfiguration& conf);
 
-  [[nodiscard]] const RobotInformation *get_information() const;
+  [[nodiscard]] const RobotInformation* get_information() const;
 
   [[nodiscard]] QString get_error() const;
 

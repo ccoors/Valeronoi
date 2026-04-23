@@ -24,9 +24,9 @@
 #endif
 
 namespace Valeronoi::state {
-RobotMap::RobotMap(QObject *parent) : QObject(parent) { reset(); }
+RobotMap::RobotMap(QObject* parent) : QObject(parent) { reset(); }
 
-void RobotMap::update_map_json(const QString &json) {
+void RobotMap::update_map_json(const QString& json) {
   m_error = "";
   m_valid = false;
   if (json == "null") {
@@ -52,7 +52,7 @@ void RobotMap::update_map_json(const QString &json) {
   update_map_json(json_document.object());
 }
 
-void RobotMap::update_map_json(const QJsonObject &json_object) {
+void RobotMap::update_map_json(const QJsonObject& json_object) {
   if (json_object["__class"].toString() != "ValetudoMap") {
     m_error = tr("Did not receive ValetudoMap");
     emit signal_map_updated();
@@ -73,8 +73,8 @@ void RobotMap::update_map_json(const QJsonObject &json_object) {
 }
 
 template <typename T>
-static void map_pixels(const QJsonArray &pixels, T &blocks, int pixel_size,
-                       int *min_x, int *max_x, int *min_y, int *max_y) {
+static void map_pixels(const QJsonArray& pixels, T& blocks, int pixel_size,
+                       int* min_x, int* max_x, int* min_y, int* max_y) {
   blocks.reserve(pixels.size() / 2);
   for (qsizetype i = 0; i + 1 < pixels.size(); i += 2) {
     int block_x = pixels[i].toInt() * pixel_size;
@@ -88,11 +88,11 @@ static void map_pixels(const QJsonArray &pixels, T &blocks, int pixel_size,
 }
 
 template <typename T>
-static void map_pixels(const std::unordered_set<Block> &pixels, T &blocks,
-                       int pixel_size, int *min_x, int *max_x, int *min_y,
-                       int *max_y) {
+static void map_pixels(const std::unordered_set<Block>& pixels, T& blocks,
+                       int pixel_size, int* min_x, int* max_x, int* min_y,
+                       int* max_y) {
   blocks.reserve(pixels.size() / 2);
-  for (const auto &block : pixels) {
+  for (const auto& block : pixels) {
     int block_x = block.x * pixel_size;
     int block_y = block.y * pixel_size;
     *min_x = std::min(*min_x, block_x);
@@ -104,8 +104,8 @@ static void map_pixels(const std::unordered_set<Block> &pixels, T &blocks,
 }
 
 template <typename T>
-static void move_pixels(T &blocks, int move_x, int move_y) {
-  for (auto &block : blocks) {
+static void move_pixels(T& blocks, int move_x, int move_y) {
+  for (auto& block : blocks) {
     block.x += move_x;
     block.y += move_y;
   }
@@ -122,8 +122,8 @@ void RobotMap::generate_map() {
   // a Layer. As layers are already a performance problem, we have to remove
   // duplicates by using an unordered_set.
   std::unordered_map<std::string, std::unordered_set<Block>> floor_pixels;
-  for (const auto &&layer : m_map_json["layers"].toArray()) {
-    const auto &layer_obj = layer.toObject();
+  for (const auto&& layer : m_map_json["layers"].toArray()) {
+    const auto& layer_obj = layer.toObject();
     auto layer_type = layer_obj["type"].toString().toStdString();
     if (layer_type == "segment") {
       // Pretend segments are floor as well, because future Valetudo Versions
@@ -132,7 +132,7 @@ void RobotMap::generate_map() {
     }
     if (layer_type == "floor" || layer_type == "wall") {
       if (m_map_version == 1) {
-        const auto &pixels = layer_obj["pixels"].toArray();
+        const auto& pixels = layer_obj["pixels"].toArray();
         if ((pixels.size() % 2) != 0 || pixels.size() < 2) {
           qDebug().nospace()
               << "Invalid layer, has " << pixels.size() << " points";
@@ -146,7 +146,7 @@ void RobotMap::generate_map() {
           floor_pixels[layer_type].insert({block_x, block_y});
         }
       } else if (m_map_version == 2) {
-        const auto &compressed_pixels = layer_obj["compressedPixels"].toArray();
+        const auto& compressed_pixels = layer_obj["compressedPixels"].toArray();
         if ((compressed_pixels.size() % 3) != 0 ||
             compressed_pixels.size() < 3) {
           qDebug().nospace()
@@ -166,17 +166,17 @@ void RobotMap::generate_map() {
       }
     }
   }
-  for (const auto &layer : floor_pixels) {
+  for (const auto& layer : floor_pixels) {
     map_pixels(layer.second, m_map.layers[layer.first].blocks, m_map.pixel_size,
                &min_x, &max_x, &min_y, &max_y);
   }
 
-  for (const auto &&entity : m_map_json["entities"].toArray()) {
-    const auto &entity_obj = entity.toObject();
+  for (const auto&& entity : m_map_json["entities"].toArray()) {
+    const auto& entity_obj = entity.toObject();
     const auto entity_class = entity_obj["__class"].toString();
     const auto entity_type = entity_obj["type"].toString();
     const auto entity_metadata = entity_obj["metaData"].toObject();
-    const auto &points = entity_obj["points"].toArray();
+    const auto& points = entity_obj["points"].toArray();
     if (entity_class == "PointMapEntity" && points.size() != 2) {
       qDebug().nospace() << "Found PointMapEntity with not 2 points but "
                          << points.size() << ", ignoring";
@@ -203,11 +203,11 @@ void RobotMap::generate_map() {
     }
   }
 
-  for (auto &layer : m_map.layers) {
+  for (auto& layer : m_map.layers) {
     move_pixels(layer.second.blocks, -min_x, -min_y);
   }
 
-  for (auto &layer : m_map.entities) {
+  for (auto& layer : m_map.entities) {
     move_pixels(layer.points, -min_x, -min_y);
   }
   m_map.size_x = max_x - min_x;
@@ -222,9 +222,9 @@ bool RobotMap::is_valid() const { return m_valid; }
 
 QString RobotMap::error_msg() const { return m_error; }
 
-const Map &RobotMap::get_map() const { return m_map; }
+const Map& RobotMap::get_map() const { return m_map; }
 
-const QJsonObject &RobotMap::get_map_json() const { return m_map_json; }
+const QJsonObject& RobotMap::get_map_json() const { return m_map_json; }
 
 void RobotMap::reset() {
   m_valid = false;

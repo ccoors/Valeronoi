@@ -24,18 +24,18 @@
 namespace Valeronoi::gui::graphics_item {
 class EntityItem : public MapBasedItem {
  public:
-  explicit EntityItem(const Valeronoi::state::RobotMap &robot_map,
-                      QGraphicsItem *parent = nullptr);
+  explicit EntityItem(const Valeronoi::state::RobotMap& robot_map,
+                      QGraphicsItem* parent = nullptr);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget) override;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
 
  private:
-  static void paint_charger(QPainter *painter,
-                            const Valeronoi::state::Entity &entity);
+  static void paint_charger(QPainter* painter,
+                            const Valeronoi::state::Entity& entity);
 
-  static void paint_robot(QPainter *painter,
-                          const Valeronoi::state::Entity &entity);
+  static void paint_robot(QPainter* painter,
+                          const Valeronoi::state::Entity& entity);
 };
 
 }  // namespace Valeronoi::gui::graphics_item

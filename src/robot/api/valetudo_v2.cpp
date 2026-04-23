@@ -44,12 +44,12 @@ ValetudoAPI::ValetudoAPI() {
 }
 
 void ValetudoAPI::set_connection_configuration(
-    const ConnectionConfiguration &conf) {
+    const ConnectionConfiguration& conf) {
   m_connection_configuration = conf;
   m_map_connection.set_connection_configuration(conf);
 }
 
-const RobotInformation *ValetudoAPI::get_information() const {
+const RobotInformation* ValetudoAPI::get_information() const {
   return &m_robot_information;
 }
 
@@ -103,7 +103,7 @@ void ValetudoAPI::next_connection_step() {
 
     const auto robot_capabilities = m_connection_responses[3].array();
     m_robot_information.m_capabilities.clear();
-    for (const auto &&c : robot_capabilities) {
+    for (const auto&& c : robot_capabilities) {
       m_robot_information.m_capabilities.push_back(c.toString());
     }
 
@@ -145,9 +145,9 @@ void ValetudoAPI::next_connection_step() {
   m_connecting_step++;
 }
 
-QNetworkReply *ValetudoAPI::request(const QString &verb, const QUrl &url,
+QNetworkReply* ValetudoAPI::request(const QString& verb, const QUrl& url,
                                     bool disconnect_on_failure, bool gc,
-                                    const QByteArray *data) {
+                                    const QByteArray* data) {
   qDebug().nospace() << "Robot request: " << verb << " to " << url;
   if (!m_connected) {
     return nullptr;
@@ -184,7 +184,7 @@ QString ValetudoAPI::get_map_data() const {
   return m_map_connection.current_data();
 }
 
-static QJsonDocument gen_document(const QString &action) {
+static QJsonDocument gen_document(const QString& action) {
   auto ret = QJsonDocument();
   auto object = QJsonObject();
   object.insert("action", action);

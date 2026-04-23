@@ -31,11 +31,11 @@ namespace Valeronoi::state {
 class RobotMap : public QObject {
   Q_OBJECT
  public:
-  explicit RobotMap(QObject *parent = nullptr);
+  explicit RobotMap(QObject* parent = nullptr);
 
-  void update_map_json(const QString &json);
+  void update_map_json(const QString& json);
 
-  void update_map_json(const QJsonObject &json);
+  void update_map_json(const QJsonObject& json);
 
   void reset();
 
@@ -43,9 +43,9 @@ class RobotMap : public QObject {
 
   [[nodiscard]] QString error_msg() const;
 
-  [[nodiscard]] const Map &get_map() const;
+  [[nodiscard]] const Map& get_map() const;
 
-  [[nodiscard]] const QJsonObject &get_map_json() const;
+  [[nodiscard]] const QJsonObject& get_map_json() const;
 
  signals:
   void signal_map_updated();

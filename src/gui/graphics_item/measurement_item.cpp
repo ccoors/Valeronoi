@@ -30,15 +30,15 @@ constexpr const QSize SCALE_SIZE{
     SCALE_WIDTH, SCALE_BAR_HEIGHT + SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT};
 
 namespace Valeronoi::gui::graphics_item {
-MeasurementItem::MeasurementItem(const Valeronoi::state::RobotMap &robot_map,
-                                 QGraphicsItem *parent)
+MeasurementItem::MeasurementItem(const Valeronoi::state::RobotMap& robot_map,
+                                 QGraphicsItem* parent)
     : MapBasedItem(robot_map, parent), m_font("Source Code Pro") {
   m_font.setPixelSize(SCALE_FONT_SIZE);
 }
 
-void MeasurementItem::paint(QPainter *painter,
-                            const QStyleOptionGraphicsItem *option,
-                            QWidget *widget) {
+void MeasurementItem::paint(QPainter* painter,
+                            const QStyleOptionGraphicsItem* option,
+                            QWidget* widget) {
   (void)option;
   (void)widget;
   (void)painter;
@@ -59,19 +59,19 @@ void MeasurementItem::paint(QPainter *painter,
         painter->setClipPath(m_points_path, Qt::IntersectClip);
       }
 
-      for (const auto &p : m_data_segments) {
+      for (const auto& p : m_data_segments) {
         painter->setBrush(p.color);
         painter->drawPolygon(p.polygon);
       }
     } else if (m_display_mode == Valeronoi::state::DISPLAY_MODE::DataPoints) {
-      for (const auto &p : m_data_segments) {
+      for (const auto& p : m_data_segments) {
         painter->setBrush(p.color);
         painter->drawEllipse(p.x - 2, p.y - 2, 4, 4);
       }
     }
 
     painter->setClipRect(boundingRect(), Qt::ReplaceClip);
-    const auto &map = m_robot_map.get_map();
+    const auto& map = m_robot_map.get_map();
     const auto base_y = map.size_y + SCALE_MARGIN;
     if (!m_legend.isNull()) {
       painter->drawPicture(QPoint(SCALE_MARGIN, base_y), m_legend);
@@ -86,7 +86,7 @@ void MeasurementItem::set_display_mode(
 }
 
 void MeasurementItem::set_color_map(
-    const Valeronoi::util::RGBColorMap *color_map) {
+    const Valeronoi::util::RGBColorMap* color_map) {
   m_color_map = color_map;
   calculate_colors();
 }
@@ -105,7 +105,7 @@ QColor MeasurementItem::get_color(double value) const {
   return color_value(normalized);
 }
 
-void MeasurementItem::set_data_segments(const state::DataSegments &segments) {
+void MeasurementItem::set_data_segments(const state::DataSegments& segments) {
   m_points_path.clear();
   m_points_path.setFillRule(Qt::WindingFill);
   m_data_segments = segments;
@@ -113,7 +113,7 @@ void MeasurementItem::set_data_segments(const state::DataSegments &segments) {
   m_max = -100.0;
   m_histogram.clear();
   m_histogram_max = 0;
-  for (const auto &s : m_data_segments) {
+  for (const auto& s : m_data_segments) {
     m_min = std::min(m_min, s.value);
     m_max = std::max(m_max, s.value);
     const auto int_value = static_cast<int>(s.value);
@@ -126,7 +126,7 @@ void MeasurementItem::set_data_segments(const state::DataSegments &segments) {
 }
 
 void MeasurementItem::calculate_colors() {
-  for (auto &s : m_data_segments) {
+  for (auto& s : m_data_segments) {
     s.color = get_color(s.value);
   }
   if (m_color_map && m_max > m_min && m_robot_map.is_valid()) {
@@ -198,7 +198,7 @@ void MeasurementItem::set_restrict_path(bool enabled) {
   update();
 }
 
-void MeasurementItem::set_restrict_path(const QPainterPath &path) {
+void MeasurementItem::set_restrict_path(const QPainterPath& path) {
   m_path = path;
   m_path.setFillRule(Qt::WindingFill);
   m_restrict_path = true;

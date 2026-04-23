@@ -35,11 +35,11 @@ class Measurements : public QObject {
  public:
   void reset();
 
-  void set_json(const QJsonArray &json);
+  void set_json(const QJsonArray& json);
 
-  void set_map(const RobotMap &map);
+  void set_map(const RobotMap& map);
 
-  [[nodiscard]] const RawMeasurements &get_measurements() const;
+  [[nodiscard]] const RawMeasurements& get_measurements() const;
 
   [[nodiscard]] QJsonArray get_json() const;
 
@@ -56,7 +56,7 @@ class Measurements : public QObject {
  private:
   void add_measurement(int x, int y, double value, int wifi_id);
 
-  const RobotMap *m_map{nullptr};
+  const RobotMap* m_map{nullptr};
 
   std::vector<Measurement> m_data;
 };
