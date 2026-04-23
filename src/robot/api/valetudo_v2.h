@@ -44,9 +44,9 @@ class ValetudoAPI : public QObject {
  public:
   ValetudoAPI();
 
-  void set_connection_configuration(const ConnectionConfiguration &conf);
+  void set_connection_configuration(const ConnectionConfiguration& conf);
 
-  [[nodiscard]] const RobotInformation *get_information() const;
+  [[nodiscard]] const RobotInformation* get_information() const;
 
   [[nodiscard]] QString get_error() const;
 
@@ -54,9 +54,9 @@ class ValetudoAPI : public QObject {
 
   [[nodiscard]] bool is_connecting() const;
 
-  QNetworkReply *request(const QString &verb, const QUrl &url,
+  QNetworkReply* request(const QString& verb, const QUrl& url,
                          bool disconnect_on_failure = false, bool gc = false,
-                         const QByteArray *data = nullptr);
+                         const QByteArray* data = nullptr);
 
   [[nodiscard]] QString get_map_data() const;
 

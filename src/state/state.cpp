@@ -22,7 +22,7 @@
 namespace Valeronoi::state {
 
 std::optional<Point> Map::get_robot_position() const {
-  auto res = std::find_if(entities.begin(), entities.end(), [=](const auto &e) {
+  auto res = std::find_if(entities.begin(), entities.end(), [=](const auto& e) {
     return e.type == "robot_position";
   });
   if (res == entities.end()) {

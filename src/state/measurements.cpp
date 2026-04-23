@@ -19,7 +19,7 @@
 
 namespace Valeronoi::state {
 
-void Measurements::set_map(const RobotMap &map) { m_map = &map; }
+void Measurements::set_map(const RobotMap& map) { m_map = &map; }
 
 void Measurements::slot_add_measurement(double signal, int wifi_id) {
   if (m_map != nullptr && m_map->is_valid()) {
@@ -35,7 +35,7 @@ void Measurements::slot_add_measurement(double signal, int wifi_id) {
 
 QJsonArray Measurements::get_json() const {
   QJsonArray arr;
-  for (const auto &d : m_data) {
+  for (const auto& d : m_data) {
     auto obj = QJsonObject();
     obj.insert("x", d.x);
     obj.insert("y", d.y);
@@ -55,7 +55,7 @@ void Measurements::reset() {
   emit signal_measurements_updated();
 }
 
-void Measurements::set_json(const QJsonArray &json) {
+void Measurements::set_json(const QJsonArray& json) {
   m_data.clear();
   for (auto v : json) {
     const auto obj = v.toObject();
@@ -73,11 +73,11 @@ void Measurements::set_json(const QJsonArray &json) {
 }
 
 void Measurements::add_measurement(int x, int y, double value, int wifi_id) {
-  for (auto &d : m_data) {
+  for (auto& d : m_data) {
     if (d.x == x && d.y == y && d.wifi_id == wifi_id) {
       d.data.push_back(value);
       double avg = 0;
-      for (const auto &m : d.data) {
+      for (const auto& m : d.data) {
         avg += m;
       }
       d.average = avg / d.data.size();
@@ -95,12 +95,12 @@ MeasurementStatistics Measurements::get_statistics() const {
   ret.strongest = -1000;
   ret.unique_wifi_APs = 0;
   QVector<int> temp_wifi_count;
-  for (auto &m : m_data) {
+  for (auto& m : m_data) {
     if (!temp_wifi_count.contains(m.wifi_id)) {
       temp_wifi_count.push_back(m.wifi_id);
       ret.unique_wifi_APs++;
     }
-    for (auto &d : m.data) {
+    for (auto& d : m.data) {
       ret.measurements++;
       ret.weakest = std::min(ret.weakest, d);
       ret.strongest = std::max(ret.strongest, d);
@@ -109,6 +109,6 @@ MeasurementStatistics Measurements::get_statistics() const {
   return ret;
 }
 
-const RawMeasurements &Measurements::get_measurements() const { return m_data; }
+const RawMeasurements& Measurements::get_measurements() const { return m_data; }
 
 }  // namespace Valeronoi::state

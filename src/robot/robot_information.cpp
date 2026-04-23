@@ -20,10 +20,10 @@
 
 namespace Valeronoi::robot {
 
-QJsonObject RobotInformation::get_attribute(const QString &class_name,
-                                            const QString &type,
-                                            const QString &sub_type) const {
-  for (const auto &&attr : m_attributes) {
+QJsonObject RobotInformation::get_attribute(const QString& class_name,
+                                            const QString& type,
+                                            const QString& sub_type) const {
+  for (const auto&& attr : m_attributes) {
     auto attribute = attr.toObject();
     if (!class_name.isEmpty() &&
         class_name != attribute["__class"].toString()) {

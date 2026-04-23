@@ -21,7 +21,7 @@
 
 #include "src/util/colormap.h"
 
-void assert_color(const Valeronoi::util::RGBColorMap &m, double pos, double e1,
+void assert_color(const Valeronoi::util::RGBColorMap& m, double pos, double e1,
                   double e2, double e3) {
   const auto c = m.get_color(pos);
   CHECK(c[0] == Approx(e1).margin(0.001));

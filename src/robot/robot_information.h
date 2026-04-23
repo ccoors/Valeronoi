@@ -31,9 +31,9 @@ struct RobotInformation {
   QStringList m_capabilities;
   QJsonArray m_attributes;
 
-  [[nodiscard]] QJsonObject get_attribute(const QString &class_name,
-                                          const QString &type = "",
-                                          const QString &sub_type = "") const;
+  [[nodiscard]] QJsonObject get_attribute(const QString& class_name,
+                                          const QString& type = "",
+                                          const QString& sub_type = "") const;
 };
 
 }  // namespace Valeronoi::robot

@@ -18,12 +18,12 @@
 #include "floor_item.h"
 
 namespace Valeronoi::gui::graphics_item {
-FloorItem::FloorItem(const Valeronoi::state::RobotMap &robot_map,
-                     QGraphicsItem *parent)
+FloorItem::FloorItem(const Valeronoi::state::RobotMap& robot_map,
+                     QGraphicsItem* parent)
     : MapBasedItem(robot_map, parent) {}
 
-void FloorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget) {
+void FloorItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+                      QWidget* widget) {
   (void)option;
   (void)widget;
   painter->setPen(Qt::transparent);
@@ -44,10 +44,10 @@ void FloorItem::map_updated() {
   m_floor_path.clear();
   m_floor_path.setFillRule(Qt::WindingFill);
   if (m_robot_map.is_valid()) {
-    const auto &map = m_robot_map.get_map();
+    const auto& map = m_robot_map.get_map();
     const auto floor = map.layers.find("floor");
     if (floor != map.layers.end()) {
-      for (const auto &block : floor->second.blocks) {
+      for (const auto& block : floor->second.blocks) {
         m_floor_path.addRect(block.x, block.y, map.pixel_size, map.pixel_size);
       }
     }
@@ -55,6 +55,6 @@ void FloorItem::map_updated() {
   MapBasedItem::map_updated();
 }
 
-const QPainterPath &FloorItem::get_floor_path() const { return m_floor_path; }
+const QPainterPath& FloorItem::get_floor_path() const { return m_floor_path; }
 
 }  // namespace Valeronoi::gui::graphics_item

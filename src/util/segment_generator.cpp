@@ -56,7 +56,7 @@ SegmentGenerator::~SegmentGenerator() {
 }
 
 void SegmentGenerator::generate(
-    const Valeronoi::state::RawMeasurements &measurements,
+    const Valeronoi::state::RawMeasurements& measurements,
     Valeronoi::state::DISPLAY_MODE display_mode, int simplify,
     int wifi_id_filter) {
   QMutexLocker locker(&m_mutex);
@@ -88,7 +88,7 @@ void SegmentGenerator::run() {
 
     Valeronoi::state::RawMeasurements processed_measurements;
     if (simplify > 1 || wifi_id_filter != -1) {
-      for (auto &m : measurements) {
+      for (auto& m : measurements) {
         bool saveValue = true;
 
         if (wifi_id_filter != -1 && m.wifi_id != wifi_id_filter) {
@@ -99,7 +99,7 @@ void SegmentGenerator::run() {
           m.x = (m.x / simplify) * simplify;
           m.y = (m.y / simplify) * simplify;
 
-          for (auto &sm : processed_measurements) {
+          for (auto& sm : processed_measurements) {
             if (sm.x == m.x && sm.y == m.y) {
               // I'd like to use std::transform with std::back_inserter instead,
               // but that doesn't work for doubles
@@ -116,9 +116,9 @@ void SegmentGenerator::run() {
         }
       }
       // Update averages
-      for (auto &sm : processed_measurements) {
+      for (auto& sm : processed_measurements) {
         double avg = 0;
-        for (const auto &m : sm.data) {
+        for (const auto& m : sm.data) {
           avg += m;
         }
         sm.average = avg / sm.data.size();
@@ -134,7 +134,7 @@ void SegmentGenerator::run() {
         generate_voronoi(processed_measurements, segments);
         break;
       case state::DISPLAY_MODE::DataPoints:
-        for (const auto &m : processed_measurements) {
+        for (const auto& m : processed_measurements) {
           Valeronoi::state::DataSegment s;
           s.x = m.x;
           s.y = m.y;
@@ -158,14 +158,14 @@ void SegmentGenerator::run() {
 }
 
 void SegmentGenerator::generate_voronoi(
-    const Valeronoi::state::RawMeasurements &measurements,
-    Valeronoi::state::DataSegments &segments) {
+    const Valeronoi::state::RawMeasurements& measurements,
+    Valeronoi::state::DataSegments& segments) {
   if (measurements.size() < 2) {
     return;
   }
   VD vd;
   int x_max{0}, y_max{0};
-  for (const auto &m : measurements) {
+  for (const auto& m : measurements) {
     Site_2 t(m.x, m.y);
     vd.insert(t);
     x_max = std::max(x_max, m.x);
@@ -190,10 +190,10 @@ void SegmentGenerator::generate_voronoi(
   if (!vd.is_valid()) {
     return;
   }
-  for (const auto &m : measurements) {
+  for (const auto& m : measurements) {
     Point_2 p(m.x, m.y);
     auto result = vd.locate(p);
-    if (auto *v = GET_IF(&result)) {
+    if (auto* v = GET_IF(&result)) {
       Valeronoi::state::DataSegment s;
       s.x = m.x;
       s.y = m.y;

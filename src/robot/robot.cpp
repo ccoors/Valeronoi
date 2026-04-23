@@ -43,7 +43,7 @@ Robot::Robot() {
   m_wifi_timer.setSingleShot(false);
 }
 
-void Robot::set_connection_configuration(const ConnectionConfiguration &conf) {
+void Robot::set_connection_configuration(const ConnectionConfiguration& conf) {
   m_api.set_connection_configuration(conf);
 }
 
@@ -53,7 +53,7 @@ bool Robot::is_connected() const { return m_api.is_connected(); }
 
 bool Robot::is_connecting() const { return m_api.is_connecting(); }
 
-const RobotInformation *Robot::get_information() const {
+const RobotInformation* Robot::get_information() const {
   return m_api.get_information();
 }
 

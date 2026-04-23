@@ -24,7 +24,7 @@
 #include "ui_robot_config.h"
 
 namespace Valeronoi::gui::dialog {
-RobotConfigDialog::RobotConfigDialog(QWidget *parent)
+RobotConfigDialog::RobotConfigDialog(QWidget* parent)
     : QDialog(parent),
       ui(new Ui::RobotConfigDialog),
       m_progress_dialog(tr("Testing connection..."), tr("Cancel"), 0, 100,

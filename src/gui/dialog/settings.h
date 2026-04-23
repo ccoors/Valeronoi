@@ -30,14 +30,14 @@ namespace Valeronoi::gui::dialog {
 class SettingsDialog : public QDialog {
   Q_OBJECT
  public:
-  explicit SettingsDialog(QWidget *parent = nullptr);
+  explicit SettingsDialog(QWidget* parent = nullptr);
 
   ~SettingsDialog() override;
 
-  [[nodiscard]] bool should_auto_check_for_updates(QWidget *parent = nullptr);
+  [[nodiscard]] bool should_auto_check_for_updates(QWidget* parent = nullptr);
 
  private:
-  Ui::SettingsDialog *ui;
+  Ui::SettingsDialog* ui;
 };
 }  // namespace Valeronoi::gui::dialog
 

@@ -32,17 +32,17 @@
 namespace Valeronoi::gui::graphics_item {
 class MapItem : public MapBasedItem {
  public:
-  explicit MapItem(const Valeronoi::state::RobotMap &robot_map,
+  explicit MapItem(const Valeronoi::state::RobotMap& robot_map,
                    std::function<void(int, int)> relocate,
-                   QGraphicsItem *parent = nullptr);
+                   QGraphicsItem* parent = nullptr);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-             QWidget *widget) override;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
 
   void set_wall_color(QColor color);
 
 #ifndef QT_NO_CONTEXTMENU
-  void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+  void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 #endif
 
  private:

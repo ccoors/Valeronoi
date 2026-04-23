@@ -22,20 +22,20 @@
 #include <cmath>
 
 namespace Valeronoi::gui::graphics_item {
-EntityItem::EntityItem(const Valeronoi::state::RobotMap &robot_map,
-                       QGraphicsItem *parent)
+EntityItem::EntityItem(const Valeronoi::state::RobotMap& robot_map,
+                       QGraphicsItem* parent)
     : MapBasedItem(robot_map, parent) {}
 
-void EntityItem::paint(QPainter *painter,
-                       const QStyleOptionGraphicsItem *option,
-                       QWidget *widget) {
+void EntityItem::paint(QPainter* painter,
+                       const QStyleOptionGraphicsItem* option,
+                       QWidget* widget) {
   (void)widget;
   (void)option;
   if (m_robot_map.is_valid()) {
-    const auto &map = m_robot_map.get_map();
+    const auto& map = m_robot_map.get_map();
     // Draw path(s) first
     std::for_each(
-        map.entities.begin(), map.entities.end(), [=](const auto &entity) {
+        map.entities.begin(), map.entities.end(), [=](const auto& entity) {
           if ((entity.type == "path" || entity.cls == "PathMapEntity") &&
               entity.points.size() > 1) {
             QPen pen;
@@ -47,7 +47,7 @@ void EntityItem::paint(QPainter *painter,
             painter->setBrush(Qt::transparent);
             QPainterPath path;
             path.moveTo(entity.points[0].x, entity.points[0].y);
-            for (const auto &p : entity.points) {
+            for (const auto& p : entity.points) {
               path.lineTo(p.x, p.y);
             }
             painter->drawPath(path);
@@ -55,7 +55,7 @@ void EntityItem::paint(QPainter *painter,
         });
 
     std::for_each(map.entities.begin(), map.entities.end(),
-                  [=](const auto &entity) {
+                  [=](const auto& entity) {
                     if (entity.points.empty()) {
                       return;
                     }
@@ -68,8 +68,8 @@ void EntityItem::paint(QPainter *painter,
   }
 }
 
-void EntityItem::paint_robot(QPainter *painter,
-                             const Valeronoi::state::Entity &entity) {
+void EntityItem::paint_robot(QPainter* painter,
+                             const Valeronoi::state::Entity& entity) {
   QPen pen;
   pen.setColor(Qt::darkGray);
   pen.setWidthF(1.5);
@@ -84,8 +84,8 @@ void EntityItem::paint_robot(QPainter *painter,
   painter->drawEllipse(tower_head, 3, 3);
 }
 
-void EntityItem::paint_charger(QPainter *painter,
-                               const Valeronoi::state::Entity &entity) {
+void EntityItem::paint_charger(QPainter* painter,
+                               const Valeronoi::state::Entity& entity) {
   QPen pen;
   pen.setColor(QColor(50, 50, 50));
   pen.setWidthF(1.5);

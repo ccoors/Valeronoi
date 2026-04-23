@@ -20,7 +20,7 @@
 #include "ui_export.h"
 
 namespace Valeronoi::gui::dialog {
-ExportDialog::ExportDialog(QWidget *parent)
+ExportDialog::ExportDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::ExportDialog) {
   ui->setupUi(this);
   setWindowFlags(Qt::Sheet);
@@ -48,7 +48,7 @@ ExportDialog::ExportDialog(QWidget *parent)
 
 ExportDialog::~ExportDialog() { delete ui; }
 
-void ExportDialog::set_size(const QSize &size) {
+void ExportDialog::set_size(const QSize& size) {
   ui->width->setMaximum(10 * size.width());
   ui->height->setMaximum(10 * size.height());
   const bool block_w = ui->width->blockSignals(true);

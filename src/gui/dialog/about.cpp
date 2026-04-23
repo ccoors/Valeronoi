@@ -26,7 +26,7 @@
 
 namespace Valeronoi::gui::dialog {
 
-AboutDialog::AboutDialog(QWidget *parent)
+AboutDialog::AboutDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::AboutDialog) {
   ui->setupUi(this);
   ui->version->setText(VALERONOI_VERSION);

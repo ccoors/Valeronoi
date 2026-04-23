@@ -18,8 +18,8 @@
 #include "map_based_item.h"
 
 namespace Valeronoi::gui::graphics_item {
-MapBasedItem::MapBasedItem(const Valeronoi::state::RobotMap &robot_map,
-                           QGraphicsItem *parent)
+MapBasedItem::MapBasedItem(const Valeronoi::state::RobotMap& robot_map,
+                           QGraphicsItem* parent)
     : QGraphicsItem(parent), m_robot_map(robot_map) {}
 
 QRectF MapBasedItem::boundingRect() const { return m_map_bounds; }

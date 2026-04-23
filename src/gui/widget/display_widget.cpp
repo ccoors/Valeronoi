@@ -25,9 +25,9 @@
 
 namespace Valeronoi::gui::widget {
 
-DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
-                             const Valeronoi::state::Measurements &measurements,
-                             QWidget *parent)
+DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap& robot_map,
+                             const Valeronoi::state::Measurements& measurements,
+                             QWidget* parent)
     : QGraphicsView(parent), m_measurements{measurements} {
   setScene(new QGraphicsScene(this));
   setTransformationAnchor(AnchorUnderMouse);
@@ -86,7 +86,7 @@ DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
 
   connect(&m_segment_generator,
           &Valeronoi::util::SegmentGenerator::generated_segments, this,
-          [=](const Valeronoi::state::DataSegments &segments) {
+          [=](const Valeronoi::state::DataSegments& segments) {
             qDebug() << "Calculated new Voronoi segments";
             m_measurement_item->set_data_segments(segments);
           });
@@ -94,7 +94,7 @@ DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap &robot_map,
   slot_map_updated();
 }
 
-void DisplayWidget::paintEvent(QPaintEvent *event) {
+void DisplayWidget::paintEvent(QPaintEvent* event) {
   (void)event;
   QGraphicsView::paintEvent(event);
 }
@@ -147,7 +147,7 @@ void DisplayWidget::set_entities(bool enabled) {
 bool DisplayWidget::get_entities_enabled() const { return m_draw_entities; }
 
 void DisplayWidget::set_color_map(
-    const Valeronoi::util::RGBColorMap *color_map) {
+    const Valeronoi::util::RGBColorMap* color_map) {
   QSettings settings;
   settings.setValue("display/colorMap",
                     QString::fromStdString(color_map->name()));
@@ -157,7 +157,7 @@ void DisplayWidget::set_color_map(
 
 qreal DisplayWidget::get_zoom_factor() const { return transform().m11(); }
 
-void DisplayWidget::wheelEvent(QWheelEvent *event) {
+void DisplayWidget::wheelEvent(QWheelEvent* event) {
   zoom_by(qPow(1.5, event->angleDelta().y() / 240.0));
 }
 
@@ -184,7 +184,7 @@ void DisplayWidget::slot_map_updated() {
 }
 
 void DisplayWidget::slot_measurements_updated() {
-  const auto &measurements = m_measurements.get_measurements();
+  const auto& measurements = m_measurements.get_measurements();
   qDebug() << "Requesting generation of Voronoi segments";
   m_segment_generator.generate(measurements, m_display_mode, m_simplify,
                                m_wifi_id_filter);
@@ -206,7 +206,7 @@ void DisplayWidget::set_opengl(bool enabled) {
   settings.setValue("display/useOpenGL", m_use_opengl);
 #ifndef QT_NO_OPENGL
   if (m_use_opengl) {
-    auto *widget = new QOpenGLWidget;
+    auto* widget = new QOpenGLWidget;
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);

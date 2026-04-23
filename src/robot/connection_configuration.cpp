@@ -31,8 +31,8 @@ void ConnectionConfiguration::read_settings() {
   m_password = settings.value("robot/auth/password", "").toString();
 }
 
-ConnectionConfiguration &ConnectionConfiguration::operator=(
-    const ConnectionConfiguration &other) {
+ConnectionConfiguration& ConnectionConfiguration::operator=(
+    const ConnectionConfiguration& other) {
   if (this != &other) {
     m_url = other.m_url;
     m_auth = other.m_auth;
@@ -46,7 +46,7 @@ bool ConnectionConfiguration::is_valid() const {
   return !m_url.isEmpty() && m_url.isValid();
 }
 
-void ConnectionConfiguration::prepare_request(QNetworkRequest &r) const {
+void ConnectionConfiguration::prepare_request(QNetworkRequest& r) const {
   r.setMaximumRedirectsAllowed(10);  // Should not be needed anyway
   r.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
                  QNetworkRequest::AlwaysNetwork);

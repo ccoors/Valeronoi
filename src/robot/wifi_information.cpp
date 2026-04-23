@@ -27,7 +27,7 @@ class WifiInformationData : public QSharedData {
     m_signal = 0.0;
   }
 
-  WifiInformationData(const WifiInformationData &other)
+  WifiInformationData(const WifiInformationData& other)
       : QSharedData(other),
         m_ssid(other.m_ssid),
         m_bssid(other.m_bssid),
@@ -49,7 +49,7 @@ class WifiInformationData : public QSharedData {
 
 WifiInformation::WifiInformation() : m_data(new WifiInformationData) {}
 
-WifiInformation::WifiInformation(const QJsonObject &jsonObj)
+WifiInformation::WifiInformation(const QJsonObject& jsonObj)
     : m_data(new WifiInformationData) {
   set_json(jsonObj);
 }
@@ -59,27 +59,27 @@ WifiInformation::WifiInformation(const double signal)
   set_signal(signal);
 }
 
-WifiInformation::WifiInformation(double signal, const QString &ssid,
-                                 const QString &bssid)
+WifiInformation::WifiInformation(double signal, const QString& ssid,
+                                 const QString& bssid)
     : m_data(new WifiInformationData) {
   set_signal(signal);
   set_ssid(ssid);
   set_bssid(bssid);
 }
 
-WifiInformation::WifiInformation(const WifiInformation &other)
+WifiInformation::WifiInformation(const WifiInformation& other)
     : m_data(other.m_data) {}
 
-WifiInformation &WifiInformation::operator=(const WifiInformation &rhs) {
+WifiInformation& WifiInformation::operator=(const WifiInformation& rhs) {
   if (this != &rhs) m_data.operator=(rhs.m_data);
   return *this;
 }
 
 WifiInformation::~WifiInformation() { m_data.reset(); }
 
-void WifiInformation::set_ssid(const QString &ssid) { m_data->m_ssid = ssid; }
+void WifiInformation::set_ssid(const QString& ssid) { m_data->m_ssid = ssid; }
 
-void WifiInformation::set_bssid(const QString &bssid) {
+void WifiInformation::set_bssid(const QString& bssid) {
   m_data->m_bssid = bssid;
 }
 

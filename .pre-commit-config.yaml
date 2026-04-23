@@ -1,15 +1,15 @@
 # See https://pre-commit.com for more information
 repos:
   - repo: https://github.com/timothycrosley/isort
-    rev: 5.13.2
+    rev: 8.0.1
     hooks:
       - id: isort
   - repo: https://github.com/ambv/black
-    rev: 24.10.0
+    rev: 26.3.1
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-merge-conflict
       - id: check-yaml
@@ -40,4 +40,4 @@ repos:
       - id: cmake-format
       - id: cmake-lint
 
-exclude: (3rdparty/.*)
+exclude: (3rdparty/.*|tools/pkgbuild/.*)

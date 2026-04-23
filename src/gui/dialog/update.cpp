@@ -31,7 +31,7 @@
 
 namespace Valeronoi::gui::dialog {
 
-UpdateDialog::UpdateDialog(QWidget *parent)
+UpdateDialog::UpdateDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::UpdateDialog) {
   ui->setupUi(this);
   ui->currentVersion->setText(VALERONOI_VERSION);
@@ -42,7 +42,7 @@ UpdateDialog::UpdateDialog(QWidget *parent)
 
 UpdateDialog::~UpdateDialog() { delete ui; }
 
-void UpdateDialog::check_update(bool silent, QWidget *error_parent) {
+void UpdateDialog::check_update(bool silent, QWidget* error_parent) {
   qDebug() << "Checking for updates";
 
   auto r = QNetworkRequest(

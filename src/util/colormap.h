@@ -27,7 +27,7 @@ namespace Valeronoi::util {
 template <typename T, int components>
 class ColorMap {
  public:
-  ColorMap(const char *name, std::vector<std::array<T, components>> colors)
+  ColorMap(const char* name, std::vector<std::array<T, components>> colors)
       : colormap_name{name}, colormap_colors{std::move(colors)} {
     if (colormap_colors.size() == 0) {
       throw std::runtime_error("Can not initialize ColorMap without colors");

@@ -31,14 +31,14 @@ namespace Valeronoi::gui::dialog {
 class LogDialog : public QDialog {
   Q_OBJECT
  public:
-  explicit LogDialog(QWidget *parent = nullptr);
+  explicit LogDialog(QWidget* parent = nullptr);
 
   ~LogDialog() override;
 
-  void log_message(const QString &msg);
+  void log_message(const QString& msg);
 
  private:
-  Ui::LogDialog *ui;
+  Ui::LogDialog* ui;
 };
 
 }  // namespace Valeronoi::gui::dialog

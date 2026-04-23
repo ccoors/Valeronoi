@@ -28,16 +28,16 @@ class WifiInformationData;
 class WifiInformation {
  public:
   WifiInformation();
-  explicit WifiInformation(const QJsonObject &jsonObj);
+  explicit WifiInformation(const QJsonObject& jsonObj);
   explicit WifiInformation(double signal);
-  WifiInformation(double signal, const QString &ssid, const QString &bssid);
+  WifiInformation(double signal, const QString& ssid, const QString& bssid);
 
-  WifiInformation(const WifiInformation &);
-  WifiInformation &operator=(const WifiInformation &);
+  WifiInformation(const WifiInformation&);
+  WifiInformation& operator=(const WifiInformation&);
   ~WifiInformation();
 
-  void set_ssid(const QString &ssid);
-  void set_bssid(const QString &bssid);
+  void set_ssid(const QString& ssid);
+  void set_bssid(const QString& bssid);
   void set_signal(double signal);
 
   [[nodiscard]] QString ssid() const;
