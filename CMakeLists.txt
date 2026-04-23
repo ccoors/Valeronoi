@@ -151,6 +151,9 @@ target_link_libraries(
             CGAL::CGAL
             OpenSSL::SSL
 )
+if(MINGW)
+    target_link_options(valeronoi-tests PRIVATE -mconsole)
+endif()
 
 target_link_libraries(
     valeronoi
