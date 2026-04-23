@@ -82,7 +82,6 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: "6.11.0"
           arch: "win64_msvc2022_64"
       - name: Install vcpkg dependencies
         run: |
