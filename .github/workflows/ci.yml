@@ -12,20 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-14
-            qt: "6.8.0"
-            cgal: "6.0.1"
+          - os: macos-15
+            qt: "6.11.0"
+            cgal: "6.1.1"
             variant: "current"
-          - os: macos-13
-            qt: "6.5.3"
-            cgal: "5.6.2"
-            variant: "legacy"
     name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_ANALYTICS: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install dependencies
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -63,7 +59,7 @@ jobs:
           mv valeronoi.app dist/Valeronoi.app
           create-dmg --hdiutil-verbose --no-internet-enable --skip-jenkins --volname "Valeronoi Installer" --volicon "../assets/icon/valeronoi.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "Valeronoi.app" 200 190 --hide-extension "Valeronoi.app" --app-drop-link 600 185 "Valeronoi-macOS-Intel-$VARIANT.dmg" "dist/"
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: valeronoi-macos-${{ matrix.variant }}
           path: build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg
@@ -82,7 +78,7 @@ jobs:
     name: CI Windows/MSYS2
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install msys2
         uses: msys2/setup-msys2@v2
         with:
@@ -104,7 +100,7 @@ jobs:
             openssl:p
             cgal:p
             eigen3:p
-            intel-tbb:p
+            tbb:p
             nsis:p
           location: C:\msys2
       - name: Build on Windows
@@ -125,7 +121,7 @@ jobs:
           python ../../tools/windows/copy_dlls.py
           zip -r ../Valeronoi-Windows-portable-x86_64.zip .
       - name: Upload portable archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: valeronoi-windows-portable-${{ matrix.sys }}
           path: build/dist
@@ -143,7 +139,7 @@ jobs:
           cp ../../tools/windows/install.nsi .
           makensis install.nsi
       - name: Upload installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: valeronoi-windows-installer-${{ matrix.sys }}
           path: build/dist/Valeronoi-installer-x86_64.exe
@@ -160,17 +156,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-24.04
-            qt: "6.8.0"
-            cgal: "6.0.1"
+            qt: "6.11.0"
+            cgal: "6.1.1"
             variant: "current"
-          - os: ubuntu-22.04
-            qt: "6.5.3"
-            cgal: "5.6.2"
-            variant: "legacy"
     name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -212,7 +204,7 @@ jobs:
           mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-x86_64.AppImage"
         shell: bash
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: valeronoi-linux-appimage-${{ matrix.variant }}
           path: build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage
