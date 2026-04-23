@@ -21,7 +21,7 @@ find_package(CGAL REQUIRED)
 
 find_package(
     Qt6
-    COMPONENTS Core Widgets Network Svg OpenGLWidgets
+    COMPONENTS Core Widgets Network Svg OpenGLWidgets Test
     REQUIRED
 )
 include(CheckIPOSupported)
@@ -107,12 +107,26 @@ set(SOURCE_FILES
     src/gui/graphics_item/measurement_item.cpp
 )
 
-set(TEST_FILES tests/test_main.cpp tests/test_colormap.cpp)
+set(TEST_FILES
+    tests/test_main.cpp
+    tests/test_colormap.cpp
+    tests/test_wifi_information.cpp
+    tests/test_wifi_collection.cpp
+    tests/test_measurements.cpp
+    tests/test_robot_map.cpp
+    tests/test_segment_generator.cpp
+)
+
+set(TEST_SOURCE_FILES
+    src/util/segment_generator.cpp src/robot/wifi_information.cpp
+    src/state/wifi_collection.cpp src/state/measurements.cpp
+    src/state/robot_map.cpp src/state/state.cpp
+)
 
 set(MACOSX_BUNDLE_BUNDLE_NAME "Valeronoi")
 set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_COPYRIGHT
-    "2021-2024 Christian Friedrich Coors, released under GPLv3"
+    "2021-2026 Christian Friedrich Coors, released under GPLv3"
 )
 set(MACOSX_BUNDLE_ICON_FILE "valeronoi.icns")
 set(MACOSX_BUNDLE_LONG_VERSION_STRING "${CMAKE_PROJECT_VERSION}")
@@ -124,7 +138,19 @@ add_executable(
     ${CMAKE_SOURCE_DIR}/assets/appinfo.rc
 )
 target_compile_options(valeronoi PRIVATE -fPIC)
-add_executable(valeronoi-tests ${TEST_FILES})
+add_executable(valeronoi-tests ${TEST_FILES} ${TEST_SOURCE_FILES})
+target_link_libraries(
+    valeronoi-tests
+    PRIVATE Threads::Threads
+            Qt6::Core
+            Qt6::Widgets
+            Qt6::Network
+            Qt6::Svg
+            Qt6::OpenGLWidgets
+            Qt6::Test
+            CGAL::CGAL
+            OpenSSL::SSL
+)
 
 target_link_libraries(
     valeronoi

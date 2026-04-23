@@ -12,10 +12,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-15
+          - os: macos-15-intel
             qt: "6.11.0"
             cgal: "6.1.1"
-            variant: "current"
+            variant: "current-intel"
+          - os: macos-15-arm
+            qt: "6.11.0"
+            cgal: "6.1.1"
+            variant: "current-arm64"
     name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     env:

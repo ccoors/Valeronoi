@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "measurements.h"
+
+#include <limits>
 
 namespace Valeronoi::state {
 
@@ -91,9 +93,14 @@ MeasurementStatistics Measurements::get_statistics() const {
   MeasurementStatistics ret{};
   ret.measurements = 0;
   ret.unique_places = m_data.size();
-  ret.weakest = 0;
-  ret.strongest = -1000;
+  ret.weakest = std::numeric_limits<double>::max();
+  ret.strongest = -std::numeric_limits<double>::max();
   ret.unique_wifi_APs = 0;
+  if (m_data.empty()) {
+    ret.weakest = 0;
+    ret.strongest = 0;
+    return ret;
+  }
   QVector<int> temp_wifi_count;
   for (auto& m : m_data) {
     if (!temp_wifi_count.contains(m.wifi_id)) {

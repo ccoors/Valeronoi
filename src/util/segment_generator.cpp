@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Voronoi_diagram_2.h>
 
+#include <map>
 #include <utility>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
@@ -88,43 +89,64 @@ void SegmentGenerator::run() {
 
     Valeronoi::state::RawMeasurements processed_measurements;
     if (simplify > 1 || wifi_id_filter != -1) {
-      for (auto& m : measurements) {
-        bool saveValue = true;
-
+      std::map<std::pair<int, int>, Valeronoi::state::Measurement>
+          simplified_map;
+      for (const auto& m : measurements) {
+        if (m_abort || m_restart) {
+          break;
+        }
         if (wifi_id_filter != -1 && m.wifi_id != wifi_id_filter) {
           continue;  // Skip and probe next one
         }
 
+        int x = m.x;
+        int y = m.y;
         if (simplify > 1) {
-          m.x = (m.x / simplify) * simplify;
-          m.y = (m.y / simplify) * simplify;
-
-          for (auto& sm : processed_measurements) {
-            if (sm.x == m.x && sm.y == m.y) {
-              // I'd like to use std::transform with std::back_inserter instead,
-              // but that doesn't work for doubles
-              for (const auto d : m.data) {
-                sm.data.push_back(d);
-              }
-              saveValue = false;
-            }
-          }
+          x = (m.x / simplify) * simplify;
+          y = (m.y / simplify) * simplify;
         }
 
-        if (saveValue) {
-          processed_measurements.push_back(m);
+        auto& sm = simplified_map[{x, y}];
+        if (sm.data.empty()) {
+          sm.x = x;
+          sm.y = y;
+          sm.wifi_id = m.wifi_id;
+        }
+        for (const auto d : m.data) {
+          sm.data.push_back(d);
         }
       }
-      // Update averages
-      for (auto& sm : processed_measurements) {
+
+      if (m_abort || m_restart) {
+        m_mutex.lock();
+        if (!m_restart) {
+          m_condition.wait(&m_mutex);
+        }
+        m_restart = false;
+        m_mutex.unlock();
+        continue;
+      }
+
+      for (auto& [pos, sm] : simplified_map) {
         double avg = 0;
-        for (const auto& m : sm.data) {
-          avg += m;
+        for (const auto& d : sm.data) {
+          avg += d;
         }
         sm.average = avg / sm.data.size();
+        processed_measurements.push_back(std::move(sm));
       }
     } else {
       processed_measurements = std::move(measurements);
+    }
+
+    if (m_abort || m_restart) {
+      m_mutex.lock();
+      if (!m_restart) {
+        m_condition.wait(&m_mutex);
+      }
+      m_restart = false;
+      m_mutex.unlock();
+      continue;
     }
 
     Valeronoi::state::DataSegments segments;
@@ -146,6 +168,16 @@ void SegmentGenerator::run() {
         break;
     }
 
+    if (m_abort || m_restart) {
+      m_mutex.lock();
+      if (!m_restart) {
+        m_condition.wait(&m_mutex);
+      }
+      m_restart = false;
+      m_mutex.unlock();
+      continue;
+    }
+
     emit generated_segments(segments);
 
     m_mutex.lock();
@@ -164,15 +196,26 @@ void SegmentGenerator::generate_voronoi(
     return;
   }
   VD vd;
-  int x_max{0}, y_max{0};
+  int x_min{0}, x_max{0}, y_min{0}, y_max{0};
+  bool first{true};
   for (const auto& m : measurements) {
     Site_2 t(m.x, m.y);
     vd.insert(t);
-    x_max = std::max(x_max, m.x);
-    y_max = std::max(y_max, m.y);
+    if (first) {
+      x_min = x_max = m.x;
+      y_min = y_max = m.y;
+      first = false;
+    } else {
+      x_min = std::min(x_min, m.x);
+      x_max = std::max(x_max, m.x);
+      y_min = std::min(y_min, m.y);
+      y_max = std::max(y_max, m.y);
+    }
   }
-  const int x_center{x_max / 2};
-  const int y_center{y_max / 2};
+  const int x_center{(x_max + x_min) / 2};
+  const int y_center{(y_max + y_min) / 2};
+  const int x_range{std::max(100, x_max - x_min)};
+  const int y_range{std::max(100, y_max - y_min)};
 
   // Insert dummy points to prevent infinite points in our vertices.
   // You could also do a ton of math magic to calculate the infinite points
@@ -180,8 +223,7 @@ void SegmentGenerator::generate_voronoi(
   for (int y = -1; y < 2; y++) {
     for (int x = -1; x < 2; x++) {
       if (x || y) {  // No center point
-        Site_2 t(x_center + x * (x_center * 10),
-                 y_center + y * (y_center * 10));
+        Site_2 t(x_center + x * (x_range * 10), y_center + y * (y_range * 10));
         vd.insert(t);
       }
     }
