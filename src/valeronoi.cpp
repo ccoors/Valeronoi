@@ -199,8 +199,8 @@ bool ValeronoiWindow::save() {
   object.insert("measurements", m_wifi_measurements.get_json());
   object.insert("wifis", m_wifi_collection.get_json());
   object.insert("version", FILE_FORMAT_VERSION);
-  auto data = QJsonDocument(object);
-  file.write(data.toJson(QJsonDocument::Compact));
+  auto document = QJsonDocument(object);
+  file.write(document.toJson(QJsonDocument::Compact));
   file.close();
   set_modified(false);
   return true;

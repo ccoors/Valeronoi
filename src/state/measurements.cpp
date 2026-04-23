@@ -92,7 +92,7 @@ void Measurements::add_measurement(int x, int y, double value, int wifi_id) {
 MeasurementStatistics Measurements::get_statistics() const {
   MeasurementStatistics ret{};
   ret.measurements = 0;
-  ret.unique_places = m_data.size();
+  ret.unique_places = static_cast<int>(m_data.size());
   ret.weakest = std::numeric_limits<double>::max();
   ret.strongest = -std::numeric_limits<double>::max();
   ret.unique_wifi_APs = 0;

@@ -139,7 +139,9 @@ add_executable(
     ${SOURCE_FILES} ${CMAKE_SOURCE_DIR}/assets/icon/valeronoi.icns
     ${CMAKE_SOURCE_DIR}/assets/appinfo.rc
 )
-target_compile_options(valeronoi PRIVATE -fPIC)
+if(NOT MSVC)
+    target_compile_options(valeronoi PRIVATE -fPIC)
+endif()
 add_executable(valeronoi-tests ${TEST_FILES} ${TEST_SOURCE_FILES})
 target_link_libraries(
     valeronoi-tests
