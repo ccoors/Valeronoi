@@ -75,59 +75,40 @@ jobs:
         with:
           asset_paths: '["build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg"]'
   ci-windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        sys: [mingw64] # mingw32, ucrt64 - Experimental
-    name: CI Windows/MSYS2
+    name: CI Windows/MSVC
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v6
-      - name: Install msys2
-        uses: msys2/setup-msys2@v2
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
         with:
-          msystem: ${{ matrix.sys }}
-          install: >-
-            base-devel
-            git
-            make
-            zip
-          pacboy: >-
-            cmake:p
-            ninja:p
-            gcc:p
-            cc:p
-            qt6-tools:p
-            qt6-base:p
-            qt6-imageformats:p
-            qt6-svg:p
-            openssl:p
-            cgal:p
-            eigen3:p
-            tbb:p
-            nsis:p
-          location: C:\msys2
+          version: "6.11.0"
+          arch: "win64_msvc2022_64"
+      - name: Install vcpkg dependencies
+        run: |
+          vcpkg install cgal[core] gmp mpfr boost-system boost-thread boost-program-options openssl --triplet x64-windows
       - name: Build on Windows
-        shell: msys2 {0}
         run: |
           mkdir build
           cd build
-          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
-          ./valeronoi-tests.exe
+          cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          .\Release\valeronoi-tests.exe
           mkdir dist
-          mv valeronoi.exe dist/valeronoi.exe
-          cp ../COPYING dist
-          cp ../assets/appinfo.rc dist
-          mkdir dist/icon
-          cp ../assets/icon/appicon.ico dist/icon
-          cd dist
-          python ../../tools/windows/copy_dlls.py
-          zip -r ../Valeronoi-Windows-portable-x86_64.zip .
+          copy Release\valeronoi.exe dist\valeronoi.exe
+          copy ..\COPYING dist
+          copy ..\assets\appinfo.rc dist
+          mkdir dist\icon
+          copy ..\assets\icon\appicon.ico dist\icon
+          windeployqt --release --no-translations --compiler-runtime dist\valeronoi.exe
+          # vcpkg-installed DLLs might need manual copying if windeployqt doesn't catch them
+          # But vcpkg usually handles it if they are linked. Actually, for portable app we might need to copy them.
+          powershell -Command "if (Test-Path Release\*.dll) { Copy-Item Release\*.dll -Destination dist }"
+          powershell -Command "Compress-Archive -Path dist\* -DestinationPath Valeronoi-Windows-portable-x86_64.zip"
       - name: Upload portable archive
         uses: actions/upload-artifact@v7
         with:
-          name: valeronoi-windows-portable-${{ matrix.sys }}
+          name: valeronoi-windows-portable
           path: build/dist
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
@@ -137,15 +118,14 @@ jobs:
         with:
           asset_paths: '["build/Valeronoi-Windows-portable-x86_64.zip"]'
       - name: Build installer
-        shell: msys2 {0}
         run: |
           cd build/dist
-          cp ../../tools/windows/install.nsi .
+          copy ..\..\tools\windows\install.nsi .
           makensis install.nsi
       - name: Upload installer
         uses: actions/upload-artifact@v7
         with:
-          name: valeronoi-windows-installer-${{ matrix.sys }}
+          name: valeronoi-windows-installer
           path: build/dist/Valeronoi-installer-x86_64.exe
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}

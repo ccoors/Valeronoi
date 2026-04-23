@@ -61,6 +61,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES
         message(STATUS "Building binary for native architecture")
         add_compile_options(-march=native)
     endif()
+elseif(MSVC)
+    add_compile_options(/W4 /WX /MP)
 endif()
 
 configure_file(src/config.h.in config.h)
