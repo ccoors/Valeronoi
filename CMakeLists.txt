@@ -151,8 +151,12 @@ target_link_libraries(
             CGAL::CGAL
             OpenSSL::SSL
 )
-if(MINGW)
-    target_link_options(valeronoi-tests PRIVATE -mconsole)
+if(WIN32)
+    target_link_options(
+        valeronoi-tests PRIVATE -mconsole -Wl,--subsystem,console
+        -Wl,--entry,mainCRTStartup
+    )
+    target_compile_definitions(valeronoi-tests PRIVATE QT_NO_ENTRYPOINT)
 endif()
 
 target_link_libraries(
