@@ -16,7 +16,7 @@ jobs:
             qt: "6.11.0"
             cgal: "6.1.1"
             variant: "current-intel"
-          - os: macos-15-arm
+          - os: macos-15
             qt: "6.11.0"
             cgal: "6.1.1"
             variant: "current-arm64"
