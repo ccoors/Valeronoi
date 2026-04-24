@@ -51,10 +51,19 @@ Section "Valeronoi" SecValeronoi
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 SectionEnd
 
+Section "Visual C++ Redistributable" SecVCRedist
+  SetOutPath "$INSTDIR"
+  File vc_redist.x64.exe
+  ExecWait '"$INSTDIR\vc_redist.x64.exe" /install /quiet /norestart'
+  Delete "$INSTDIR\vc_redist.x64.exe"
+SectionEnd
+
 LangString DESC_SecValeronoi ${LANG_ENGLISH} "Valeronoi main application."
+LangString DESC_SecVCRedist ${LANG_ENGLISH} "Install Microsoft Visual C++ Redistributable (required for the application to run)."
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValeronoi} $(DESC_SecValeronoi)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecVCRedist} $(DESC_SecVCRedist)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
