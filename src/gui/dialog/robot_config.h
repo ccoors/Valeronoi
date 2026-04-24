@@ -28,6 +28,7 @@
 #include <QUrl>
 #include <QtWidgets>
 
+#include "../../robot/mdns_discovery.h"
 #include "../../robot/robot.h"
 
 QT_BEGIN_NAMESPACE
@@ -60,6 +61,8 @@ class RobotConfigDialog : public QDialog {
 
   void slot_robot_connection_failed();
 
+  void slot_robot_discovered(const Valeronoi::robot::DiscoveredRobot& robot);
+
  private:
   void ensure_http();
 
@@ -68,6 +71,7 @@ class RobotConfigDialog : public QDialog {
   bool m_test_cancelled{false};
 
   Valeronoi::robot::Robot m_robot;
+  Valeronoi::robot::MdnsDiscovery m_discovery;
 };
 }  // namespace Valeronoi::gui::dialog
 

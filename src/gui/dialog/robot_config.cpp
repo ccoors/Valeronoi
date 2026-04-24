@@ -54,7 +54,17 @@ RobotConfigDialog::RobotConfigDialog(QWidget* parent)
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_error, this,
           &RobotConfigDialog::slot_robot_connection_failed);
 
+  connect(&m_discovery, &Valeronoi::robot::MdnsDiscovery::robotDiscovered, this,
+          &RobotConfigDialog::slot_robot_discovered);
+
+  connect(ui->discoveredRobots, &QComboBox::activated, this, [=](int index) {
+    ui->valetudoAddress->setText(
+        ui->discoveredRobots->itemData(index).toString());
+    ensure_http();
+  });
+
   load_settings();
+  m_discovery.startDiscovery();
 }
 
 RobotConfigDialog::~RobotConfigDialog() { delete ui; }
@@ -158,6 +168,14 @@ void RobotConfigDialog::slot_robot_connection_failed() {
   m_progress_dialog.close();
   QMessageBox::warning(this, tr("Error"),
                        tr("Test failed:\n%1").arg(m_robot.get_error()));
+}
+
+void RobotConfigDialog::slot_robot_discovered(
+    const Valeronoi::robot::DiscoveredRobot& robot) {
+  const QString url = robot.url();
+  if (ui->discoveredRobots->findData(url) == -1) {
+    ui->discoveredRobots->addItem(robot.name, url);
+  }
 }
 
 void RobotConfigDialog::ensure_http() {
