@@ -102,7 +102,7 @@ jobs:
           copy ..\assets\appinfo.rc dist
           mkdir dist\icon
           copy ..\assets\icon\appicon.ico dist\icon
-          & "${env:Qt6_DIR}\bin\windeployqt.exe" --release --no-translations --compiler-runtime dist\valeronoi.exe
+          & "${env:QT_ROOT_DIR}\bin\windeployqt.exe" --release --no-translations --compiler-runtime dist\valeronoi.exe
           # vcpkg-installed DLLs might need manual copying if windeployqt doesn't catch them
           # But vcpkg usually handles it if they are linked. Actually, for portable app we might need to copy them.
           powershell -Command "if (Test-Path Release\*.dll) { Copy-Item Release\*.dll -Destination dist }"

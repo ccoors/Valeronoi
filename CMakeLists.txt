@@ -156,10 +156,6 @@ target_link_libraries(
             OpenSSL::SSL
 )
 if(WIN32)
-    target_link_options(
-        valeronoi-tests PRIVATE -mconsole -Wl,--subsystem,console
-        -Wl,--entry,mainCRTStartup
-    )
     target_compile_definitions(valeronoi-tests PRIVATE QT_NO_ENTRYPOINT)
 endif()
 
