@@ -96,7 +96,7 @@ void RobotConfigDialog::slot_test_connection() {
   const QString url_input = ui->valetudoAddress->text().trimmed();
   if (url_input.isEmpty()) {
     QMessageBox::warning(this, tr("Error"),
-                         tr("Please enter the Valetudo address"));
+                         tr("Please enter the Valetudo address."));
     return;
   }
 
@@ -150,7 +150,7 @@ void RobotConfigDialog::slot_robot_connected() {
   if (has_wifi_config) {
     QMessageBox::information(this, tr("Test successful"), test_result);
   } else {
-    QMessageBox::warning(this, tr("Test failed"), test_result);
+    QMessageBox::warning(this, tr("Capability missing"), test_result);
   }
 }
 

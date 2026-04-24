@@ -81,7 +81,7 @@ DisplayWidget::DisplayWidget(const Valeronoi::state::RobotMap& robot_map,
   slot_set_display_mode(0);
 
   setStatusTip(
-      tr("Scroll to zoom, click and drag to move and right-click for more "
+      tr("Scroll to zoom, click and drag to pan, and right-click for more "
          "actions"));
 
   connect(&m_segment_generator,

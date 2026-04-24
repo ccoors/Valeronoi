@@ -282,7 +282,7 @@ void ValeronoiWindow::load_colormaps() {
   QFile loadFile{":/res/colormaps.json"};
 
   if (!loadFile.open(QIODevice::ReadOnly)) {
-    QMessageBox::critical(this, "Valeronoio", tr("Could not load colormaps"));
+    QMessageBox::critical(this, "Valeronoi", tr("Could not load colormaps"));
     return;
   }
 
@@ -587,7 +587,7 @@ void ValeronoiWindow::connect_actions() {
   connect(ui->actionExportAsSVG, &QAction::triggered, this, [=]() {
     QMessageBox::information(
         this, "Valeronoi",
-        tr("Please note that the SVG export is experimental and will generate "
+        tr("The SVG export is experimental. Note that it may generate "
            "geometry that is out of bounds."));
     QString export_path = QFileDialog::getSaveFileName(
         this, tr("Save SVG"), get_open_save_dir(), tr("SVG files (*.svg)"));

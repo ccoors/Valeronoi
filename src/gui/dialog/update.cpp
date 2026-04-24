@@ -72,7 +72,7 @@ void UpdateDialog::check_update(bool silent, QWidget* error_parent) {
         m_goto_url = newest_release["html_url"].toString();
         if (current_tag.isEmpty() || m_goto_url.isEmpty()) {
           QMessageBox::information(error_parent, "Valeronoi",
-                                   tr("Could not load update information"));
+                                   tr("Could not load update information."));
           return;
         }
         ui->updatedVersion->setText(current_tag);
