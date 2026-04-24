@@ -35,7 +35,17 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
+      - name: Cache CGAL
+        id: cache-cgal
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/CGAL
+            /usr/local/lib/cmake/CGAL
+            /usr/local/lib/libCGAL*
+          key: cgal-macos-${{ matrix.os }}-${{ matrix.cgal }}
       - name: Install CGAL
+        if: steps.cache-cgal.outputs.cache-hit != 'true'
         env:
           CGAL_VERSION: ${{ matrix.cgal }}
         run: |
@@ -86,6 +96,13 @@ jobs:
           arch: "win64_msvc2022_64"
       - name: Set up MSVC
         uses: ilammy/msvc-dev-cmd@v1
+      - name: Cache vcpkg
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VCPKG_INSTALLATION_ROOT }}/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-
       - name: Install vcpkg dependencies
         run: |
           vcpkg install cgal[core] gmp mpfr boost-system boost-thread boost-program-options openssl --triplet x64-windows
@@ -94,7 +111,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release
-          cmake --build . --config Release
+          cmake --build . --config Release -j 4
           .\Release\valeronoi-tests.exe
           mkdir dist
           copy Release\valeronoi.exe dist\valeronoi.exe
@@ -103,8 +120,6 @@ jobs:
           mkdir dist\icon
           copy ..\assets\icon\appicon.ico dist\icon
           & "${env:QT_ROOT_DIR}\bin\windeployqt.exe" --release --no-translations --compiler-runtime dist\valeronoi.exe
-          # vcpkg-installed DLLs might need manual copying if windeployqt doesn't catch them
-          # But vcpkg usually handles it if they are linked. Actually, for portable app we might need to copy them.
           powershell -Command "if (Test-Path Release\*.dll) { Copy-Item Release\*.dll -Destination dist }"
           powershell -Command "Compress-Archive -Path dist\* -DestinationPath Valeronoi-Windows-portable-x86_64.zip"
       - name: Upload portable archive
@@ -156,7 +171,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils libmpfr-dev libboost-dev -y
+      - name: Cache CGAL
+        id: cache-cgal
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/CGAL
+            /usr/local/lib/cmake/CGAL
+            /usr/local/lib/libCGAL*
+          key: cgal-linux-${{ matrix.os }}-${{ matrix.cgal }}
       - name: Install CGAL
+        if: steps.cache-cgal.outputs.cache-hit != 'true'
         env:
           CGAL_VERSION: ${{ matrix.cgal }}
         run: |
