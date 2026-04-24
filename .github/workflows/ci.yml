@@ -12,10 +12,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: macos-15-intel
+            qt: "6.11.0"
+            cgal: "6.1.1"
+            variant: "current-intel"
           - os: macos-15
             qt: "6.11.0"
             cgal: "6.1.1"
-            variant: "current"
+            variant: "current-arm64"
     name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     env:
@@ -31,7 +35,17 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
+      - name: Cache CGAL
+        id: cache-cgal
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/CGAL
+            /usr/local/lib/cmake/CGAL
+            /usr/local/lib/libCGAL*
+          key: cgal-macos-${{ matrix.os }}-${{ matrix.cgal }}
       - name: Install CGAL
+        if: steps.cache-cgal.outputs.cache-hit != 'true'
         env:
           CGAL_VERSION: ${{ matrix.cgal }}
         run: |
@@ -71,59 +85,50 @@ jobs:
         with:
           asset_paths: '["build/Valeronoi-macOS-Intel-${{ matrix.variant }}.dmg"]'
   ci-windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        sys: [mingw64] # mingw32, ucrt64 - Experimental
-    name: CI Windows/MSYS2
+    name: CI Windows/MSVC
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v6
-      - name: Install msys2
-        uses: msys2/setup-msys2@v2
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
         with:
-          msystem: ${{ matrix.sys }}
-          install: >-
-            base-devel
-            git
-            make
-            zip
-          pacboy: >-
-            cmake:p
-            ninja:p
-            gcc:p
-            cc:p
-            qt6-tools:p
-            qt6-base:p
-            qt6-imageformats:p
-            qt6-svg:p
-            openssl:p
-            cgal:p
-            eigen3:p
-            tbb:p
-            nsis:p
-          location: C:\msys2
+          version: "6.10.3"
+          arch: "win64_msvc2022_64"
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Cache vcpkg
+        uses: actions/cache@v5
+        with:
+          path: |
+            C:\vcpkg\installed
+            C:\vcpkg\vcpkg.exe
+            C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-
+      - name: Install vcpkg dependencies
+        run: |
+          vcpkg install cgal[core] gmp mpfr boost-system boost-thread boost-program-options openssl --triplet x64-windows
       - name: Build on Windows
-        shell: msys2 {0}
         run: |
           mkdir build
           cd build
-          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
-          ./valeronoi-tests.exe
+          cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release -j 4
+          .\Release\valeronoi-tests.exe
           mkdir dist
-          mv valeronoi.exe dist/valeronoi.exe
-          cp ../COPYING dist
-          cp ../assets/appinfo.rc dist
-          mkdir dist/icon
-          cp ../assets/icon/appicon.ico dist/icon
-          cd dist
-          python ../../tools/windows/copy_dlls.py
-          zip -r ../Valeronoi-Windows-portable-x86_64.zip .
+          copy Release\valeronoi.exe dist\valeronoi.exe
+          copy ..\COPYING dist
+          copy ..\assets\appinfo.rc dist
+          mkdir dist\icon
+          copy ..\assets\icon\appicon.ico dist\icon
+          & "${env:QT_ROOT_DIR}\bin\windeployqt.exe" --release --no-translations --compiler-runtime dist\valeronoi.exe
+          powershell -Command "if (Test-Path Release\*.dll) { Copy-Item Release\*.dll -Destination dist }"
+          powershell -Command "Compress-Archive -Path dist\* -DestinationPath Valeronoi-Windows-portable-x86_64.zip"
       - name: Upload portable archive
         uses: actions/upload-artifact@v7
         with:
-          name: valeronoi-windows-portable-${{ matrix.sys }}
+          name: valeronoi-windows-portable
           path: build/dist
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
@@ -133,15 +138,14 @@ jobs:
         with:
           asset_paths: '["build/Valeronoi-Windows-portable-x86_64.zip"]'
       - name: Build installer
-        shell: msys2 {0}
         run: |
           cd build/dist
-          cp ../../tools/windows/install.nsi .
+          copy ..\..\tools\windows\install.nsi .
           makensis install.nsi
       - name: Upload installer
         uses: actions/upload-artifact@v7
         with:
-          name: valeronoi-windows-installer-${{ matrix.sys }}
+          name: valeronoi-windows-installer
           path: build/dist/Valeronoi-installer-x86_64.exe
       - name: Upload release portable archive
         if: ${{ github.event_name == 'release' }}
@@ -170,7 +174,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils libmpfr-dev libboost-dev -y
+      - name: Cache CGAL
+        id: cache-cgal
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/CGAL
+            /usr/local/lib/cmake/CGAL
+            /usr/local/lib/libCGAL*
+          key: cgal-linux-${{ matrix.os }}-${{ matrix.cgal }}
       - name: Install CGAL
+        if: steps.cache-cgal.outputs.cache-hit != 'true'
         env:
           CGAL_VERSION: ${{ matrix.cgal }}
         run: |

@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class ColorMap {
     double place = (colormap_colors.size() - 1) * f;
     double int_part, fract_part;
     fract_part = std::modf(place, &int_part);
-    std::size_t index = int_part;
+    auto index = static_cast<std::size_t>(int_part);
     if (index == colormap_colors.size() - 1) {
       // VERY close to end
       return colormap_colors[colormap_colors.size() - 1];

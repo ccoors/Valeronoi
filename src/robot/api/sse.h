@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 namespace Valeronoi::robot::api {
 
 constexpr const std::chrono::milliseconds RECONNECT_TIMER{2000};
+constexpr const std::chrono::milliseconds WATCHDOG_TIMER{30000};
 
 enum class ParserState { IDLE = 0, DATA };
 
@@ -68,6 +69,8 @@ class SSEConnection : public QObject {
 
   void slot_make_request();
 
+  void slot_watchdog_timeout();
+
  private:
   QNetworkRequest prepare_request(const QUrl& url) const;
 
@@ -76,6 +79,7 @@ class SSEConnection : public QObject {
       m_event_type;
   ParserState m_parser_state{ParserState::IDLE};
   QTimer m_reconnect_timer;
+  QTimer m_watchdog_timer;
   ConnectionConfiguration m_connection_configuration;
   QUrl m_initial_url, m_url;
   QNetworkReply* m_reply{nullptr};

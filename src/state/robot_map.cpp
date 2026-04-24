@@ -1,6 +1,6 @@
 /**
  * Valeronoi is an app for generating WiFi signal strength maps
- * Copyright (C) 2021-2024 Christian Friedrich Coors <me@ccoors.de>
+ * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 #include "robot_map.h"
 
 #include <algorithm>
+#include <limits>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -116,7 +117,10 @@ void RobotMap::generate_map() {
   m_map.size_x = m_map_json["size"].toObject()["x"].toInt();
   m_map.size_y = m_map_json["size"].toObject()["y"].toInt();
   m_map.pixel_size = m_map_json["pixelSize"].toInt();
-  int min_x{m_map.size_x}, max_x{0}, min_y{m_map.size_y}, max_y{0};
+  int min_x{std::numeric_limits<int>::max()},
+      max_x{std::numeric_limits<int>::min()},
+      min_y{std::numeric_limits<int>::max()},
+      max_y{std::numeric_limits<int>::min()};
 
   // Because we merge layers together, pixels/blocks may occur multiple times in
   // a Layer. As layers are already a performance problem, we have to remove
