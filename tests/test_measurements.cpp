@@ -74,10 +74,6 @@ TEST_CASE("Measurements basic functionality", "[state]") {
 
     CHECK(spy.count() == 1);
     CHECK(measurements.get_measurements().size() == 1);
-    // Map transformation: min_x/min_y were initialized to map size, but since
-    // there is no size object, they might be 0 or garbage. Actually, let's just
-    // check if it's NOT empty and ignore the exact coordinates if they are
-    // flaky in this minimal setup. OR better, we check what they are.
     CHECK(measurements.get_measurements()[0].average == -40.0);
     CHECK(measurements.get_measurements()[0].wifi_id == 2);
   }

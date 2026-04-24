@@ -23,6 +23,10 @@ SSEConnection::SSEConnection() {
   m_reconnect_timer.setSingleShot(true);
   connect(&m_reconnect_timer, &QTimer::timeout, this,
           &SSEConnection::slot_make_request);
+
+  m_watchdog_timer.setSingleShot(true);
+  connect(&m_watchdog_timer, &QTimer::timeout, this,
+          &SSEConnection::slot_watchdog_timeout);
 }
 
 void SSEConnection::set_connection_configuration(
@@ -63,6 +67,7 @@ void SSEConnection::slot_connect() {
     connect(reply, &QNetworkReply::finished, this, [=]() {
       if (!m_initial_current_data.isEmpty() && m_current_data.isEmpty()) {
         m_current_data = m_initial_current_data;
+        m_watchdog_timer.start(WATCHDOG_TIMER);
         emit signal_data_updated();
       }
 
@@ -104,6 +109,7 @@ void SSEConnection::slot_ready_read() {
         if (line.isEmpty()) {
           m_parser_state = ParserState::IDLE;
           m_current_data = m_data_buffer;
+          m_watchdog_timer.start(WATCHDOG_TIMER);
           emit signal_data_updated();
         } else {
           m_data_buffer.append(line);
@@ -118,6 +124,8 @@ void SSEConnection::slot_disconnect() {
   }
   qDebug() << "SSE connection closed";
   m_connected = false;
+  m_reconnect_timer.stop();
+  m_watchdog_timer.stop();
   if (m_reply) {
     m_reply->abort();
     m_reply = nullptr;
@@ -126,8 +134,10 @@ void SSEConnection::slot_disconnect() {
 
 void SSEConnection::slot_stream_finished() {
   qDebug() << "SSE connection finished";
-  m_reply->deleteLater();
-  m_reply = nullptr;
+  if (m_reply) {
+    m_reply->deleteLater();
+    m_reply = nullptr;
+  }
   if (m_connected) {
     m_reconnect_timer.start(RECONNECT_TIMER);
   }
@@ -140,6 +150,7 @@ void SSEConnection::slot_make_request() {
   QNetworkRequest request = prepare_request(m_url);
 
   m_reply = m_qnam.get(request);
+  m_watchdog_timer.start(WATCHDOG_TIMER);
   connect(m_reply, &QNetworkReply::readyRead, this,
           &SSEConnection::slot_ready_read);
   connect(m_reply, &QNetworkReply::finished, this,
@@ -154,5 +165,18 @@ QNetworkRequest SSEConnection::prepare_request(const QUrl& url) const {
 }
 
 void SSEConnection::set_event(const QString& event) { m_event = event; }
+
+void SSEConnection::slot_watchdog_timeout() {
+  if (!m_connected) {
+    return;
+  }
+  qDebug() << "SSE watchdog timeout, reconnecting";
+  if (m_reply) {
+    m_reply->abort();
+    // slot_stream_finished will be called by signal finished()
+  } else {
+    slot_make_request();
+  }
+}
 
 }  // namespace Valeronoi::robot::api
