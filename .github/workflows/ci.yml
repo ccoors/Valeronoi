@@ -99,7 +99,10 @@ jobs:
       - name: Cache vcpkg
         uses: actions/cache@v5
         with:
-          path: ${{ env.VCPKG_INSTALLATION_ROOT }}/installed
+          path: |
+            C:\vcpkg\installed
+            C:\vcpkg\vcpkg.exe
+            C:\vcpkg\scripts\buildsystems\vcpkg.cmake
           key: vcpkg-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yml') }}
           restore-keys: |
             vcpkg-${{ runner.os }}-
