@@ -60,6 +60,8 @@ class RobotConfigDialog : public QDialog {
 
   void slot_robot_connection_failed();
 
+  void slot_auto_discover();
+
  private:
   void ensure_http();
 

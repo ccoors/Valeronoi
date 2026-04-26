@@ -80,6 +80,7 @@ set(SOURCE_FILES
     src/util/segment_generator.cpp
     src/util/log_helper.cpp
     src/robot/robot.cpp
+    src/robot/mdns_discovery.cpp
     src/robot/connection_configuration.cpp
     src/robot/robot_information.cpp
     src/robot/wifi_information.cpp
@@ -91,6 +92,7 @@ set(SOURCE_FILES
     src/state/wifi_collection.cpp
     src/gui/dialog/robot_config.ui
     src/gui/dialog/robot_config.cpp
+    src/gui/dialog/mdns_discovery_dialog.cpp
     src/gui/dialog/about.ui
     src/gui/dialog/about.cpp
     src/gui/dialog/update.ui

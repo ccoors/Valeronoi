@@ -37,7 +37,7 @@ jobs:
           version: ${{ matrix.qt }}
       - name: Cache CGAL
         id: cache-cgal
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             /usr/local/include/CGAL
@@ -176,7 +176,7 @@ jobs:
           sudo apt-get install libfuse2 openssl libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-x11-0 cmake xz-utils libmpfr-dev libboost-dev -y
       - name: Cache CGAL
         id: cache-cgal
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             /usr/local/include/CGAL

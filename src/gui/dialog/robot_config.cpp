@@ -21,6 +21,7 @@
 #include <QTextStream>
 
 #include "../../robot/connection_configuration.h"
+#include "mdns_discovery_dialog.h"
 #include "ui_robot_config.h"
 
 namespace Valeronoi::gui::dialog {
@@ -53,6 +54,9 @@ RobotConfigDialog::RobotConfigDialog(QWidget* parent)
           &RobotConfigDialog::slot_robot_connected);
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_error, this,
           &RobotConfigDialog::slot_robot_connection_failed);
+
+  connect(ui->buttonAutoDiscover, &QPushButton::clicked, this,
+          &RobotConfigDialog::slot_auto_discover);
 
   load_settings();
 }
@@ -158,6 +162,17 @@ void RobotConfigDialog::slot_robot_connection_failed() {
   m_progress_dialog.close();
   QMessageBox::warning(this, tr("Error"),
                        tr("Test failed:\n%1").arg(m_robot.get_error()));
+}
+
+void RobotConfigDialog::slot_auto_discover() {
+  MdnsDiscoveryDialog dialog(this);
+  if (dialog.exec() == QDialog::Accepted) {
+    const QString url = dialog.selectedUrl();
+    if (!url.isEmpty()) {
+      ui->valetudoAddress->setText(url);
+      ensure_http();
+    }
+  }
 }
 
 void RobotConfigDialog::ensure_http() {

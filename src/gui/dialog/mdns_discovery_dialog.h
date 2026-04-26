@@ -15,20 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "state.h"
+#ifndef VALERONOI_GUI_DIALOG_MDNS_DISCOVERY_DIALOG_H
+#define VALERONOI_GUI_DIALOG_MDNS_DISCOVERY_DIALOG_H
 
-#include <algorithm>
+#include <QDialog>
+#include <QTableWidget>
 
-namespace Valeronoi::state {
+#include "../../robot/mdns_discovery.h"
 
-std::optional<Point> Map::get_robot_position() const {
-  const auto res =
-      std::find_if(entities.begin(), entities.end(),
-                   [=](const auto& e) { return e.type == "robot_position"; });
-  if (res == entities.end()) {
-    return std::nullopt;
-  }
-  return {res->points[0]};
-}
+namespace Valeronoi::gui::dialog {
 
-}  // namespace Valeronoi::state
+class MdnsDiscoveryDialog : public QDialog {
+  Q_OBJECT
+ public:
+  explicit MdnsDiscoveryDialog(QWidget* parent = nullptr);
+
+  [[nodiscard]] QString selectedUrl() const;
+
+ private slots:
+  void slot_robot_discovered(const Valeronoi::robot::DiscoveredRobot& robot);
+
+ private:
+  QTableWidget* m_table;
+  Valeronoi::robot::MdnsDiscovery m_discovery;
+};
+
+}  // namespace Valeronoi::gui::dialog
+
+#endif  // VALERONOI_GUI_DIALOG_MDNS_DISCOVERY_DIALOG_H

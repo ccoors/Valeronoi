@@ -95,16 +95,17 @@ void SSEConnection::slot_ready_read() {
     QString line = raw_line.simplified();
 
     switch (m_parser_state) {
-      case ParserState::IDLE:
+      case ParserState::IDLE: {
         if (line.startsWith(":")) {
           continue;
-        } else if (line.startsWith("event: ")) {
+        }
+        if (line.startsWith("event: ")) {
           m_event_type = line.right(line.size() - 7);
         } else if (line.startsWith("data: ") && m_event_type == m_event) {
           m_data_buffer = line.right(line.size() - 6);
           m_parser_state = ParserState::DATA;
         }
-        break;
+      } break;
       case ParserState::DATA:
         if (line.isEmpty()) {
           m_parser_state = ParserState::IDLE;

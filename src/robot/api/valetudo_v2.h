@@ -36,7 +36,7 @@
 
 namespace Valeronoi::robot::api::v2 {
 
-const QUrl ROBOT_WIFI_CAPABILITY =
+const auto ROBOT_WIFI_CAPABILITY =
     QUrl("/api/v2/robot/capabilities/WifiConfigurationCapability");
 
 class ValetudoAPI : public QObject {

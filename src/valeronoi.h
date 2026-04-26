@@ -42,8 +42,8 @@
 #include "util/log_helper.h"
 
 namespace Valeronoi {
-constexpr const char* VALERONOI_FILE_EXTENSION = "vwm";  // Valeronoi WiFi Map
-constexpr const int FILE_FORMAT_VERSION = 1;
+constexpr auto VALERONOI_FILE_EXTENSION = "vwm";  // Valeronoi WiFi Map
+constexpr int FILE_FORMAT_VERSION = 1;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
