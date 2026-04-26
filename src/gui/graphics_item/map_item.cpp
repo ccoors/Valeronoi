@@ -34,17 +34,12 @@ void MapItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
   painter->setFont(m_font);
 
   if (m_robot_map.is_valid()) {
-    const auto& map = m_robot_map.get_map();
-
     painter->setBrush(m_wall_color);
     painter->setRenderHints(
         QPainter::Antialiasing,
         false);  // Antialiasing the walls leads to a thin grid
-    const auto walls = map.layers.find("wall");
-    if (walls != map.layers.end()) {
-      for (const auto& block : walls->second.blocks) {
-        painter->drawRect(block.x, block.y, map.pixel_size, map.pixel_size);
-      }
+    if (!m_walls.empty()) {
+      painter->drawRects(m_walls.data(), static_cast<int>(m_walls.size()));
     }
   } else {
     painter->setBrush(Qt::black);
@@ -59,6 +54,18 @@ void MapItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
 void MapItem::set_wall_color(QColor color) {
   m_wall_color = color;
   update();
+}
+
+void MapItem::map_updated() {
+  m_walls.clear();
+  if (m_robot_map.is_valid()) {
+    const auto& map = m_robot_map.get_map();
+    const auto walls = map.layers.find("wall");
+    if (walls != map.layers.end()) {
+      m_walls = walls->second.rects;
+    }
+  }
+  MapBasedItem::map_updated();
 }
 
 #ifndef QT_NO_CONTEXTMENU

@@ -47,8 +47,8 @@ void FloorItem::map_updated() {
     const auto& map = m_robot_map.get_map();
     const auto floor = map.layers.find("floor");
     if (floor != map.layers.end()) {
-      for (const auto& block : floor->second.blocks) {
-        m_floor_path.addRect(block.x, block.y, map.pixel_size, map.pixel_size);
+      for (const auto& rect : floor->second.rects) {
+        m_floor_path.addRect(rect);
       }
     }
   }
