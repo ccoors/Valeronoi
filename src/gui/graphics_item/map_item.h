@@ -25,6 +25,7 @@
 #endif
 
 #include <functional>
+#include <vector>
 
 #include "../../state/robot_map.h"
 #include "map_based_item.h"
@@ -39,6 +40,8 @@ class MapItem : public MapBasedItem {
   void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
              QWidget* widget) override;
 
+  void map_updated() override;
+
   void set_wall_color(QColor color);
 
 #ifndef QT_NO_CONTEXTMENU
@@ -48,6 +51,7 @@ class MapItem : public MapBasedItem {
  private:
   QFont m_font;
   QColor m_wall_color;
+  std::vector<QRect> m_walls;
   std::function<void(int, int)>
       m_relocate;  // This is a bit hacky, but since MapItem is not a QObject,
                    // we can't use signals/slots
