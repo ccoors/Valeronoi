@@ -79,7 +79,7 @@ To build and run tests:
 
 ```bash
 mkdir build && cd build
-cmake .. -DVALERONOI_BUILD_TESTS=ON
+cmake ..
 cmake --build .
 ./valeronoi-tests
 ```
