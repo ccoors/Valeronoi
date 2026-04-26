@@ -30,11 +30,20 @@ namespace Valeronoi::robot {
 
 struct DiscoveredRobot {
   QString name;
+  QString id;
+  QString model;
+  QString manufacturer;
+  QString version;
   QString host;
   quint16 port;
   QHostAddress address;
 
   [[nodiscard]] QString url() const {
+    if (port != 80) {
+      return QString("http://%1:%2")
+          .arg(address.isNull() ? host : address.toString(),
+               QString::number(port));
+    }
     return QString("http://%1")
         .arg(address.isNull() ? host : address.toString());
   }
@@ -50,6 +59,10 @@ class MdnsDiscovery : public QObject {
     QHostAddress address;
     QHostAddress senderAddr;
     QString friendlyName;
+    QString id;
+    QString model;
+    QString manufacturer;
+    QString version;
     bool hasSrv{false};
   };
 

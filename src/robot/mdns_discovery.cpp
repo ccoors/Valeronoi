@@ -107,15 +107,24 @@ int mdns_record_callback(int /*sock*/, const struct sockaddr* from,
     mdns_record_txt_t txtRecords[16];
     size_t count = mdns_record_parse_txt(data, size, record_offset,
                                          record_length, txtRecords, 16);
+    auto& svc = (*ctx->pending)[nameStr];
     for (size_t i = 0; i < count; ++i) {
-      if (txtRecords[i].key.length == 4 &&
-          memcmp(txtRecords[i].key.str, "name", 4) == 0 &&
-          txtRecords[i].value.length > 0) {
-        (*ctx->pending)[nameStr].friendlyName =
-            QString::fromLatin1(txtRecords[i].value.str,
-                                static_cast<int>(txtRecords[i].value.length));
-        break;
-      }
+      auto& rec = txtRecords[i];
+      if (rec.value.length == 0) continue;
+      QString val = QString::fromLatin1(rec.value.str,
+                                        static_cast<int>(rec.value.length));
+      const size_t kl = rec.key.length;
+      const char* ks = rec.key.str;
+      if (kl == 4 && memcmp(ks, "name", 4) == 0)
+        svc.friendlyName = val;
+      else if (kl == 2 && memcmp(ks, "id", 2) == 0)
+        svc.id = val;
+      else if (kl == 5 && memcmp(ks, "model", 5) == 0)
+        svc.model = val;
+      else if (kl == 12 && memcmp(ks, "manufacturer", 12) == 0)
+        svc.manufacturer = val;
+      else if (kl == 7 && memcmp(ks, "version", 7) == 0)
+        svc.version = val;
     }
   }
 
@@ -212,21 +221,24 @@ void MdnsDiscovery::onSocketReady() {
 
   for (auto it = m_pending.cbegin(); it != m_pending.cend(); ++it) {
     const QString& instanceName = it.key();
-    const auto& [host, port, address, senderAddr, friendlyName, hasSrv] =
-        it.value();
-    if (!hasSrv || m_emitted.contains(instanceName)) continue;
+    const PendingService& svc = it.value();
+    if (!svc.hasSrv || m_emitted.contains(instanceName)) continue;
 
     DiscoveredRobot robot;
-    if (!friendlyName.isEmpty()) {
-      robot.name = friendlyName;
+    if (!svc.friendlyName.isEmpty()) {
+      robot.name = svc.friendlyName;
     } else {
       robot.name = instanceName;
       if (robot.name.endsWith(VALETUDO_SERVICE_SUFFIX))
         robot.name.chop(VALETUDO_SERVICE_SUFFIX.length());
     }
-    robot.host = host;
-    robot.port = port;
-    robot.address = address.isNull() ? senderAddr : address;
+    robot.id = svc.id;
+    robot.model = svc.model;
+    robot.manufacturer = svc.manufacturer;
+    robot.version = svc.version;
+    robot.host = svc.host;
+    robot.port = svc.port;
+    robot.address = svc.address.isNull() ? svc.senderAddr : svc.address;
 
     qDebug() << "mDNS: emitting robot" << robot.name << "at" << robot.url()
              << "port" << robot.port;
