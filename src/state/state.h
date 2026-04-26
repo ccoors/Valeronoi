@@ -21,11 +21,11 @@
 #include <QColor>
 #include <QMetaType>
 #include <QPolygon>
+#include <QRect>
 #include <functional>
 #include <optional>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 namespace Valeronoi::state {
@@ -34,18 +34,6 @@ struct Point {
   int x, y;
 };
 
-struct Block {
-  int x, y;
-};
-
-inline bool operator==(const Block& lhs, const Block& rhs) {
-  return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
-inline bool operator<(const Block& lhs, const Block& rhs) {
-  return (lhs.x + lhs.y) < (rhs.x + rhs.y);
-}
-
 struct Entity {
   std::string type, cls;
   double angle;
@@ -53,7 +41,7 @@ struct Entity {
 };
 
 struct Layer {
-  std::vector<Block> blocks;
+  std::vector<QRect> rects;
 };
 
 struct Map {
@@ -96,17 +84,6 @@ struct DataSegment {
 typedef QList<Valeronoi::state::DataSegment> DataSegments;
 
 }  // namespace Valeronoi::state
-
-namespace std {
-template <>
-struct hash<Valeronoi::state::Block> {
-  std::size_t operator()(Valeronoi::state::Block const& s) const noexcept {
-    std::size_t h1 = std::hash<int>{}(s.x);
-    std::size_t h2 = std::hash<int>{}(s.y);
-    return h1 ^ (h2 << 1);
-  }
-};
-}  // namespace std
 
 #ifndef Q_DECLARE_METATYPE
 // To make cppcheck happy
