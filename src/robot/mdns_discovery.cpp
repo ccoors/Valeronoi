@@ -17,9 +17,6 @@
  */
 #include "mdns_discovery.h"
 
-#include <netinet/in.h>
-#include <sys/socket.h>
-
 #include <QDebug>
 #include <QNetworkInterface>
 #include <QSocketNotifier>
