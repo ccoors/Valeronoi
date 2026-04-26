@@ -25,25 +25,29 @@
 
 namespace Valeronoi::gui::dialog {
 static constexpr int COL_NAME = 0;
-static constexpr int COL_URL = 1;
-static constexpr int COL_MANUFACTURER = 2;
-static constexpr int COL_MODEL = 3;
-static constexpr int COL_VERSION = 4;
-static constexpr int NUM_COLS = 5;
+static constexpr int COL_ID = 1;
+static constexpr int COL_URL = 2;
+static constexpr int COL_MANUFACTURER = 3;
+static constexpr int COL_MODEL = 4;
+static constexpr int COL_VERSION = 5;
+static constexpr int NUM_COLS = 6;
 
 MdnsDiscoveryDialog::MdnsDiscoveryDialog(QWidget* parent)
     : QDialog(parent), m_table(new QTableWidget(0, NUM_COLS, this)) {
   setWindowTitle(tr("Auto-discover Robots"));
   setMinimumSize(850, 400);
 
-  m_table->setHorizontalHeaderLabels(
-      {tr("Name"), tr("URL"), tr("Manufacturer"), tr("Model"), tr("Version")});
+  m_table->setHorizontalHeaderLabels({tr("Name"), tr("ID"), tr("URL"),
+                                      tr("Manufacturer"), tr("Model"),
+                                      tr("Version")});
   m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_table->setSelectionMode(QAbstractItemView::SingleSelection);
   m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_table->verticalHeader()->setVisible(false);
   m_table->horizontalHeader()->setSectionResizeMode(COL_NAME,
                                                     QHeaderView::Stretch);
+  m_table->horizontalHeader()->setSectionResizeMode(
+      COL_ID, QHeaderView::ResizeToContents);
   m_table->horizontalHeader()->setSectionResizeMode(
       COL_URL, QHeaderView::ResizeToContents);
   m_table->horizontalHeader()->setSectionResizeMode(
@@ -95,10 +99,10 @@ void MdnsDiscoveryDialog::slot_robot_discovered(
   const int row = m_table->rowCount();
   m_table->insertRow(row);
 
-  auto* nameItem =
-      new QTableWidgetItem(QString("%1 (%2)").arg(robot.name, robot.id));
+  auto* nameItem = new QTableWidgetItem(robot.name);
   nameItem->setData(Qt::UserRole, url);
   m_table->setItem(row, COL_NAME, nameItem);
+  m_table->setItem(row, COL_ID, new QTableWidgetItem(robot.id));
   m_table->setItem(row, COL_URL, new QTableWidgetItem(robot.url()));
   m_table->setItem(row, COL_MANUFACTURER,
                    new QTableWidgetItem(robot.manufacturer));
