@@ -24,7 +24,6 @@
           <property name="font">
            <font>
             <pointsize>20</pointsize>
-            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -32,17 +31,17 @@
            <string>Valeronoi</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
           </property>
          </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+           <enum>QSizePolicy::Policy::Fixed</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -57,7 +56,6 @@
           <property name="font">
            <font>
             <pointsize>30</pointsize>
-            <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
            </font>
@@ -66,7 +64,7 @@
            <string>version</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
           </property>
          </widget>
         </item>
@@ -76,14 +74,14 @@
            <string>git_commit</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
           </property>
          </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -118,8 +116,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>764</width>
-            <height>420</height>
+            <width>770</width>
+            <height>426</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -139,7 +137,7 @@
            <item>
             <spacer name="verticalSpacer_3">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -170,7 +168,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>743</width>
+            <width>749</width>
             <height>11088</height>
            </rect>
           </property>
@@ -802,7 +800,7 @@ above cannot be given local legal effect </string>
            <item>
             <spacer name="verticalSpacer">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -833,8 +831,8 @@ above cannot be given local legal effect </string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>743</width>
-            <height>2600</height>
+            <width>749</width>
+            <height>1510</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -848,6 +846,7 @@ above cannot be given local legal effect </string>
 &lt;p&gt;This software uses some icons inspired by &lt;a href=&quot;https://valetudo.cloud&quot;&gt;Valetudo&lt;/a&gt;, which is released under the Apache License 2.0&lt;/p&gt;
 &lt;p&gt;This software uses the &lt;a href=&quot;https://www.qt.io/&quot;&gt;Qt Library&lt;/a&gt;. Binary releases of this software containing Qt use it under the GPLv3.&lt;/p&gt;
 &lt;p&gt;This software uses the &lt;a href=&quot;https://www.cgal.org/&quot;&gt;CGAL Library&lt;/a&gt;, which is released under the GPLv3 or later.&lt;/p&gt;
+&lt;p&gt;This software uses &lt;a href=&quot;https://github.com/mjansson/mdns&quot;&gt;mdns.h, a mDNS/DNS-SD library&lt;/a&gt;, which is under public domain.&lt;/p&gt;
 &lt;p&gt;OpenGL is a trademark of Silicon Graphics, Inc. in the United States and other countries.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</string>
@@ -879,7 +878,7 @@ above cannot be given local legal effect </string>
               <item>
                <spacer name="horizontalSpacer_3">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -902,7 +901,7 @@ above cannot be given local legal effect </string>
            <item>
             <widget class="QLabel" name="label_6">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This software contains a copy of the &lt;a href=&quot;https://github.com/adobe-fonts/source-code-pro&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Source Code Pro&lt;/span&gt;&lt;/a&gt; font, released under the SIL Open Font License:&lt;/p&gt;&lt;p&gt;Copyright 2010-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'. All Rights Reserved. Source is a trademark of Adobe in the United States and/or other countries.&lt;/p&gt;&lt;p&gt;This Font Software is licensed under the SIL Open Font License, Version 1.1.&lt;/p&gt;&lt;p&gt;This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL&lt;/p&gt;&lt;p&gt;-----------------------------------------------------------&lt;/p&gt;&lt;p&gt;SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007&lt;/p&gt;&lt;p&gt;-----------------------------------------------------------&lt;/p&gt;&lt;p&gt;PREAMBLE&lt;/p&gt;&lt;p&gt;The goals of the Open Font License (OFL) are to stimulate worldwide&lt;/p&gt;&lt;p&gt;development of collaborative font projects, to support the font creation&lt;/p&gt;&lt;p&gt;efforts of academic and linguistic communities, and to provide a free and&lt;/p&gt;&lt;p&gt;open framework in which fonts may be shared and improved in partnership&lt;/p&gt;&lt;p&gt;with others.&lt;/p&gt;&lt;p&gt;The OFL allows the licensed fonts to be used, studied, modified and&lt;/p&gt;&lt;p&gt;redistributed freely as long as they are not sold by themselves. The&lt;/p&gt;&lt;p&gt;fonts, including any derivative works, can be bundled, embedded,&lt;/p&gt;&lt;p&gt;redistributed and/or sold with any software provided that any reserved&lt;/p&gt;&lt;p&gt;names are not used by derivative works. The fonts and derivatives,&lt;/p&gt;&lt;p&gt;however, cannot be released under any other type of license. The&lt;/p&gt;&lt;p&gt;requirement for fonts to remain under this license does not apply&lt;/p&gt;&lt;p&gt;to any document created using the fonts or their derivatives.&lt;/p&gt;&lt;p&gt;DEFINITIONS&lt;/p&gt;&lt;p&gt;&amp;quot;Font Software&amp;quot; refers to the set of files released by the Copyright&lt;/p&gt;&lt;p&gt;Holder(s) under this license and clearly marked as such. This may&lt;/p&gt;&lt;p&gt;include source files, build scripts and documentation.&lt;/p&gt;&lt;p&gt;&amp;quot;Reserved Font Name&amp;quot; refers to any names specified as such after the&lt;/p&gt;&lt;p&gt;copyright statement(s).&lt;/p&gt;&lt;p&gt;&amp;quot;Original Version&amp;quot; refers to the collection of Font Software components as&lt;/p&gt;&lt;p&gt;distributed by the Copyright Holder(s).&lt;/p&gt;&lt;p&gt;&amp;quot;Modified Version&amp;quot; refers to any derivative made by adding to, deleting,&lt;/p&gt;&lt;p&gt;or substituting -- in part or in whole -- any of the components of the&lt;/p&gt;&lt;p&gt;Original Version, by changing formats or by porting the Font Software to a&lt;/p&gt;&lt;p&gt;new environment.&lt;/p&gt;&lt;p&gt;&amp;quot;Author&amp;quot; refers to any designer, engineer, programmer, technical&lt;/p&gt;&lt;p&gt;writer or other person who contributed to the Font Software.&lt;/p&gt;&lt;p&gt;PERMISSION &amp;amp; CONDITIONS&lt;/p&gt;&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining&lt;/p&gt;&lt;p&gt;a copy of the Font Software, to use, study, copy, merge, embed, modify,&lt;/p&gt;&lt;p&gt;redistribute, and sell modified and unmodified copies of the Font&lt;/p&gt;&lt;p&gt;Software, subject to the following conditions:&lt;/p&gt;&lt;p&gt;1) Neither the Font Software nor any of its individual components,&lt;/p&gt;&lt;p&gt;in Original or Modified Versions, may be sold by itself.&lt;/p&gt;&lt;p&gt;2) Original or Modified Versions of the Font Software may be bundled,&lt;/p&gt;&lt;p&gt;redistributed and/or sold with any software, provided that each copy&lt;/p&gt;&lt;p&gt;contains the above copyright notice and this license. These can be&lt;/p&gt;&lt;p&gt;included either as stand-alone text files, human-readable headers or&lt;/p&gt;&lt;p&gt;in the appropriate machine-readable metadata fields within text or&lt;/p&gt;&lt;p&gt;binary files as long as those fields can be easily viewed by the user.&lt;/p&gt;&lt;p&gt;3) No Modified Version of the Font Software may use the Reserved Font&lt;/p&gt;&lt;p&gt;Name(s) unless explicit written permission is granted by the corresponding&lt;/p&gt;&lt;p&gt;Copyright Holder. This restriction only applies to the primary font name as&lt;/p&gt;&lt;p&gt;presented to the users.&lt;/p&gt;&lt;p&gt;4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font&lt;/p&gt;&lt;p&gt;Software shall not be used to promote, endorse or advertise any&lt;/p&gt;&lt;p&gt;Modified Version, except to acknowledge the contribution(s) of the&lt;/p&gt;&lt;p&gt;Copyright Holder(s) and the Author(s) or with their explicit written&lt;/p&gt;&lt;p&gt;permission.&lt;/p&gt;&lt;p&gt;5) The Font Software, modified or unmodified, in part or in whole,&lt;/p&gt;&lt;p&gt;must be distributed entirely under this license, and must not be&lt;/p&gt;&lt;p&gt;distributed under any other license. The requirement for fonts to&lt;/p&gt;&lt;p&gt;remain under this license does not apply to any document created&lt;/p&gt;&lt;p&gt;using the Font Software.&lt;/p&gt;&lt;p&gt;TERMINATION&lt;/p&gt;&lt;p&gt;This license becomes null and void if any of the above conditions are&lt;/p&gt;&lt;p&gt;not met.&lt;/p&gt;&lt;p&gt;DISCLAIMER&lt;/p&gt;&lt;p&gt;THE FONT SOFTWARE IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND,&lt;/p&gt;&lt;p&gt;EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF&lt;/p&gt;&lt;p&gt;MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT&lt;/p&gt;&lt;p&gt;OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE&lt;/p&gt;&lt;p&gt;COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,&lt;/p&gt;&lt;p&gt;INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL&lt;/p&gt;&lt;p&gt;DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING&lt;/p&gt;&lt;p&gt;FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM&lt;/p&gt;&lt;p&gt;OTHER DEALINGS IN THE FONT SOFTWARE.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This software contains a copy of the &lt;a href=&quot;https://github.com/adobe-fonts/source-code-pro&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#1d99f3;&quot;&gt;Source Code Pro&lt;/span&gt;&lt;/a&gt; font, released under the SIL Open Font License:&lt;/p&gt;&lt;p&gt;© 2023 Adobe (&lt;a href=&quot;http://www.adobe.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#1d99f3;&quot;&gt;http://www.adobe.com/&lt;/span&gt;&lt;/a&gt;), with Reserved Font Name 'Source'. All Rights Reserved. Source is a trademark of Adobe in the United States and/or other countries.&lt;/p&gt;&lt;p&gt;This Font Software is licensed under the SIL Open Font License, Version 1.1.&lt;/p&gt;&lt;p&gt;This license is copied below, and is also available with a FAQ at: &lt;a href=&quot;http://scripts.sil.org/OFL&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#1d99f3;&quot;&gt;http://scripts.sil.org/OFL&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;hr/&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:700;&quot;&gt;SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;PREAMBLE The goals of the Open Font License (OFL) are to stimulate worldwide development of collaborative font projects, to support the font creation efforts of academic and linguistic communities, and to provide a free and open framework in which fonts may be shared and improved in partnership with others.&lt;/p&gt;&lt;p&gt;The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves. The fonts, including any derivative works, can be bundled, embedded, redistributed and/or sold with any software provided that any reserved names are not used by derivative works. The fonts and derivatives, however, cannot be released under any other type of license. The requirement for fonts to remain under this license does not apply to any document created using the fonts or their derivatives.&lt;/p&gt;&lt;p&gt;DEFINITIONS &amp;quot;Font Software&amp;quot; refers to the set of files released by the Copyright Holder(s) under this license and clearly marked as such. This may include source files, build scripts and documentation.&lt;/p&gt;&lt;p&gt;&amp;quot;Reserved Font Name&amp;quot; refers to any names specified as such after the copyright statement(s).&lt;/p&gt;&lt;p&gt;&amp;quot;Original Version&amp;quot; refers to the collection of Font Software components as distributed by the Copyright Holder(s).&lt;/p&gt;&lt;p&gt;&amp;quot;Modified Version&amp;quot; refers to any derivative made by adding to, deleting, or substituting -- in part or in whole -- any of the components of the Original Version, by changing formats or by porting the Font Software to a new environment.&lt;/p&gt;&lt;p&gt;&amp;quot;Author&amp;quot; refers to any designer, engineer, programmer, technical writer or other person who contributed to the Font Software.&lt;/p&gt;&lt;p&gt;PERMISSION &amp;amp; CONDITIONS Permission is hereby granted, free of charge, to any person obtaining a copy of the Font Software, to use, study, copy, merge, embed, modify, redistribute, and sell modified and unmodified copies of the Font Software, subject to the following conditions:&lt;/p&gt;&lt;ol style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Neither the Font Software nor any of its individual components, in Original or Modified Versions, may be sold by itself.&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Original or Modified Versions of the Font Software may be bundled, redistributed and/or sold with any software, provided that each copy contains the above copyright notice and this license. These can be included either as stand-alone text files, human-readable headers or in the appropriate machine-readable metadata fields within text or binary files as long as those fields can be easily viewed by the user.&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;No Modified Version of the Font Software may use the Reserved Font Name(s) unless explicit written permission is granted by the corresponding Copyright Holder. This restriction only applies to the primary font name as presented to the users.&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The name(s) of the Copyright Holder(s) or the Author(s) of the Font Software shall not be used to promote, endorse or advertise any Modified Version, except to acknowledge the contribution(s) of the Copyright Holder(s) and the Author(s) or with their explicit written permission.&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Font Software, modified or unmodified, in part or in whole, must be distributed entirely under this license, and must not be distributed under any other license. The requirement for fonts to remain under this license does not apply to any document created using the Font Software.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;TERMINATION This license becomes null and void if any of the above conditions are not met.&lt;/p&gt;&lt;p&gt;DISCLAIMER THE FONT SOFTWARE IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE FONT SOFTWARE.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -915,7 +914,7 @@ above cannot be given local legal effect </string>
            <item>
             <spacer name="verticalSpacer_2">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -936,10 +935,10 @@ above cannot be given local legal effect </string>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
+      <set>QDialogButtonBox::StandardButton::Close</set>
      </property>
     </widget>
    </item>
