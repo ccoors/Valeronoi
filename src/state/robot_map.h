@@ -35,7 +35,7 @@ class RobotMap : public QObject {
 
   void update_map_json(const QString& json);
 
-  void update_map_json(const QJsonObject& json);
+  void update_map_json(const QJsonObject& json_object);
 
   void reset();
 

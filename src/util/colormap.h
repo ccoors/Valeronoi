@@ -32,9 +32,9 @@ class ColorMap {
     if (colormap_colors.size() == 0) {
       throw std::runtime_error("Can not initialize ColorMap without colors");
     }
-  };
+  }
 
-  [[nodiscard]] std::string name() const { return colormap_name; };
+  [[nodiscard]] std::string name() const { return colormap_name; }
 
   [[nodiscard]] std::array<T, components> get_color(T f) const {
     if (f <= 0) return colormap_colors[0];

@@ -54,8 +54,8 @@ class SegmentGenerator : public QThread {
 
   Valeronoi::state::RawMeasurements m_measurements{};
   Valeronoi::state::DISPLAY_MODE m_display_mode{};
-  int m_simplify;
-  int m_wifi_id_filter;
+  int m_simplify{};
+  int m_wifi_id_filter{};
 };
 
 }  // namespace Valeronoi::util

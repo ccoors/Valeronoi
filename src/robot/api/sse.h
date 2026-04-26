@@ -34,8 +34,8 @@
 
 namespace Valeronoi::robot::api {
 
-constexpr const std::chrono::milliseconds RECONNECT_TIMER{2000};
-constexpr const std::chrono::milliseconds WATCHDOG_TIMER{30000};
+constexpr std::chrono::milliseconds RECONNECT_TIMER{2000};
+constexpr std::chrono::milliseconds WATCHDOG_TIMER{30000};
 
 enum class ParserState { IDLE = 0, DATA };
 

@@ -74,8 +74,9 @@ void RobotMap::update_map_json(const QJsonObject& json_object) {
 }
 
 template <typename T>
-static void map_pixels(const QJsonArray& pixels, T& blocks, int pixel_size,
-                       int* min_x, int* max_x, int* min_y, int* max_y) {
+static void map_pixels(const QJsonArray& pixels, T& blocks,
+                       const int pixel_size, int* min_x, int* max_x, int* min_y,
+                       int* max_y) {
   blocks.reserve(pixels.size() / 2);
   for (qsizetype i = 0; i + 1 < pixels.size(); i += 2) {
     int block_x = pixels[i].toInt() * pixel_size;

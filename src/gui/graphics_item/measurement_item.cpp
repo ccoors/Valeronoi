@@ -20,13 +20,13 @@
 #include <QPen>
 #include <algorithm>
 
-constexpr const int SCALE_FONT_SIZE{15};
-constexpr const int SCALE_HISTOGRAM_HEIGHT{70};
-constexpr const int SCALE_BAR_HEIGHT{30};
-constexpr const int SCALE_WIDTH{200};
-constexpr const int SCALE_MARGIN{5};
-constexpr const int PATH_DISTANCE{35};
-constexpr const QSize SCALE_SIZE{
+constexpr int SCALE_FONT_SIZE{15};
+constexpr int SCALE_HISTOGRAM_HEIGHT{70};
+constexpr int SCALE_BAR_HEIGHT{30};
+constexpr int SCALE_WIDTH{200};
+constexpr int SCALE_MARGIN{5};
+constexpr int PATH_DISTANCE{35};
+constexpr QSize SCALE_SIZE{
     SCALE_WIDTH, SCALE_BAR_HEIGHT + SCALE_MARGIN + SCALE_HISTOGRAM_HEIGHT};
 
 namespace Valeronoi::gui::graphics_item {

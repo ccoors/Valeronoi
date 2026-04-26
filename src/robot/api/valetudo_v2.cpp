@@ -24,12 +24,12 @@
 
 namespace Valeronoi::robot::api::v2 {
 
-const QUrl VALETUDO_VERSION = QUrl("/api/v2/valetudo/version");
-const QUrl ROBOT_INFO = QUrl("/api/v2/robot");
-const QUrl ROBOT_STATE = QUrl("/api/v2/robot/state");
-const QUrl ROBOT_CAPABILITIES_INFO = QUrl("/api/v2/robot/capabilities");
-const QUrl ROBOT_MAP = QUrl("/api/v2/robot/state/map");
-const QUrl ROBOT_MAP_SSE = QUrl("/api/v2/robot/state/map/sse");
+const auto VALETUDO_VERSION = QUrl("/api/v2/valetudo/version");
+const auto ROBOT_INFO = QUrl("/api/v2/robot");
+const auto ROBOT_STATE = QUrl("/api/v2/robot/state");
+const auto ROBOT_CAPABILITIES_INFO = QUrl("/api/v2/robot/capabilities");
+const auto ROBOT_MAP = QUrl("/api/v2/robot/state/map");
+const auto ROBOT_MAP_SSE = QUrl("/api/v2/robot/state/map/sse");
 
 const QList<QUrl> ROBOT_INIT_URLS = {VALETUDO_VERSION, ROBOT_INFO, ROBOT_STATE,
                                      ROBOT_CAPABILITIES_INFO};
