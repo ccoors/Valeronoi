@@ -92,6 +92,7 @@ set(SOURCE_FILES
     src/state/wifi_collection.cpp
     src/gui/dialog/robot_config.ui
     src/gui/dialog/robot_config.cpp
+    src/gui/dialog/mdns_discovery_dialog.cpp
     src/gui/dialog/about.ui
     src/gui/dialog/about.cpp
     src/gui/dialog/update.ui

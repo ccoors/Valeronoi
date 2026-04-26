@@ -19,9 +19,12 @@
 #define VALERONOI_ROBOT_MDNS_DISCOVERY_H
 
 #include <QHostAddress>
+#include <QMap>
 #include <QObject>
+#include <QSet>
 #include <QTimer>
-#include <QUdpSocket>
+
+class QSocketNotifier;
 
 namespace Valeronoi::robot {
 
@@ -31,7 +34,7 @@ struct DiscoveredRobot {
   quint16 port;
   QHostAddress address;
 
-  QString url() const {
+  [[nodiscard]] QString url() const {
     return QString("http://%1")
         .arg(address.isNull() ? host : address.toString());
   }
@@ -40,7 +43,18 @@ struct DiscoveredRobot {
 class MdnsDiscovery : public QObject {
   Q_OBJECT
  public:
+  // Accessible to the mdns callback in the .cpp translation unit
+  struct PendingService {
+    QString host;
+    quint16 port{0};
+    QHostAddress address;
+    QHostAddress senderAddr;
+    QString friendlyName;
+    bool hasSrv{false};
+  };
+
   explicit MdnsDiscovery(QObject* parent = nullptr);
+  ~MdnsDiscovery() override;
 
   void startDiscovery();
 
@@ -48,12 +62,15 @@ class MdnsDiscovery : public QObject {
   void robotDiscovered(const DiscoveredRobot& robot);
 
  private slots:
-  void readPendingDatagrams();
-  void sendQuery();
+  void onSocketReady();
+  void sendQuery() const;
 
  private:
-  QUdpSocket* m_udpSocket;
+  int m_sock{-1};
+  QSocketNotifier* m_notifier{nullptr};
   QTimer* m_queryTimer;
+  QMap<QString, PendingService> m_pending;
+  QSet<QString> m_emitted;
 };
 
 }  // namespace Valeronoi::robot

@@ -21,6 +21,7 @@
 #include <QTextStream>
 
 #include "../../robot/connection_configuration.h"
+#include "mdns_discovery_dialog.h"
 #include "ui_robot_config.h"
 
 namespace Valeronoi::gui::dialog {
@@ -54,17 +55,10 @@ RobotConfigDialog::RobotConfigDialog(QWidget* parent)
   connect(&m_robot, &Valeronoi::robot::Robot::signal_connection_error, this,
           &RobotConfigDialog::slot_robot_connection_failed);
 
-  connect(&m_discovery, &Valeronoi::robot::MdnsDiscovery::robotDiscovered, this,
-          &RobotConfigDialog::slot_robot_discovered);
-
-  connect(ui->discoveredRobots, &QComboBox::activated, this, [=](int index) {
-    ui->valetudoAddress->setText(
-        ui->discoveredRobots->itemData(index).toString());
-    ensure_http();
-  });
+  connect(ui->buttonAutoDiscover, &QPushButton::clicked, this,
+          &RobotConfigDialog::slot_auto_discover);
 
   load_settings();
-  m_discovery.startDiscovery();
 }
 
 RobotConfigDialog::~RobotConfigDialog() { delete ui; }
@@ -170,11 +164,14 @@ void RobotConfigDialog::slot_robot_connection_failed() {
                        tr("Test failed:\n%1").arg(m_robot.get_error()));
 }
 
-void RobotConfigDialog::slot_robot_discovered(
-    const Valeronoi::robot::DiscoveredRobot& robot) {
-  const QString url = robot.url();
-  if (ui->discoveredRobots->findData(url) == -1) {
-    ui->discoveredRobots->addItem(robot.name, url);
+void RobotConfigDialog::slot_auto_discover() {
+  MdnsDiscoveryDialog dialog(this);
+  if (dialog.exec() == QDialog::Accepted) {
+    const QString url = dialog.selectedUrl();
+    if (!url.isEmpty()) {
+      ui->valetudoAddress->setText(url);
+      ensure_http();
+    }
   }
 }
 

@@ -17,137 +17,221 @@
  */
 #include "mdns_discovery.h"
 
-#include <QDataStream>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
+#include <QDebug>
 #include <QNetworkInterface>
+#include <QSocketNotifier>
+
+#include "mdns.h"
 
 namespace Valeronoi::robot {
+namespace {
+constexpr char VALETUDO_SERVICE[] = "_valetudo._tcp.local.";
+constexpr size_t VALETUDO_SERVICE_LEN = sizeof(VALETUDO_SERVICE) - 1;
+const auto VALETUDO_SERVICE_SUFFIX = QStringLiteral("._valetudo._tcp.local");
+constexpr size_t RECV_BUFFER_SIZE = 2048;
+
+struct RecvContext {
+  QMap<QString, MdnsDiscovery::PendingService>* pending;
+};
+
+QString extractName(const void* data, const size_t size,
+                    const size_t name_offset) {
+  char buf[256];
+  size_t offset = name_offset;
+  auto [str, length] =
+      mdns_string_extract(data, size, &offset, buf, sizeof(buf));
+  QString name = QString::fromLatin1(str, static_cast<int>(length));
+  if (name.endsWith(QLatin1Char('.'))) name.chop(1);
+  return name;
+}
+
+int mdns_record_callback(int /*sock*/, const struct sockaddr* from,
+                         size_t /*addrlen*/, mdns_entry_type_t /*entry*/,
+                         uint16_t /*query_id*/, uint16_t rtype,
+                         uint16_t /*rclass*/, uint32_t /*ttl*/,
+                         const void* data, size_t size, size_t name_offset,
+                         size_t /*name_length*/, size_t record_offset,
+                         size_t record_length, void* user_data) {
+  const auto* ctx = static_cast<RecvContext*>(user_data);
+  const QString nameStr = extractName(data, size, name_offset);
+
+  if (rtype == MDNS_RECORDTYPE_PTR) {
+    // Only track PTR records for our service type
+    if (nameStr != QStringLiteral("_valetudo._tcp.local")) return 0;
+    char ptrBuf[256];
+    auto [str, length] = mdns_record_parse_ptr(
+        data, size, record_offset, record_length, ptrBuf, sizeof(ptrBuf));
+    if (length == 0) return 0;
+    QString instanceName = QString::fromLatin1(str, static_cast<int>(length));
+    if (instanceName.endsWith(QLatin1Char('.'))) instanceName.chop(1);
+    if (!ctx->pending->contains(instanceName)) {
+      qDebug() << "mDNS: found Valetudo instance:" << instanceName;
+      ctx->pending->insert(instanceName, MdnsDiscovery::PendingService{});
+    }
+
+  } else if (rtype == MDNS_RECORDTYPE_SRV) {
+    if (!ctx->pending->contains(nameStr)) return 0;
+    char srvBuf[256];
+    mdns_record_srv_t srv = mdns_record_parse_srv(
+        data, size, record_offset, record_length, srvBuf, sizeof(srvBuf));
+    auto& svc = (*ctx->pending)[nameStr];
+    svc.host =
+        QString::fromLatin1(srv.name.str, static_cast<int>(srv.name.length));
+    if (svc.host.endsWith(QLatin1Char('.'))) svc.host.chop(1);
+    svc.port = srv.port;
+    svc.hasSrv = true;
+    if (from->sa_family == AF_INET) {
+      const auto* addr4 = reinterpret_cast<const sockaddr_in*>(from);
+      svc.senderAddr = QHostAddress(ntohl(addr4->sin_addr.s_addr));
+    }
+    qDebug() << "mDNS: SRV for" << nameStr << "→" << svc.host << "port"
+             << svc.port;
+
+  } else if (rtype == MDNS_RECORDTYPE_A) {
+    sockaddr_in addr{};
+    mdns_record_parse_a(data, size, record_offset, record_length, &addr);
+    if (!addr.sin_addr.s_addr) return 0;
+    const QHostAddress qAddr(ntohl(addr.sin_addr.s_addr));
+    for (auto& svc : *ctx->pending) {
+      if (svc.host == nameStr) {
+        qDebug() << "mDNS: A record" << nameStr << "→" << qAddr.toString();
+        svc.address = qAddr;
+      }
+    }
+
+  } else if (rtype == MDNS_RECORDTYPE_TXT) {
+    if (!ctx->pending->contains(nameStr)) return 0;
+    mdns_record_txt_t txtRecords[16];
+    size_t count = mdns_record_parse_txt(data, size, record_offset,
+                                         record_length, txtRecords, 16);
+    for (size_t i = 0; i < count; ++i) {
+      if (txtRecords[i].key.length == 4 &&
+          memcmp(txtRecords[i].key.str, "name", 4) == 0 &&
+          txtRecords[i].value.length > 0) {
+        (*ctx->pending)[nameStr].friendlyName =
+            QString::fromLatin1(txtRecords[i].value.str,
+                                static_cast<int>(txtRecords[i].value.length));
+        break;
+      }
+    }
+  }
+
+  return 0;
+}
+
+}  // namespace
 
 MdnsDiscovery::MdnsDiscovery(QObject* parent) : QObject(parent) {
-  m_udpSocket = new QUdpSocket(this);
-  m_udpSocket->bind(QHostAddress::AnyIPv4, 0,
-                    QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint);
+  sockaddr_in saddr{};
+  saddr.sin_family = AF_INET;
+  saddr.sin_addr.s_addr = INADDR_ANY;
+  // Bind to port 5353 so multicast responses from bonjour-service reach us.
+  // An ephemeral port would cause responses sent to 224.0.0.251:5353 to be
+  // delivered only to port-5353 sockets, never to the ephemeral-port socket.
+  saddr.sin_port = htons(MDNS_PORT);
+
+  m_sock = mdns_socket_open_ipv4(&saddr);
+  if (m_sock >= 0) {
+    // mdns.h joins the multicast group on the default interface only.
+    // Join on every active interface, so we receive responses regardless of
+    // which physical link the robot is on — same as avahi-daemon does.
+    for (const auto& iface : QNetworkInterface::allInterfaces()) {
+      const auto flags = iface.flags();
+      if (!(flags & QNetworkInterface::IsUp) ||
+          !(flags & QNetworkInterface::CanMulticast) ||
+          (flags & QNetworkInterface::IsLoopBack))
+        continue;
+      for (const auto& entry : iface.addressEntries()) {
+        if (entry.ip().protocol() != QAbstractSocket::IPv4Protocol) continue;
+        ip_mreq req{};
+        req.imr_multiaddr.s_addr = htonl(0xE00000FBU);  // 224.0.0.251
+        req.imr_interface.s_addr = htonl(entry.ip().toIPv4Address());
+        if (setsockopt(m_sock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+                       reinterpret_cast<const char*>(&req), sizeof(req)) == 0) {
+          qDebug() << "mDNS: joined multicast on" << iface.name()
+                   << entry.ip().toString();
+        }
+      }
+    }
+    qDebug() << "mDNS: socket ready on port 5353";
+    m_notifier = new QSocketNotifier(m_sock, QSocketNotifier::Read, this);
+    connect(m_notifier, &QSocketNotifier::activated, this,
+            &MdnsDiscovery::onSocketReady);
+  } else {
+    qWarning() << "mDNS: failed to open socket on port 5353";
+  }
 
   m_queryTimer = new QTimer(this);
   connect(m_queryTimer, &QTimer::timeout, this, &MdnsDiscovery::sendQuery);
+}
 
-  connect(m_udpSocket, &QUdpSocket::readyRead, this,
-          &MdnsDiscovery::readPendingDatagrams);
+MdnsDiscovery::~MdnsDiscovery() {
+  if (m_sock >= 0) mdns_socket_close(m_sock);
 }
 
 void MdnsDiscovery::startDiscovery() {
+  if (m_sock < 0) return;
   sendQuery();
   m_queryTimer->start(5000);
 }
 
-void MdnsDiscovery::sendQuery() {
-  QByteArray datagram;
-  QDataStream out(&datagram, QIODevice::WriteOnly);
-  out.setByteOrder(QDataStream::BigEndian);
-
-  // Transaction ID
-  out << (quint16)0;
-  // Flags: Standard query
-  out << (quint16)0x0000;
-  // Questions
-  out << (quint16)1;
-  // Answer RRs
-  out << (quint16)0;
-  // Authority RRs
-  out << (quint16)0;
-  // Additional RRs
-  out << (quint16)0;
-
-  // Query: _valetudo._tcp.local
-  static const char* service = "\x09_valetudo\x04_tcp\x05local";
-  datagram.append(service, 21);
-  datagram.append('\0');
-
-  out.device()->seek(datagram.size());
-  // Type: PTR
-  out << (quint16)12;
-  // Class: IN
-  out << (quint16)1;
-
-  m_udpSocket->writeDatagram(datagram, QHostAddress("224.0.0.251"), 5353);
+void MdnsDiscovery::sendQuery() const {
+  if (m_sock < 0) return;
+  // Send the query on every multicast-capable interface so the robot receives
+  // it even when it is not on the default-route interface.
+  for (const auto& iface : QNetworkInterface::allInterfaces()) {
+    if (const auto flags = iface.flags();
+        !(flags & QNetworkInterface::IsUp) ||
+        !(flags & QNetworkInterface::CanMulticast) ||
+        (flags & QNetworkInterface::IsLoopBack))
+      continue;
+    for (const auto& entry : iface.addressEntries()) {
+      if (entry.ip().protocol() != QAbstractSocket::IPv4Protocol) continue;
+      const quint32 ifaddr = htonl(entry.ip().toIPv4Address());
+      setsockopt(m_sock, IPPROTO_IP, IP_MULTICAST_IF,
+                 reinterpret_cast<const char*>(&ifaddr), sizeof(ifaddr));
+      alignas(32) uint8_t buffer[512];
+      const int rc =
+          mdns_query_send(m_sock, MDNS_RECORDTYPE_PTR, VALETUDO_SERVICE,
+                          VALETUDO_SERVICE_LEN, buffer, sizeof(buffer), 0);
+      qDebug() << "mDNS: sent PTR query on" << iface.name()
+               << entry.ip().toString() << (rc >= 0 ? "ok" : "failed");
+    }
+  }
 }
 
-void MdnsDiscovery::readPendingDatagrams() {
-  while (m_udpSocket->hasPendingDatagrams()) {
-    QByteArray datagram;
-    datagram.resize(m_udpSocket->pendingDatagramSize());
-    QHostAddress sender;
-    m_udpSocket->readDatagram(datagram.data(), datagram.size(), &sender);
+void MdnsDiscovery::onSocketReady() {
+  alignas(32) uint8_t buffer[RECV_BUFFER_SIZE];
+  RecvContext ctx{&m_pending};
+  const size_t records = mdns_query_recv(m_sock, buffer, sizeof(buffer),
+                                         mdns_record_callback, &ctx, 0);
+  qDebug() << "mDNS: packet received," << records << "records";
 
-    // Very basic DNS response parsing
-    if (datagram.size() < 12) continue;
+  for (auto it = m_pending.cbegin(); it != m_pending.cend(); ++it) {
+    const QString& instanceName = it.key();
+    const auto& [host, port, address, senderAddr, friendlyName, hasSrv] =
+        it.value();
+    if (!hasSrv || m_emitted.contains(instanceName)) continue;
 
-    QDataStream in(&datagram, QIODevice::ReadOnly);
-    in.setByteOrder(QDataStream::BigEndian);
-
-    quint16 id, flags, questions, answers, authority, additional;
-    in >> id >> flags >> questions >> answers >> authority >> additional;
-
-    // Skip questions
-    for (int i = 0; i < questions; ++i) {
-      quint8 len;
-      do {
-        in >> len;
-        if (len & 0xC0) {  // Compression
-          quint8 next;
-          in >> next;
-          break;
-        }
-        if (len > 0) in.skipRawData(len);
-      } while (len > 0);
-      in.skipRawData(4);  // Type and Class
+    DiscoveredRobot robot;
+    if (!friendlyName.isEmpty()) {
+      robot.name = friendlyName;
+    } else {
+      robot.name = instanceName;
+      if (robot.name.endsWith(VALETUDO_SERVICE_SUFFIX))
+        robot.name.chop(VALETUDO_SERVICE_SUFFIX.length());
     }
+    robot.host = host;
+    robot.port = port;
+    robot.address = address.isNull() ? senderAddr : address;
 
-    // Check answers for PTR records
-    for (int i = 0; i < answers + authority + additional; ++i) {
-      // Read name
-      quint8 len;
-      do {
-        if (in.atEnd()) break;
-        in >> len;
-        if (len & 0xC0) {
-          quint8 next;
-          in >> next;
-          break;
-        }
-        if (len > 0) in.skipRawData(len);
-      } while (len > 0);
-
-      quint16 type, cls;
-      quint32 ttl;
-      quint16 rdlength;
-      in >> type >> cls >> ttl >> rdlength;
-
-      if (type == 12) {  // PTR
-        // This is a PTR record. It might contain the service instance name.
-        // For Valetudo, we just care that SOMEONE responded.
-        DiscoveredRobot robot;
-        robot.address = sender;
-        robot.name = sender.toString();
-        // Try to find a TXT or SRV record in the same datagram that might have
-        // a better name Valetudo typically puts the robot name in a TXT record
-        // or the service instance name. For now, we'll just use the IP or
-        // hostname if we can find it.
-        emit robotDiscovered(robot);
-      } else if (type == 33) {  // SRV
-        // SRV record can give us the port and target hostname
-        quint16 priority, weight, port;
-        in >> priority >> weight >> port;
-        // Target name follows
-        // We'll just emit it if we haven't already
-        DiscoveredRobot robot;
-        robot.address = sender;
-        robot.port = port;
-        robot.name = sender.toString();
-        emit robotDiscovered(robot);
-      } else {
-        in.skipRawData(rdlength);
-      }
-    }
+    qDebug() << "mDNS: emitting robot" << robot.name << "at" << robot.url()
+             << "port" << robot.port;
+    emit robotDiscovered(robot);
+    m_emitted.insert(instanceName);
   }
 }
 
