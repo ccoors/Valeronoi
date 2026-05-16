@@ -74,6 +74,7 @@ set(CMAKE_AUTOUIC ON)
 
 set(SOURCE_FILES
     src/main.cpp
+    src/cli/headless_recorder.cpp
     src/valeronoi.ui
     src/valeronoi.qrc
     src/valeronoi.cpp

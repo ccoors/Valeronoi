@@ -1,0 +1,17 @@
+#
+# podman build -f Containerfile.run -t valeronoi .
+#
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libqt6network6 libqt6svg6 libqt6openglwidgets6 \
+    libqt6widgets6 libqt6gui6 libqt6core6 \
+    qt6-qpa-plugins \
+    libgmp10 libssl3 libgl1 libxkbcommon0 \
+  && rm -rf /var/lib/apt/lists/*
+ENV QT_QPA_PLATFORM=offscreen
+COPY ./valeronoi /usr/local/bin/valeronoi
+ENTRYPOINT ["valeronoi"]
+
+#
+# podman run --rm --network host -v "$PWD/output:/output:Z" valeronoi --headless --output "/output/wifi_$(date +%F_%H%M).vwm" --url http://192.168.30.15 --interval 10 --duration 60 --mode vacuum --command start
+#

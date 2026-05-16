@@ -117,6 +117,10 @@ void Robot::send_command(BASIC_COMMANDS command) {
   m_api.send_command(command);
 }
 
+void Robot::set_operation_mode(const QString& mode) {
+  m_api.set_operation_mode(mode);
+}
+
 void Robot::slot_relocate(int x, int y) { m_api.relocate(x, y); }
 
 }  // namespace Valeronoi::robot

@@ -250,4 +250,19 @@ void ValetudoAPI::relocate(int x, int y) {
           false, true, &data);
 }
 
+void ValetudoAPI::set_operation_mode(const QString& mode) {
+  if (!m_connected) {
+    return;
+  }
+  auto document = QJsonDocument();
+  auto object = QJsonObject();
+  object.insert("name", mode);
+  document.setObject(object);
+  auto data = document.toJson();
+  request(
+      "PUT",
+      QUrl("/api/v2/robot/capabilities/OperationModeControlCapability/preset"),
+      false, true, &data);
+}
+
 }  // namespace Valeronoi::robot::api::v2

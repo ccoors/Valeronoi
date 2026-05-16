@@ -52,6 +52,8 @@ class Robot : public QObject {
 
   void send_command(BASIC_COMMANDS command);
 
+  void set_operation_mode(const QString& mode);
+
  public slots:
   void slot_connect();
 

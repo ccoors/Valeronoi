@@ -1,0 +1,11 @@
+#
+# podman build -f Containerfile.build -t valeronoi-build .
+#
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake qt6-base-dev libqt6svg6-dev libqt6opengl6-dev libcgal-dev libboost-dev libssl-dev libgl-dev libvulkan-dev libxkbcommon-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+#
+# podman run --rm -ti -v "$PWD:/host:Z" -w "/host" valeronoi-build bash -c "mkdir -p build && cd build && cmake .. && cmake --build -j ."
+#
