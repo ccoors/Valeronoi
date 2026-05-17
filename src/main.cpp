@@ -120,8 +120,34 @@ int main(int argc, char** argv) {
   if (parser.isSet(headlessOpt)) {
     Valeronoi::cli::HeadlessRecorder recorder;
     recorder.set_output(parser.value(outputOpt));
-    recorder.set_duration(parser.value(durationOpt).toInt());
-    recorder.set_interval(parser.value(intervalOpt).toDouble());
+
+    // Validate --duration: must be a positive integer (0 = unlimited)
+    if (parser.isSet(durationOpt)) {
+      bool ok = false;
+      const int duration = parser.value(durationOpt).toInt(&ok);
+      if (!ok || duration < 0) {
+        fprintf(stderr,
+                "Error: --duration must be a non-negative integer (seconds), "
+                "got '%s'\n",
+                qPrintable(parser.value(durationOpt)));
+        return 1;
+      }
+      recorder.set_duration(duration);
+    }
+
+    // Validate --interval: must be a positive number > 0
+    {
+      bool ok = false;
+      const double interval = parser.value(intervalOpt).toDouble(&ok);
+      if (!ok || interval <= 0.0) {
+        fprintf(stderr,
+                "Error: --interval must be a positive number (seconds), "
+                "got '%s'\n",
+                qPrintable(parser.value(intervalOpt)));
+        return 1;
+      }
+      recorder.set_interval(interval);
+    }
 
     if (parser.isSet(urlOpt)) {
       recorder.set_url(parser.value(urlOpt));
