@@ -7,5 +7,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 #
-# podman run --rm -ti -v "$PWD:/host:Z" -w "/host" valeronoi-build bash -c "mkdir -p build && cd build && cmake .. && cmake --build -j ."
+# podman run --rm -ti -v "$PWD:/host:Z" -w "/host" valeronoi-build bash -c "mkdir -p build && cd build && cmake .. && cmake --build . -j$(nproc)"
 #
