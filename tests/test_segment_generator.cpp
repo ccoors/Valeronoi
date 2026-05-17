@@ -5,9 +5,11 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSignalSpy>
-#include <catch.hpp>
+#include <catch2/catch_amalgamated.hpp>
 
 #include "src/util/segment_generator.h"
+
+using Catch::Approx;
 
 TEST_CASE("SegmentGenerator thread safety and responsiveness", "[util]") {
   // We need a QCoreApplication for signals/slots to work if they are

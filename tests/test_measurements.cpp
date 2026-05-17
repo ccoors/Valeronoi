@@ -5,7 +5,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QSignalSpy>
-#include <catch.hpp>
+#include <catch2/catch_amalgamated.hpp>
 
 #include "src/state/measurements.h"
 #include "src/state/robot_map.h"

@@ -1,6 +1,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
-#include <catch.hpp>
+#include <catch2/catch_amalgamated.hpp>
 
 #include "src/state/robot_map.h"
 

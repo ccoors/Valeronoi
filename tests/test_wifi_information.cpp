@@ -2,7 +2,7 @@
  * Valeronoi is an app for generating WiFi signal strength maps
  * Copyright (C) 2021-2026 Christian Friedrich Coors <me@ccoors.de>
  */
-#include <catch.hpp>
+#include <catch2/catch_amalgamated.hpp>
 
 #include "src/robot/wifi_information.h"
 

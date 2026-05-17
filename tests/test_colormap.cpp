@@ -16,10 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include <array>
-#include <catch.hpp>
+#include <catch2/catch_amalgamated.hpp>
 #include <vector>
 
 #include "src/util/colormap.h"
+
+using Catch::Approx;
 
 void assert_color(const Valeronoi::util::RGBColorMap& m, double pos, double e1,
                   double e2, double e3) {
