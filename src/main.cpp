@@ -103,8 +103,6 @@ int main(int argc, char** argv) {
       "Send stop + home commands when duration elapsed or Ctrl+C is pressed");
 
   parser.addOption(headlessOpt);
-
-  parser.addOption(headlessOpt);
   parser.addOption(outputOpt);
   parser.addOption(durationOpt);
   parser.addOption(intervalOpt);
