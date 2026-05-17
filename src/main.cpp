@@ -27,7 +27,6 @@
 #include "valeronoi.h"
 
 int main(int argc, char** argv) {
-  qInstallMessageHandler(Valeronoi::util::log_handler);
 
   // Check for --headless before creating QApplication.
   // Forces offscreen QPA platform so no display is required.
@@ -43,6 +42,10 @@ int main(int argc, char** argv) {
   // If not headless, check if a display is available.
   // Prevents "Aborted (core dumped)" in containers or SSH sessions.
   if (!headless_mode) {
+    // Redirect Qt log messages to the in-app LogDialog (GUI only).
+    // In headless mode, messages go to stderr via Qt's default handler.
+    qInstallMessageHandler(Valeronoi::util::log_handler);
+
     const bool has_display = !qEnvironmentVariableIsEmpty("DISPLAY") ||
                              !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY") ||
                              !qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM");
