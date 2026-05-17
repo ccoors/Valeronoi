@@ -28,7 +28,7 @@
 #include <csignal>
 
 // Global pointer for signal handler (graceful Ctrl+C)
-static Valeronoi::cli::HeadlessRecorder *g_recorder = nullptr;
+static Valeronoi::cli::HeadlessRecorder* g_recorder = nullptr;
 
 // NOTE: Not strictly async-signal-safe, but works reliably with Qt's event
 // loop
@@ -41,7 +41,7 @@ static void signal_handler(int) {
 
 namespace Valeronoi::cli {
 
-HeadlessRecorder::HeadlessRecorder(QObject *parent) : QObject(parent) {
+HeadlessRecorder::HeadlessRecorder(QObject* parent) : QObject(parent) {
   // Link measurements to robot map (provides robot position)
   m_measurements.set_map(m_robot_map);
 
@@ -61,7 +61,7 @@ HeadlessRecorder::HeadlessRecorder(QObject *parent) : QObject(parent) {
           &HeadlessRecorder::slot_duration_elapsed);
 }
 
-void HeadlessRecorder::set_output(const QString &path) {
+void HeadlessRecorder::set_output(const QString& path) {
   m_output_path = path;
   // Append default file extension if none is present
   if (!m_output_path.isEmpty() && QFileInfo(m_output_path).suffix().isEmpty()) {
@@ -77,20 +77,20 @@ void HeadlessRecorder::set_interval(double seconds) {
   m_interval_seconds = seconds;
 }
 
-void HeadlessRecorder::set_url(const QString &url) { m_url = url; }
+void HeadlessRecorder::set_url(const QString& url) { m_url = url; }
 
-void HeadlessRecorder::set_auth(const QString &username,
-                                const QString &password) {
+void HeadlessRecorder::set_auth(const QString& username,
+                                const QString& password) {
   m_auth = true;
   m_username = username;
   m_password = password;
 }
 
-void HeadlessRecorder::set_command(const QString &command) {
+void HeadlessRecorder::set_command(const QString& command) {
   m_command = command.toLower();
 }
 
-void HeadlessRecorder::set_operation_mode(const QString &mode) {
+void HeadlessRecorder::set_operation_mode(const QString& mode) {
   m_operation_mode = mode.toLower();
 }
 
@@ -98,7 +98,7 @@ void HeadlessRecorder::set_return_home(bool enabled) {
   m_return_home = enabled;
 }
 
-void HeadlessRecorder::load_file(const QString &path) { m_load_path = path; }
+void HeadlessRecorder::load_file(const QString& path) { m_load_path = path; }
 
 int HeadlessRecorder::run() {
   QTextStream out(stdout);
@@ -181,7 +181,7 @@ void HeadlessRecorder::slot_connected() {
 
   // Send robot command if specified
   if (!m_command.isEmpty()) {
-    robot::BASIC_COMMANDS cmd;
+    robot::BASIC_COMMANDS cmd = robot::BASIC_COMMANDS::START;
     bool valid_cmd = true;
 
     if (m_command == "start" || m_command == "clean") {

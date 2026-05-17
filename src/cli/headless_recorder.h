@@ -33,17 +33,17 @@ class HeadlessRecorder : public QObject {
   Q_OBJECT
 
  public:
-  explicit HeadlessRecorder(QObject *parent = nullptr);
+  explicit HeadlessRecorder(QObject* parent = nullptr);
 
-  void set_output(const QString &path);
+  void set_output(const QString& path);
   void set_duration(int seconds);
   void set_interval(double seconds);
-  void set_url(const QString &url);
-  void set_auth(const QString &username, const QString &password);
-  void set_command(const QString &command);
-  void set_operation_mode(const QString &mode);
+  void set_url(const QString& url);
+  void set_auth(const QString& username, const QString& password);
+  void set_command(const QString& command);
+  void set_operation_mode(const QString& mode);
   void set_return_home(bool enabled);
-  void load_file(const QString &path);
+  void load_file(const QString& path);
 
   int run();
 
