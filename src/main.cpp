@@ -27,7 +27,6 @@
 #include "valeronoi.h"
 
 int main(int argc, char** argv) {
-
   // Check for --headless before creating QApplication.
   // Forces offscreen QPA platform so no display is required.
   bool headless_mode = false;
