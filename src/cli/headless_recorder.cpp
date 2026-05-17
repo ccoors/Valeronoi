@@ -26,7 +26,6 @@
 #include <QSettings>
 #include <QTextStream>
 #include <csignal>
-#include <cstdlib>
 
 // Global pointer for signal handler (graceful Ctrl+C)
 static Valeronoi::cli::HeadlessRecorder *g_recorder = nullptr;
@@ -221,7 +220,7 @@ void HeadlessRecorder::slot_connected() {
     QTimer::singleShot(2000, this, [this]() {
       m_robot.slot_disconnect();
       fflush(stdout);
-      std::exit(0);
+      QCoreApplication::exit(0);
     });
     return;
   }
@@ -331,7 +330,7 @@ void HeadlessRecorder::save_and_exit(int code) {
   out.flush();
   fflush(stdout);
   fflush(stderr);
-  std::exit(code);
+  QCoreApplication::exit(code);
 }
 
 }  // namespace Valeronoi::cli
