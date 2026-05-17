@@ -13,7 +13,7 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 - **Persistent Storage**: Save and load your measurements in the Valeronoi WiFi Map (`.vwm`) format.
 - **Robot Control**: Basic controls for starting/stopping cleanups directly from the app.
 - **Cross-platform**: Available for Linux, macOS, and Windows.
-- **Headless CLI Mode (on Linux)**: Automated recording without GUI, ideal for scheduled scans via cron or containers.
+- **Headless CLI Mode (tested on Linux)**: Automated recording without GUI, ideal for scheduled scans via cron or containers.
 
 ## Installation
 
