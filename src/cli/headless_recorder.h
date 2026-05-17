@@ -47,10 +47,8 @@ class HeadlessRecorder : public QObject {
 
   int run();
 
- public slots:
-  void slot_duration_elapsed();
-
  private slots:
+  void slot_duration_elapsed();
   void slot_connected();
   void slot_connection_error();
   void slot_map_updated();
