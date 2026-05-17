@@ -13,6 +13,7 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 - **Persistent Storage**: Save and load your measurements in the Valeronoi WiFi Map (`.vwm`) format.
 - **Robot Control**: Basic controls for starting/stopping cleanups directly from the app.
 - **Cross-platform**: Available for Linux, macOS, and Windows.
+- **Headless CLI Mode (tested on Linux)**: Automated recording without GUI, ideal for scheduled scans via cron or containers.
 
 ## Installation
 
@@ -83,6 +84,69 @@ cmake ..
 cmake --build .
 ./valeronoi-tests
 ```
+
+### Headless CLI Mode
+
+Valeronoi can run without a GUI for automated WiFi scans, e.g. triggered by a cron job on a headless home server.
+
+#### Usage
+
+```bash
+# Start cleaning in vacuum-only mode and record for 30 minutes
+valeronoi --headless \
+  --url http://192.168.1.100 \
+  --mode vacuum \
+  --command start \
+  --output scan.vwm \
+  --duration 1800
+
+# Send a command without recording (e.g. send robot home)
+valeronoi --headless --url http://192.168.1.100 --command home
+```
+
+Pressing `Ctrl+C` (or sending `SIGTERM`) saves collected data before exiting.
+
+#### Options
+
+| Option              | Description                                               |
+| ------------------- | --------------------------------------------------------- |
+| `--headless`        | Run without GUI (required)                                |
+| `--url <url>`       | Valetudo robot URL                                        |
+| `--output <file>`   | Output `.vwm` file (extension added automatically)        |
+| `--duration <sec>`  | Stop recording after N seconds                            |
+| `--interval <sec>`  | WiFi polling interval (default: 5s)                       |
+| `--mode <mode>`     | Set operation mode: `vacuum`, `mop`, `vacuum_and_mop`     |
+| `--command <cmd>`   | Robot command: `start`, `stop`, `home`, `pause`, `locate` |
+| `--return-home`     | Send stop + home when recording ends (duration or Ctrl+C) |
+| `--auth`            | Enable HTTP basic auth                                    |
+| `--user` / `--pass` | Auth credentials                                          |
+
+Non-start commands (`stop`, `home`, `pause`, `locate`) execute immediately and exit — no recording is performed even if `--output` is specified.
+
+#### Container usage
+
+```bash
+# Build
+podman build -f Containerfile.build -t valeronoi-build .
+podman run --rm -v "$PWD:/host:Z" -w /host valeronoi-build \
+  bash -c "mkdir -p build && cd build && cmake .. && cmake --build . -j$(nproc)"
+podman build -f Containerfile.run -t valeronoi .
+
+# Run
+podman run --rm --network host -v ./output:/output:Z valeronoi \
+  --headless --url http://192.168.1.100 \
+  --mode vacuum --command start \
+  --output /output/wifi_$(date +%F_%H%M).vwm --duration 1800
+```
+
+#### Cron example
+
+```cron
+# Daily 30-minute WiFi scan at 10:00
+0 10 * * * podman run --rm --network host -v /data/wifi:/output:Z valeronoi --headless --url http://192.168.1.100 --mode vacuum --command start --output /output/scan_$(date +\%F).vwm --duration 1800
+```
+
+The resulting `.vwm` files can be opened in the GUI for Voronoi visualization and image export.
 
 ## Contributing
 

@@ -62,6 +62,8 @@ class ValetudoAPI : public QObject {
 
   void send_command(Valeronoi::robot::BASIC_COMMANDS command);
 
+  void set_operation_mode(const QString& mode);
+
   void relocate(int x, int y);
 
  public slots:
