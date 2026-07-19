@@ -6,8 +6,8 @@
 
 // SPDX-License-Identifier: BSL-1.0
 
-//  Catch v3.15.0
-//  Generated: 2026-05-12 13:08:21.086523
+//  Catch v3.15.2
+//  Generated: 2026-07-07 20:39:49.445081
 //  ----------------------------------------------------------
 //  This file is an amalgamation of multiple different files.
 //  You probably shouldn't edit it directly.
@@ -2394,7 +2394,7 @@ namespace Catch {
     }
 
     Version const& libraryVersion() {
-        static Version version( 3, 15, 0, "", 0 );
+        static Version version( 3, 15, 2, "", 0 );
         return version;
     }
 
@@ -6016,6 +6016,8 @@ namespace Catch {
                 auto getGenerator() const -> GeneratorBasePtr const& override {
                     return m_generator;
                 }
+
+                bool isFilteredImpl() const override { return m_isFiltered; }
             };
         } // namespace
     }
@@ -6360,17 +6362,6 @@ namespace Catch {
         SourceLineInfo lineInfo,
         Generators::GeneratorBasePtr&& generator ) {
 
-        // TBD: Do we want to avoid the warning if the generator is filtered?
-        if ( m_config->warnAboutInfiniteGenerators() &&
-             !generator->isFinite() ) {
-            // We want the semantics of `FAIL()`, but we inline it
-            // to avoid issues with conditionally prefixed macros
-            INTERNAL_CATCH_MSG( "FAIL",
-                                Catch::ResultWas::ExplicitFailure,
-                                Catch::ResultDisposition::Normal,
-                                "GENERATE() would run infinitely" );
-        }
-
         auto nameAndLoc = TestCaseTracking::NameAndLocation( static_cast<std::string>( generatorName ), lineInfo );
         auto& currentTracker = m_trackerContext.currentTracker();
         assert(
@@ -6383,11 +6374,24 @@ namespace Catch {
                 m_trackerContext,
                 &currentTracker,
                 CATCH_MOVE( generator ) );
-        auto ret = newTracker.get();
+
+        // The warning shouldn't fire if the generator is infinite, **but** filtered down.
+        if ( m_config->warnAboutInfiniteGenerators() &&
+             !newTracker->m_generator->isFinite() &&
+             !newTracker->isFiltered() ) {
+            // We want the semantics of `FAIL()`, but we inline it
+            // to avoid issues with conditionally prefixed macros
+            INTERNAL_CATCH_MSG( "FAIL",
+                                Catch::ResultWas::ExplicitFailure,
+                                Catch::ResultDisposition::Normal,
+                                "GENERATE() would run infinitely" );
+        }
+
+        auto returnPtr = newTracker.get();
         currentTracker.addChild( CATCH_MOVE( newTracker ) );
 
-        ret->open();
-        return ret;
+        returnPtr->open();
+        return returnPtr;
     }
 
     bool RunContext::testForMissingAssertions(Counts& assertions) {
@@ -7470,6 +7474,28 @@ namespace TestCaseTracking {
         m_ctx.setCurrentTracker( this );
     }
 
+    bool SectionTracker::isFilteredImpl() const {
+        // TBD: This is currently _very_ similar to the block in `isComplete`.
+        //      Is this neccessarily that way, or just accident of current semantics?
+        const size_t filterIndex =
+            m_newStyleFilters ? m_allTrackerDepth : m_sectionOnlyDepth;
+
+        if ( filterIndex < m_filterRef->size() ) {
+            // 1) New style filter must explicitly target section
+            if ( m_newStyleFilters && ( *m_filterRef )[filterIndex].type !=
+                                          PathFilter::For::Section ) {
+                return true;
+            }
+            // 2) Both style filters must match the trimmed name exactly
+            if ( m_trimmed_name !=
+                 StringRef( ( *m_filterRef )[filterIndex].filter ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     SectionTracker::SectionTracker( NameAndLocation&& nameAndLocation, TrackerContext& ctx, ITracker* parent )
     :   TrackerBase( CATCH_MOVE(nameAndLocation), ctx, parent ),
         m_trimmed_name(trim(StringRef(ITracker::nameAndLocation().name)))
@@ -8016,8 +8042,8 @@ namespace Catch {
                 m_it--;
             }
             // Skip back over UTF-8 continuation bytes to the leading byte
-            while ( isUtf8ContinuationByte( *m_it ) ) {
-                assert( m_it != m_string->begin() );
+            while ( m_it != m_string->begin() &&
+                    isUtf8ContinuationByte( *m_it ) ) {
                 m_it--;
             }
         }
