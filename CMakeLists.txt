@@ -65,6 +65,19 @@ elseif(MSVC)
     add_compile_options(/W4 /WX /MP)
 endif()
 
+# CGAL 6.x headers (via BOOST_MPL_HAS_XXX_TRAIT_DEF) emit trailing semicolons
+# that trip -Wextra-semi. On some platforms (notably Homebrew macOS) CGAL is not
+# treated as a system include, so -Werror turns these into build failures. Only
+# segment_generator.cpp pulls in CGAL, so relax just that warning for that file.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES
+                                           "Clang"
+)
+    set_source_files_properties(
+        src/util/segment_generator.cpp PROPERTIES COMPILE_OPTIONS
+                                                  "-Wno-error=extra-semi"
+    )
+endif()
+
 configure_file(src/config.h.in config.h)
 
 set(CMAKE_AUTOGEN_PARALLEL 1)
