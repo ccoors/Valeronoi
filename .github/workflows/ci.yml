@@ -13,11 +13,11 @@ jobs:
       matrix:
         include:
           - os: macos-15-intel
-            qt: ">=6.11.1"
+            qt: "6.11.1"
             cgal: "6.2"
             variant: "current-intel"
           - os: macos-15
-            qt: ">=6.11.1"
+            qt: "6.11.1"
             cgal: "6.2"
             variant: "current-arm64"
     name: CI macOS ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
@@ -92,7 +92,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ">=6.10.3"
+          version: "6.10.3"
           arch: "win64_msvc2022_64"
       - name: Set up MSVC
         uses: ilammy/msvc-dev-cmd@v1
@@ -160,7 +160,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-24.04
-            qt: ">=6.11.1"
+            qt: "6.11.1"
             cgal: "6.2"
             variant: "current"
     name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
