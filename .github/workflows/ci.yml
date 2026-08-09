@@ -230,18 +230,19 @@ jobs:
         with:
           asset_paths: '["build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage"]'
   ci-linux-flatpak:
-    name: CI Linux/Flatpak (${{ matrix.arch }}/${{ matrix.runner }})
-    container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.10
-      options: --privileged
     strategy:
+      fail-fast: false
       matrix:
-        variant:
+        include:
           - arch: x86_64
             runner: ubuntu-24.04
           - arch: aarch64
             runner: ubuntu-24.04-arm
-    runs-on: ${{ matrix.variant.runner }}
+    name: CI Linux/Flatpak (${{ matrix.arch }}/${{ matrix.runner }})
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.10
+      options: --privileged
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v6
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -249,7 +250,7 @@ jobs:
           bundle: Valeronoi-flatpak-${{ matrix.arch }}.flatpak
           manifest-path: de.ccoors.valeronoi.yaml
           cache-key: flatpak-builder-${{ github.sha }}
-          arch: ${{ matrix.variant.arch }}
+          arch: ${{ matrix.arch }}
           verbose: true
       - name: Upload Flatpak artifact
         uses: actions/upload-artifact@v7
