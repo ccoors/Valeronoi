@@ -204,8 +204,11 @@ elseif(NOT WIN32)
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static
     )
-    install(FILES ${CMAKE_SOURCE_DIR}/assets/valeronoi.desktop
+    install(FILES ${CMAKE_SOURCE_DIR}/assets/de.ccoors.valeronoi.desktop
             DESTINATION share/applications
+    )
+    install(FILES ${CMAKE_SOURCE_DIR}/assets/de.ccoors.valeronoi.metainfo.xml
+            DESTINATION share/metainfo
     )
     install(FILES ${CMAKE_SOURCE_DIR}/COPYING
             DESTINATION share/licenses/valeronoi/LICENSE
@@ -228,12 +231,12 @@ elseif(NOT WIN32)
         install(
             FILES ${CMAKE_SOURCE_DIR}/assets/icon/icon-${icon_size}.png
             DESTINATION share/icons/hicolor/${icon_size}x${icon_size}/apps
-            RENAME valeronoi.png
+            RENAME de.ccoors.valeronoi.png
         )
     endforeach()
     install(
         FILES ${CMAKE_SOURCE_DIR}/assets/icon/icon.svg
         DESTINATION share/icons/hicolor/scalable/apps
-        RENAME valeronoi.svg
+        RENAME de.ccoors.valeronoi.svg
     )
 endif()

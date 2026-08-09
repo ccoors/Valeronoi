@@ -214,7 +214,7 @@ jobs:
           chmod +x *
           cd ..
           export PATH=$Qt6_DIR/bin:$PATH
-          tools/linuxdeploy-x86_64.AppImage --appdir AppDir -i ../assets/icon/icon-256.png -d AppDir/usr/share/applications/valeronoi.desktop --output appimage --plugin qt
+          tools/linuxdeploy-x86_64.AppImage --appdir AppDir -i ../assets/icon/icon-256.png -d AppDir/usr/share/applications/de.ccoors.valeronoi.desktop --output appimage --plugin qt
           mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-x86_64.AppImage"
         shell: bash
       - name: Upload artifact
@@ -229,3 +229,37 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           asset_paths: '["build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage"]'
+  ci-linux-flatpak:
+    name: CI Linux/Flatpak (${{ matrix.arch }}/${{ matrix.runner }})
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.11
+      options: --privileged
+    strategy:
+      matrix:
+        variant:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.variant.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: Valeronoi-flatpak-${{ matrix.arch }}.flatpak
+          manifest-path: de.ccoors.valeronoi.yaml
+          cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{ matrix.variant.arch }}
+          verbose: true
+      - name: Upload Flatpak artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: valeronoi-linux-flatpak-${{ matrix.arch }}
+          path: Valeronoi-flatpak-${{ matrix.arch }}.flatpak
+      - name: Upload release Flatpak bundle
+        if: ${{ github.event_name == 'release' }}
+        uses: alexellis/upload-assets@0.4.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["Valeronoi-flatpak-${{ matrix.arch }}.flatpak"]'

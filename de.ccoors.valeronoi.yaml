@@ -1,0 +1,87 @@
+# Flatpak manifest for Valeronoi.
+app-id: de.ccoors.valeronoi
+runtime: org.kde.Platform
+runtime-version: "6.11"
+sdk: org.kde.Sdk
+command: valeronoi
+
+# --share=ipc            required by both X11 and Wayland Qt platform plugins
+# --socket=fallback-x11  X11 access only when Wayland is not available
+# --socket=wayland       native Wayland rendering
+# --device=dri           OpenGL (used by the OpenGLWidgets display path)
+# --share=network        HTTP to the Valetudo robot + mDNS (DNS-SD) discovery on
+#                        UDP port 5353 (multicast).  mDNS joins multicast groups on
+#                        the host interfaces; --share=network grants the full host
+#                        network namespace which is sufficient for this.
+# --system-talk-name=org.freedesktop.NetworkManager
+#                        Queried while mDNS auto-discovery is running.  Without
+#                        it the discovery path logs a harmless warning and falls
+#                        back to reading /proc/net, but the permission is cheap
+#                        and keeps the log clean.
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+  - --share=network
+  - --system-talk-name=org.freedesktop.NetworkManager
+
+modules:
+  # CGAL only needs the header-only part of Boost, so we let Boost's own build
+  # system install just the headers.  b2 also generates the upstream
+  # BoostConfig.cmake, which is what CGAL's find_package(Boost) picks up.
+  - name: boost
+    buildsystem: simple
+    build-commands:
+      - ./bootstrap.sh --prefix=/app --with-libraries=headers
+      - ./b2 install
+    cleanup:
+      - "*"
+    sources:
+      - type: archive
+        url: https://github.com/boostorg/boost/releases/download/boost-1.91.0-1/boost-1.91.0-1-b2-nodocs.tar.xz
+        sha256: 7334bb672b9c7aa135da88bcc3111a64a198be9a7d44eb5151d9248e7cfd43ef
+        x-checker-data:
+          type: anitya
+          project-id: 6845
+          stable-only: true
+          url-template: https://github.com/boostorg/boost/releases/download/boost-$version/boost-$version-b2-nodocs.tar.xz
+
+  - name: cgal
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DWITH_tests=OFF
+      - -DWITH_examples=OFF
+      - -DWITH_demos=OFF
+      - -DWITH_CGAL_ImageIO=OFF
+      - -DWITH_CGAL_Qt5=OFF
+    # CGAL is header-only; nothing of it is needed at runtime.
+    cleanup:
+      - "*"
+    sources:
+      - type: archive
+        url: https://github.com/CGAL/cgal/releases/download/v6.2/CGAL-6.2-library.tar.xz
+        sha256: f75d2b2486842fb47222c780c7241c262d392802d0811143c4e9b539972ee55b
+        x-checker-data:
+          type: anitya
+          project-id: 273
+          stable-only: true
+          url-template: https://github.com/CGAL/cgal/releases/download/v$version/CGAL-$version-library.tar.xz
+
+  - name: valeronoi
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/app
+    # flatpak-validate-icon rejects anything larger than 512x512 at export time.
+    cleanup:
+      - /share/icons/hicolor/1024x1024
+    sources:
+      - type: git
+        url: https://github.com/ccoors/Valeronoi.git
+        tag: v0.4.0
+        commit: 114418a983e0afddc20764c047fd364c74071cf5
+        x-checker-data:
+          type: git
+          tag-pattern: ^v([\d.]+)$

@@ -67,6 +67,9 @@ int main(int argc, char** argv) {
   QCoreApplication::setOrganizationDomain("ccoors.de");
   QCoreApplication::setApplicationName("Valeronoi");
   QCoreApplication::setApplicationVersion(VALERONOI_VERSION);
+  // Lets the compositor/shell associate our windows with the installed
+  // de.ccoors.valeronoi.desktop entry (Wayland app_id).
+  QGuiApplication::setDesktopFileName("de.ccoors.valeronoi");
 
   Q_INIT_RESOURCE(valeronoi);
   QFontDatabase::addApplicationFont(":/res/SourceCodePro-Regular.otf");

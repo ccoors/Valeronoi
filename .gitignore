@@ -506,3 +506,8 @@ build*/
 /tools/archlinux/**/pkg/
 /tools/archlinux/**/valeronoi*/
 /tools/archlinux/**/*.pkg.tar
+
+# Flatpak local builds (flatpak-builder state + output)
+/.flatpak-builder/
+/build-dir/
+*.flatpak
