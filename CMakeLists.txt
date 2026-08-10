@@ -141,6 +141,7 @@ set(TEST_SOURCE_FILES
     src/state/robot_map.cpp src/state/state.cpp
 )
 
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "de.ccoors.valeronoi")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Valeronoi")
 set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_PROJECT_VERSION}")
 set(MACOSX_BUNDLE_COPYRIGHT
