@@ -70,7 +70,7 @@ A Flatpak manifest (`de.ccoors.valeronoi.yaml`) is included for local builds and
 [Flathub](https://flathub.org) distribution.
 
 ```bash
-flatpak install flathub org.kde.Sdk//6.9 org.kde.Platform//6.9
+flatpak install flathub org.kde.Sdk//6.11 org.kde.Platform//6.11
 flatpak-builder --user --install --force-clean build-dir de.ccoors.valeronoi.yaml
 flatpak run de.ccoors.valeronoi
 ```
