@@ -19,7 +19,7 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 
 Binary distributions are available for Linux, macOS and Windows (x86_64). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases).
 
-- **Linux**: Provided as [AppImages](https://appimage.org/)
+- **Linux**: Provided as [AppImages](https://appimage.org/) and [Flatpak single-file bundles](https://docs.flatpak.org/en/latest/single-file-bundles.html) (install with `flatpak install Valeronoi-flatpak-*.flatpak`)
 - **macOS**: Built for macOS 15 (Sequoia) on both Intel and Apple Silicon (separate binaries).
 - **Windows**: Available as an installer and a portable zip. Requires MSVC redistributable DLLs (included in the installer).
 
