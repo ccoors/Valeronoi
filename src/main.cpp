@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
     // In headless mode, messages go to stderr via Qt's default handler.
     qInstallMessageHandler(Valeronoi::util::log_handler);
 
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
     const bool has_display = !qEnvironmentVariableIsEmpty("DISPLAY") ||
                              !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY") ||
                              !qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM");
@@ -58,6 +59,7 @@ int main(int argc, char** argv) {
               "\nOr set QT_QPA_PLATFORM=offscreen to suppress this.\n");
       return 1;
     }
+#endif
   }
 
   QApplication app(argc, argv);
