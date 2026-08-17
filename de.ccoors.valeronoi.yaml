@@ -78,10 +78,5 @@ modules:
     cleanup:
       - /share/icons/hicolor/1024x1024
     sources:
-      - type: git
-        url: https://github.com/ccoors/Valeronoi.git
-        tag: v0.4.0
-        commit: 114418a983e0afddc20764c047fd364c74071cf5
-        x-checker-data:
-          type: git
-          tag-pattern: ^v([\d.]+)$
+      - type: dir
+        path: .
