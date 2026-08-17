@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>de.ccoors.valeronoi</id>
+
+  <name>Valeronoi</name>
+  <summary>A WiFi mapping companion app for Valetudo</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+
+  <description>
+    <p>
+      Valeronoi (Valetudo + Voronoi) is a companion for Valetudo for generating WiFi signal strength maps. It visualizes them using a Voronoi diagram.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">de.ccoors.valeronoi.desktop</launchable>
+
+  <url type="homepage">https://github.com/ccoors/Valeronoi</url>
+  <url type="bugtracker">https://github.com/ccoors/Valeronoi/issues</url>
+  <url type="contribute">https://github.com/ccoors/Valeronoi/blob/main/CONTRIBUTING.md</url>
+  <url type="vcs-browser">https://github.com/ccoors/Valeronoi</url>
+
+  <developer id="de.ccoors">
+    <name>Christian Friedrich Coors</name>
+  </developer>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ccoors/Valeronoi/v0.4.1/assets/screenshots/main_window.png</image>
+      <caption>Main window with a WiFi signal-strength Voronoi heat map</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ccoors/Valeronoi/v0.4.1/assets/screenshots/auto_discovery.png</image>
+      <caption>Configuration window used for auto-discovery of robots on the local network</caption>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="0.4.2" date="2026-08-17" />
+    <release version="0.4.1" date="2026-08-10" />
+    <release version="0.4.0" date="2026-07-19" />
+    <release version="0.3.1" date="2026-04-26" />
+    <release version="0.3.0" date="2026-04-24" />
+    <release version="0.2.2" date="2024-10-31" />
+    <release version="0.2.1" date="2023-11-08" />
+    <release version="0.2.0" date="2023-08-26" />
+  </releases>
+
+  <content_rating type="oars-1.1" />
+
+  <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <display_length compare="ge">768</display_length>
+  </recommends>
+</component>

@@ -2,7 +2,7 @@
 
 Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cloud) for generating WiFi signal strength maps. It visualizes them using a [Voronoi diagram](https://en.wikipedia.org/wiki/Voronoi_diagram).
 
-![Screenshot](assets/screenshot.png)
+![Screenshot](assets/screenshots/main_window.png)
 
 ## Features
 
@@ -19,8 +19,8 @@ Valeronoi (Valetudo + Voronoi) is a companion for [Valetudo](https://valetudo.cl
 
 Binary distributions are available for Linux, macOS and Windows (x86_64). They can be found in the [releases](https://github.com/ccoors/Valeronoi/releases).
 
-- **Linux**: Provided as [AppImages](https://appimage.org/). Built on Ubuntu 24.04 LTS with Qt 6.
-- **macOS**: Built for macOS 15 (Sequoia) on both Intel and Apple Silicon (Universal/Separate binaries).
+- **Linux**: Provided as [AppImages](https://appimage.org/) and [Flatpak single-file bundles](https://docs.flatpak.org/en/latest/single-file-bundles.html) (install with `flatpak install Valeronoi-flatpak-*.flatpak`)
+- **macOS**: Built for macOS 15 (Sequoia) on both Intel and Apple Silicon (separate binaries).
 - **Windows**: Available as an installer and a portable zip. Requires MSVC redistributable DLLs (included in the installer).
 
 ## Basic Usage
@@ -62,6 +62,16 @@ If the visualization is slow, adjust settings in the **Display** tab:
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j$(nproc)
+```
+
+### Flatpak
+
+A Flatpak manifest (`de.ccoors.valeronoi.yaml`) is included for local builds.
+
+```bash
+flatpak install flathub org.kde.Sdk//6.11 org.kde.Platform//6.11
+flatpak-builder --user --install --force-clean build-dir de.ccoors.valeronoi.yaml
+flatpak run de.ccoors.valeronoi
 ```
 
 ### Arch Linux

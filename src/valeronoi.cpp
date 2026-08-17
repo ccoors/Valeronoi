@@ -152,7 +152,7 @@ void ValeronoiWindow::newFile() {
 }
 
 void ValeronoiWindow::update_title() {
-  QString title = "Valeronoi " VALERONOI_VERSION;
+  QString title = "Valeronoi";
   if (m_current_file.isEmpty()) {
     title.append(" - Untitled.").append(VALERONOI_FILE_EXTENSION);
   } else {
