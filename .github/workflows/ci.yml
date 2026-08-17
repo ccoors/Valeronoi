@@ -163,7 +163,13 @@ jobs:
             qt: "6.11.1"
             cgal: "6.2"
             variant: "current"
-    name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
+            arch: x86_64
+          - os: ubuntu-24.04-arm
+            qt: "6.11.1"
+            cgal: "6.2"
+            variant: "current"
+            arch: aarch64
+    name: CI Linux/AppImage ${{ matrix.variant }} (${{ matrix.os }}/${{ matrix.arch }}/Qt ${{ matrix.qt }}/CGAL ${{ matrix.cgal }})
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -201,6 +207,7 @@ jobs:
           OS: ${{ matrix.os }}
           QT_VERSION: ${{ matrix.qt }}
           VARIANT: ${{ matrix.variant }}
+          ARCH: ${{ matrix.arch }}
         run: |
           mkdir build
           cd build
@@ -209,26 +216,26 @@ jobs:
           ./valeronoi-tests
           mkdir tools
           cd tools
-          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-${ARCH}.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-${ARCH}.AppImage
           chmod +x *
           cd ..
           export PATH=$Qt6_DIR/bin:$PATH
-          tools/linuxdeploy-x86_64.AppImage --appdir AppDir -i ../assets/icon/icon-256.png -d AppDir/usr/share/applications/de.ccoors.valeronoi.desktop --output appimage --plugin qt
-          mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-x86_64.AppImage"
+          tools/linuxdeploy-${ARCH}.AppImage --appdir AppDir -i ../assets/icon/icon-256.png -d AppDir/usr/share/applications/de.ccoors.valeronoi.desktop --output appimage --plugin qt
+          mv Valeronoi-*.AppImage "Valeronoi-${VARIANT}-${ARCH}.AppImage"
         shell: bash
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: valeronoi-linux-appimage-${{ matrix.variant }}
-          path: build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage
+          name: valeronoi-linux-appimage-${{ matrix.variant }}-${{ matrix.arch }}
+          path: build/Valeronoi-${{ matrix.variant }}-${{ matrix.arch }}.AppImage
       - name: Upload release AppImage
         if: ${{ github.event_name == 'release' }}
         uses: alexellis/upload-assets@0.4.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset_paths: '["build/Valeronoi-${{ matrix.variant }}-x86_64.AppImage"]'
+          asset_paths: '["build/Valeronoi-${{ matrix.variant }}-${{ matrix.arch }}.AppImage"]'
   ci-linux-flatpak:
     strategy:
       fail-fast: false
