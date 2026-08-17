@@ -52,12 +52,12 @@ int main(int argc, char** argv) {
 
     if (!has_display) {
       fprintf(stderr,
-              "Error: No display available.\n"
+              "Warning: No display available.\n"
               "Run with --headless for CLI mode, e.g.:\n"
-              "  valeronoi --headless --url http://robot:80 "
+              "  %s --headless --url http://robot:80 "
               "--output out.vwm --duration 60\n"
-              "\nOr set QT_QPA_PLATFORM=offscreen to suppress this.\n");
-      return 1;
+              "\nOr set QT_QPA_PLATFORM=offscreen to suppress this.\n",
+              argv[0]);
     }
 #endif
   }
